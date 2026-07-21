@@ -154,6 +154,43 @@ main{padding-top:8px}
 code.k{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:13px}
 a{color:var(--brand)}
 
+/* v2: nutrition + meal types */
+.chips{display:flex;gap:7px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;font-weight:600;font-size:13px}
+.chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.rmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.kcaltag{font-size:11px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
+.daynutri{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;box-shadow:var(--shadow)}
+.dn-kcal{font-weight:700;font-size:13px}
+.dn-kcal small{color:var(--muted);font-weight:500}
+.dn-bars{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.dn-b{display:flex;align-items:center;gap:6px;font-size:10px}
+.dn-lab{width:58px;color:var(--muted);flex:none}
+.dn-track{flex:1;height:5px;background:var(--chip);border-radius:3px;overflow:hidden}
+.dn-fill{display:block;height:100%;background:var(--milch);border-radius:3px}
+.dn-fill.ok{background:var(--accent)}
+.togglerow{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:10px}
+.togglerow input{width:18px;height:18px;flex:none}
+.npanel{background:var(--chip);border-radius:12px;padding:11px 13px;margin-bottom:12px;font-size:13px}
+.np-title{font-weight:700;margin-bottom:6px;font-size:12.5px}
+.np-miss-title{font-weight:700;margin:8px 0 3px;font-size:12.5px}
+.np-line{margin:4px 0;line-height:1.35}
+.np-line.ok{color:var(--accent)}
+.np-line.miss b{color:var(--fleisch)}
+.np-ex{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.nutrisum{background:var(--chip);border-radius:10px;padding:9px 11px;font-size:12.5px}
+.ns-lab{display:block;color:var(--muted);font-weight:600;margin-bottom:5px}
+.nutriline{display:flex;flex-wrap:wrap;gap:6px 12px}
+.nutriline span{white-space:nowrap}
+.nutriline b{font-variant-numeric:tabular-nums}
+.stepsbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-top:12px}
+.stepshd{font-weight:700;font-size:13px;margin-bottom:5px}
+.stepstext{font-size:13.5px;line-height:1.5}
+.targets{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tgt{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.tgt input{padding:9px 10px}
+textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
+
 @media(max-width:760px){
   .daybar{display:flex}
   .weekgrid{grid-template-columns:1fr;gap:10px}
@@ -191,6 +228,7 @@ a{color:var(--brand)}
   <!-- WOCHENPLAN -->
   <section class="view active" id="view-plan">
     <div class="viewhead"><h2>Wochenplan</h2><div class="spacer"></div>
+      <button class="btn sm" id="genWeekBtn">✨ Beispielwoche</button>
       <button class="btn sm" id="fillCartBtn">🛒 Woche → Wagen</button>
     </div>
     <div class="daybar" id="dayBar"></div>
@@ -203,6 +241,7 @@ a{color:var(--brand)}
       <button class="btn sm primary" id="newRecipeBtn">＋ Neu</button>
     </div>
     <input class="searchbox" id="recipeSearch" placeholder="Rezept suchen …" autocomplete="off">
+    <div class="chips" id="recipeFilter"></div>
     <div class="list" id="recipeList"></div>
   </section>
 
@@ -233,6 +272,13 @@ a{color:var(--brand)}
         <button class="btn sm ghost" id="disconnectCloudBtn">Trennen</button>
         <button class="btn sm" id="syncNowBtn">🔄 Jetzt synchronisieren</button>
       </div>
+    </div>
+    <div class="divider"></div>
+    <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:10px">
+      <h3 style="font-size:16px">🥗 Nährwert-Ziele pro Person / Tag</h3>
+      <p class="hint" style="margin:0">Richtwerte für die Tagesübersicht und die automatische Beispielwoche.</p>
+      <div class="targets" id="targetsGrid"></div>
+      <button class="btn primary sm" id="saveTargetsBtn" style="align-self:flex-start">Ziele speichern</button>
     </div>
     <div class="divider"></div>
     <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:10px">
@@ -307,6 +353,154 @@ const CATALOG = {
 };
 function cat(name){ return CATALOG[(name||"").trim().toLowerCase()] || "Sonstiges"; }
 
+/* ============================ NUTRITION (v2) ============================ */
+/* Nutrients per 100 g (approx. reference values). kcal + grams. */
+const NUTRI = {
+  "apfel":{kcal:52,protein:0.3,carbs:14,fat:0.2,fiber:2.4},"banane":{kcal:89,protein:1.1,carbs:23,fat:0.3,fiber:2.6},
+  "birne":{kcal:57,protein:0.4,carbs:15,fat:0.1,fiber:3.1},"beeren":{kcal:45,protein:1.0,carbs:10,fat:0.4,fiber:3.0},
+  "trauben":{kcal:69,protein:0.7,carbs:18,fat:0.2,fiber:0.9},"melone oder saisonales obst":{kcal:34,protein:0.8,carbs:8,fat:0.2,fiber:0.9},
+  "zitrone":{kcal:29,protein:1.1,carbs:9,fat:0.3,fiber:2.8},"obst":{kcal:55,protein:0.7,carbs:13,fat:0.2,fiber:2.3},
+  "brokkoli":{kcal:34,protein:2.8,carbs:7,fat:0.4,fiber:2.6},"kartoffeln":{kcal:77,protein:2.0,carbs:17,fat:0.1,fiber:2.2},
+  "karotten":{kcal:41,protein:0.9,carbs:10,fat:0.2,fiber:2.8},"paprika":{kcal:31,protein:1.0,carbs:6,fat:0.3,fiber:2.1},
+  "gurken":{kcal:15,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5},"tomaten":{kcal:20,protein:0.9,carbs:3.9,fat:0.2,fiber:1.2},
+  "zucchini":{kcal:17,protein:1.2,carbs:3.1,fat:0.3,fiber:1.0},"champignons":{kcal:22,protein:3.1,carbs:3.3,fat:0.3,fiber:1.0},
+  "zwiebel":{kcal:40,protein:1.1,carbs:9,fat:0.1,fiber:1.7},"knoblauchzehen":{kcal:149,protein:6.4,carbs:33,fat:0.5,fiber:2.1},
+  "blattspinat":{kcal:23,protein:2.9,carbs:3.6,fat:0.4,fiber:2.2},"salat":{kcal:15,protein:1.4,carbs:2.9,fat:0.2,fiber:1.3},
+  "gemüse nach wahl":{kcal:30,protein:1.5,carbs:5,fat:0.3,fiber:2.0},"gemüse":{kcal:30,protein:1.5,carbs:5,fat:0.3,fiber:2.0},
+  "naturjoghurt":{kcal:61,protein:3.5,carbs:4.7,fat:3.3,fiber:0},"skyr":{kcal:63,protein:11,carbs:4,fat:0.2,fiber:0},
+  "kräuterquark":{kcal:90,protein:12,carbs:3.5,fat:3.5,fiber:0},"frischkäse":{kcal:250,protein:6,carbs:3,fat:24,fiber:0},
+  "feta":{kcal:264,protein:14,carbs:4,fat:21,fiber:0},"mozzarella":{kcal:250,protein:18,carbs:3,fat:18,fiber:0},
+  "käse":{kcal:350,protein:25,carbs:0.5,fat:27,fiber:0},"ricotta":{kcal:174,protein:11,carbs:3,fat:13,fiber:0},
+  "milch":{kcal:64,protein:3.4,carbs:4.8,fat:3.6,fiber:0},
+  "hähnchen":{kcal:165,protein:31,carbs:0,fat:3.6,fiber:0},"hähnchenbrust":{kcal:165,protein:31,carbs:0,fat:3.6,fiber:0},
+  "putenbrustaufschnitt":{kcal:110,protein:18,carbs:2,fat:3,fiber:0},
+  "ei":{kcal:143,protein:13,carbs:1.1,fat:10,fiber:0},"eier":{kcal:143,protein:13,carbs:1.1,fat:10,fiber:0},
+  "haferflocken":{kcal:372,protein:13,carbs:59,fat:7,fiber:10},"vollkornreis":{kcal:360,protein:7.5,carbs:76,fat:2.8,fiber:3.5},
+  "vollkornmehl":{kcal:340,protein:13,carbs:72,fat:2.5,fiber:10},"vollkornnudeln":{kcal:350,protein:14,carbs:64,fat:2.5,fiber:8},
+  "vollkorntoast":{kcal:250,protein:9,carbs:43,fat:3.5,fiber:6},"vollkornbrot":{kcal:240,protein:9,carbs:41,fat:3.4,fiber:7},
+  "vollkornbrötchen":{kcal:250,protein:9,carbs:45,fat:3.5,fiber:6},"lasagneplatten":{kcal:352,protein:13,carbs:70,fat:2,fiber:5},
+  "walnüsse":{kcal:654,protein:15,carbs:14,fat:65,fiber:6.7},"olivenöl":{kcal:884,protein:0,carbs:0,fat:100,fiber:0},
+  "kokosmilch":{kcal:197,protein:2,carbs:3,fat:21,fiber:0},"honig":{kcal:304,protein:0.3,carbs:82,fat:0,fiber:0.2},
+  "zimt":{kcal:247,protein:4,carbs:81,fat:1.2,fiber:53},"gemüsebrühe":{kcal:5,protein:0.2,carbs:0.8,fat:0.1,fiber:0},
+  "mandeln":{kcal:579,protein:21,carbs:22,fat:50,fiber:12.5},"nüsse":{kcal:620,protein:15,carbs:20,fat:55,fiber:8},
+  "hefe":{kcal:105,protein:12,carbs:12,fat:2,fiber:6}
+};
+/* grams represented by 1 of a non-mass unit (per ingredient), + fallbacks per unit */
+const UNIT_G = {"apfel|Stk":125,"banane|Stk":120,"birne|Stk":150,"zitrone|Stk":90,"obst|Portion":125,"brokkoli|Stk":400,
+  "kartoffeln|Stk":100,"karotten|Stk":70,"paprika|Stk":150,"gurken|Stk":300,"tomaten|Stk":90,"zucchini|Stk":250,
+  "zwiebel|Stk":90,"knoblauchzehen|Stk":4,"salat|Stk":200,"ei|Stk":60,"eier|Stk":60,"vollkornbrot|Scheibe":45,
+  "vollkorntoast|Scheibe":30,"vollkornbrötchen|Stk":70,"lasagneplatten|Stk":12,"olivenöl|EL":12,"honig|EL":21,
+  "nüsse|Handvoll":25,"kokosmilch|Dose":400,"hefe|Würfel":42};
+const DEFAULT_UNIT_G = {"Stk":100,"Scheibe":40,"EL":15,"TL":5,"Dose":400,"Würfel":42,"Handvoll":25,"Portion":125,"Prise":0.5,"":0};
+
+const NUTR_KEYS = ["kcal","protein","carbs","fat","fiber"];
+const NUTR_META = {kcal:{label:"Kalorien",short:"kcal",unit:"kcal"},protein:{label:"Eiweiß",short:"Eiweiß",unit:"g"},
+  carbs:{label:"Kohlenhydrate",short:"Kohlenh.",unit:"g"},fat:{label:"Fett",short:"Fett",unit:"g"},fiber:{label:"Ballaststoffe",short:"Ballastst.",unit:"g"}};
+const DEFAULT_TARGETS = {kcal:2000,protein:55,carbs:260,fat:70,fiber:30};
+const EXAMPLE_FOODS = {
+  kcal:"z. B. Haferflocken, Nüsse, Vollkornbrot",protein:"z. B. Skyr, Quark, Hähnchen, Eier, Linsen",
+  carbs:"z. B. Vollkornreis, Kartoffeln, Haferflocken",fat:"z. B. Olivenöl, Nüsse, Käse",
+  fiber:"z. B. Vollkornbrot, Haferflocken, Gemüse, Hülsenfrüchte"};
+
+const MEAL_TYPES = [{id:"fruehstueck",label:"Frühstück"},{id:"mittag",label:"Mittag"},{id:"abend",label:"Abend"},{id:"snack",label:"Snack"}];
+const SLOT_TYPE = {b:"fruehstueck",s1:"snack",l:"mittag",s2:"snack",d:"abend"};
+function mealLabel(t){ const m=MEAL_TYPES.find(x=>x.id===t); return m?m.label:"Snack"; }
+const MEAL_TYPE = {r01:"fruehstueck",r02:"fruehstueck",r03:"fruehstueck",r04:"fruehstueck",r05:"fruehstueck",r06:"fruehstueck",
+  r07:"snack",r08:"snack",r09:"snack",r10:"snack",r11:"snack",r12:"snack",r13:"snack",r14:"snack",r15:"snack",r16:"snack",r17:"snack",r18:"snack",r19:"snack",r20:"snack",
+  r21:"mittag",r22:"mittag",r23:"mittag",r24:"mittag",r25:"mittag",r26:"mittag",r27:"mittag",
+  r28:"abend",r29:"abend",r30:"abend",r31:"abend",r32:"abend",r33:"abend",r34:"abend"};
+const STEPS = {
+  r01:"Haferflocken mit dem Naturjoghurt verrühren. Mit Beeren und gehackten Nüssen toppen.",
+  r02:"Ei ca. 8–10 Min hart kochen, abschrecken und pellen. Brot mit Frischkäse bestreichen, Ei in Scheiben darauflegen, salzen und pfeffern.",
+  r03:"Haferflocken mit Milch (oder Joghurt) übergießen, kurz quellen lassen, klein geschnittenes Obst dazugeben.",
+  r04:"Skyr mit den Haferflocken verrühren, Banane in Scheiben schneiden und untermischen.",
+  r05:"Brot mit Käse und Putenbrust belegen. Gurke und weitere Rohkost dazu reichen.",
+  r06:"Haferflocken über Nacht in Milch und Joghurt einweichen. Am Morgen geriebenen Apfel, Bananenscheiben und Nüsse untermischen, mit Zimt abschmecken.",
+  r07:"Apfel waschen und mit einer Handvoll Mandeln genießen.",r08:"Schälen und genießen.",r09:"Waschen und genießen.",
+  r10:"Paprika und Gurke waschen und in Sticks schneiden.",r11:"Pur genießen oder nach Wunsch leicht süßen.",
+  r12:"Obst waschen, klein schneiden und mischen.",r13:"Beliebiges frisches Obst wählen.",
+  r14:"Gemüse in Sticks schneiden und mit Kräuterquark als Dip servieren.",r15:"Naturjoghurt mit Beeren toppen.",
+  r16:"Trauben waschen – alternativ eine Handvoll Nüsse.",r17:"Waschen und genießen.",r18:"Waschen und genießen.",
+  r19:"Eine Handvoll Nüsse genießen.",r20:"Skyr mit Honig verrühren und mit gehackten Walnüssen bestreuen.",
+  r21:"Reis nach Packungsangabe kochen. Brokkoli 5–7 Min dämpfen. Hähnchen in Olivenöl je Seite 6–8 Min goldbraun braten, salzen und pfeffern. Alles anrichten.",
+  r22:"Kartoffeln waschen, halbieren, mit Öl und Salz bei 200 °C 30–40 Min backen. Mit Kräuterquark und Salat servieren.",
+  r23:"Kartoffeln und Karotten in Scheiben, Brokkoli in Röschen. In eine Form schichten, mit Milch übergießen, mit Käse bestreuen und bei 200 °C ca. 35 Min backen.",
+  r24:"Reis kochen. Zucchini, Paprika und Champignons anbraten, Kokosmilch angießen, 10 Min köcheln lassen und würzen. Mit Reis servieren.",
+  r25:"Mehl mit Hefe, Wasser und Salz zu einem Teig kneten und gehen lassen. Ausrollen, mit passierten Tomaten bestreichen, mit Gemüse und Mozzarella belegen. Bei 220 °C ca. 15 Min backen.",
+  r26:"Kartoffeln als Spalten backen. Geraspeltes Gemüse mit Ei und Haferflocken mischen, würzen, Frikadellen formen und braten. Mit Tzatziki servieren.",
+  r27:"Spinat andünsten und mit Ricotta mischen. Mit Tomatensauce und Lasagneplatten schichten, mit Käse bestreuen und bei 190 °C ca. 35 Min backen.",
+  r28:"Brot mit Frischkäse bestreichen, mit Käse belegen und Rohkost dazu reichen.",
+  r29:"Salat, Tomaten und Gurke schneiden, mit Feta und Dressing anmachen. Brötchen dazu reichen.",
+  r30:"Eier verquirlen, in der Pfanne stocken lassen und würzen. Mit Brot und Rohkost servieren.",
+  r31:"Gemüse in Stücke schneiden, mit Öl und Salz auf einem Blech bei 200 °C 25–30 Min rösten. Mit Kräuterquark servieren.",
+  r32:"Zwiebel andünsten, Karotten und Kartoffeln dazugeben, mit Brühe aufgießen, weich kochen und pürieren. Mit Brot servieren.",
+  r33:"Ei hart kochen. Salat, Tomaten und Gurke schneiden, Ei dazugeben und Brot reichen.",
+  r34:"Brot mit Käse und Frischkäse belegen und Rohkost dazu reichen."
+};
+
+function ingGrams(ing){
+  if(ing.a==null) return 0;
+  const u=ing.u||"";
+  if(u==="g"||u==="ml") return ing.a;
+  const name=(ing.n||"").trim().toLowerCase();
+  const g = (UNIT_G[name+"|"+u]!=null) ? UNIT_G[name+"|"+u]
+          : (DEFAULT_UNIT_G[u]!=null ? DEFAULT_UNIT_G[u] : 100);
+  return ing.a*g;
+}
+function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !NUTRI[ing.n.trim().toLowerCase()]) out.push(ing.n); }); return out; }
+function sanitizeTargets(t){ const o={...DEFAULT_TARGETS}; if(t&&typeof t==="object"&&!Array.isArray(t)) NUTR_KEYS.forEach(k=>{ if(typeof t[k]==="number"&&isFinite(t[k])&&t[k]>0) o[k]=t[k]; }); return o; }
+function ingNutrients(ing){
+  const base=NUTRI[(ing.n||"").trim().toLowerCase()]; if(!base) return null;
+  const f=ingGrams(ing)/100;
+  return {kcal:base.kcal*f,protein:base.protein*f,carbs:base.carbs*f,fat:base.fat*f,fiber:base.fiber*f};
+}
+function zeroNut(){ return {kcal:0,protein:0,carbs:0,fat:0,fiber:0}; }
+function addNut(a,b){ NUTR_KEYS.forEach(k=>a[k]+=(b[k]||0)); return a; }
+function recipeNutrients(r){ const t=zeroNut(); if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ const n=ingNutrients(ing); if(n) addNut(t,n); }); return t; }
+function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; const rid=state.plan[dayId]&&state.plan[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
+function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
+
+/* Auto-generate a nutrient-balanced example week */
+function scoreCandidate(cur,rn,usedCount,tg){
+  let s=0;
+  NUTR_KEYS.forEach(k=>{ const t=tg[k]; if(!t) return;
+    const need=Math.max(0,t-cur[k]);
+    s += Math.min(rn[k],need)/t;                         // reward filling a deficit
+    const over=Math.max(0,(cur[k]+rn[k])-t*1.2)/t;       // penalise big overshoot
+    if(k==="kcal"||k==="fat") s -= over*0.6;
+  });
+  s -= usedCount*0.25;            // encourage variety across the week
+  s += Math.random()*0.05;        // small jitter so each week differs
+  return s;
+}
+function generateWeek(){
+  const tg=targets(), used={};
+  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length);
+  const order=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
+  const np={};
+  DAYS.forEach(d=>{
+    np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
+    const cur=zeroNut();
+    order.forEach(([slot,type])=>{
+      const cands=byType(type); if(!cands.length) return;
+      let best=null,bs=-1e9;
+      cands.forEach(r=>{ const sc=scoreCandidate(cur,recipeNutrients(r),used[r.id]||0,tg); if(sc>bs){bs=sc;best=r;} });
+      if(best){ np[d.id][slot]=best.id; used[best.id]=(used[best.id]||0)+1; addNut(cur,recipeNutrients(best)); }
+    });
+  });
+  state.plan=normalizePlan(np); save(); renderPlan();
+  toast("Beispielwoche erstellt ✨");
+}
+
+function normalizeRecipes(recipes){
+  Object.values(recipes||{}).forEach(r=>{
+    if(!r.mealType) r.mealType=MEAL_TYPE[r.id]||"snack";
+    if(typeof r.steps!=="string") r.steps=STEPS[r.id]||"";
+    if(!Array.isArray(r.ing)) r.ing=[];
+  });
+  return recipes;
+}
+
 /* ---- Seed recipes (amounts per 1 person). i(name,amount,unit) ---- */
 function i(n,a,u){ return {n:n, a:(a===undefined?null:a), u:(u||"")}; }
 const SEED_RECIPES = [
@@ -355,9 +549,9 @@ const SEED_PLAN = {
   so:{b:"r06",s1:"r13",l:"r27",s2:"r20",d:"r34"}
 };
 function seedState(){
-  const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,ing:r.ing.map(x=>({...x}))});
+  const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",ing:r.ing.map(x=>({...x}))});
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
-  return {persons:4, plan, recipes, cart:[]};
+  return {persons:4, targets:{...DEFAULT_TARGETS}, plan, recipes, cart:[]};
 }
 
 /* ============================ STATE ============================ */
@@ -371,7 +565,7 @@ function load(){
   return seedState();
 }
 function normalizePlan(p){ const np={}; DAYS.forEach(d=>{ const src=(p&&p[d.id])||{}; np[d.id]={}; SLOTS.forEach(s=>np[d.id][s.id]=(src[s.id]!=null?src[s.id]:null)); }); return np; }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; s.plan=normalizePlan(s.plan); return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); s.plan=normalizePlan(s.plan); return s; }
 function persistLocal(){ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
 function save(){ persistLocal(); scheduleCloudPush(); }
 
@@ -393,7 +587,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,plan:state.plan,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,plan:state.plan,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -421,8 +615,9 @@ async function cloudPullApply(force){
       if(force || !sameStamp(row.updated_at,remoteStamp)){
         const d=row.data||{};
         if(d.plan) state.plan=normalizePlan(d.plan);
-        if(d.recipes && typeof d.recipes==="object") state.recipes=d.recipes;
+        if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
+        if(d.targets) state.targets=sanitizeTargets(d.targets);
         if(Array.isArray(d.cart)) state.cart=d.cart;
         remoteStamp=row.updated_at; persistLocal(); renderAll();
       }
@@ -455,7 +650,19 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+" <button class='undo'>"+esc(label)+"</button>"; t.classList.add("show"); t.querySelector(".undo").onclick=()=>{ fn(); t.classList.remove("show"); }; clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ============================ RENDER ============================ */
-function renderAll(){ $("#pVal").textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); }
+function renderAll(){ $("#pVal").textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets(); }
+
+function dayNutriEl(dayId){
+  const n=dayNutrients(dayId), t=targets();
+  const wrap=el("div","daynutri");
+  const bars=["protein","carbs","fat","fiber"].map(k=>{
+    const pct=t[k]?Math.min(100,Math.round(n[k]/t[k]*100)):0;
+    const ok=t[k] && n[k]>=t[k]*0.9;
+    return "<div class='dn-b'><span class='dn-lab'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+"' style='width:"+pct+"%'></span></span></div>";
+  }).join("");
+  wrap.innerHTML="<div class='dn-kcal'>≈ "+Math.round(n.kcal)+" kcal <small>/ "+Math.round(t.kcal)+"</small></div><div class='dn-bars'>"+bars+"</div>";
+  return wrap;
+}
 
 function renderPlan(){
   const grid=$("#weekGrid"); grid.innerHTML="";
@@ -466,6 +673,7 @@ function renderPlan(){
     bar.appendChild(b);
     const col=el("div","daycol"+(d.id===uiDay?" showday":""));
     col.appendChild(el("div","dayname",esc(d.name)));
+    col.appendChild(dayNutriEl(d.id));
     SLOTS.forEach(s=>{
       const rid=state.plan[d.id][s.id]; const r=rid?recipe(rid):null;
       const card=el("div","slotcard"+(r?" filled":""));
@@ -479,18 +687,43 @@ function renderPlan(){
   });
 }
 
+let recipeFilter="all";
 function renderRecipes(){
   const q=($("#recipeSearch").value||"").toLowerCase().trim();
+  const fc=$("#recipeFilter");
+  if(fc){ fc.innerHTML=""; [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{
+    const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label));
+    c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); };
+    fc.appendChild(c);
+  }); }
   const list=$("#recipeList"); list.innerHTML="";
-  const rs=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,"de"));
+  let rs=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q));
+  if(recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
+  rs.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   if(!rs.length){ list.appendChild(el("div","empty-state","<div class='big'>📖</div>Keine Rezepte gefunden.")); return; }
   rs.forEach(r=>{
     const row=el("div","rowcard");
+    const kcal=Math.round(recipeNutrients(r).kcal);
     const ingTxt=r.ing.length? r.ing.map(x=>x.n).join(", ") : "Noch keine Zutaten";
-    row.innerHTML="<div class='grow'><div class='title'>"+esc(r.name)+"</div><div class='meta'>"+esc(ingTxt)+"</div></div><span class='tag'>"+r.ing.length+" Zut.</span>";
+    row.innerHTML="<div class='grow'><div class='title'>"+esc(r.name)+"</div><div class='meta'>"+esc(ingTxt)+"</div></div>"+
+      "<div class='rmeta'><span class='tag'>"+esc(mealLabel(r.mealType))+"</span>"+(kcal?"<span class='kcaltag'>"+kcal+" kcal</span>":"")+"</div>";
     row.onclick=()=>openRecipeEdit(r.id);
     list.appendChild(row);
   });
+}
+function renderNutriPanel(container,day,exceptSlot){
+  const n=dayNutrients(day,exceptSlot), t=targets();
+  const covered=[], missing=[];
+  NUTR_KEYS.forEach(k=>{ const pct=t[k]?n[k]/t[k]:1; if(pct>=0.9) covered.push(k); else missing.push({k,gap:Math.max(0,t[k]-n[k])}); });
+  let html="<div class='npanel'><div class='np-title'>Nährstoffe für "+esc(DAYS.find(d=>d.id===day).name)+" – bereits durch andere Mahlzeiten geplant:</div>";
+  html+= covered.length? "<div class='np-line ok'>✓ Ausreichend gedeckt: "+covered.map(k=>esc(NUTR_META[k].label)).join(", ")+"</div>"
+                        : "<div class='np-line'>Für heute ist noch nichts abgedeckt.</div>";
+  if(missing.length){
+    html+="<div class='np-miss-title'>Fehlt für heute noch:</div>";
+    missing.forEach(m=>{ html+="<div class='np-line miss'><b>"+esc(NUTR_META[m.k].label)+"</b> – ca. "+Math.round(m.gap)+" "+NUTR_META[m.k].unit+"<span class='np-ex'>"+esc(EXAMPLE_FOODS[m.k])+"</span></div>"; });
+  } else { html+="<div class='np-line ok'>Klasse – für heute ist ernährungstechnisch alles abgedeckt. 🎉</div>"; }
+  html+="</div>";
+  container.innerHTML=html;
 }
 
 function renderCart(){
@@ -552,29 +785,38 @@ modalBg.addEventListener("click",e=>{ if(e.target===modalBg) closeModal(); });
 /* pick a recipe for a slot */
 function openPicker(day,slot){
   const dn=DAYS.find(d=>d.id===day).name, sn=SLOTS.find(s=>s.id===slot).name;
+  const slotType=SLOT_TYPE[slot]||"snack";
   openModal(
     "<div class='mhead'><h3>"+esc(dn)+" · "+esc(sn)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
-    "<div class='mbody'><input class='searchbox' id='pickSearch' placeholder='Gericht suchen …' autocomplete='off'>"+
+    "<div class='mbody'>"+
+    "<div id='nutriPanel'></div>"+
+    "<input class='searchbox' id='pickSearch' placeholder='Gericht suchen …' autocomplete='off'>"+
+    "<label class='togglerow'><input type='checkbox' id='showAll'> Alle Mahlzeiten zeigen (nicht nur "+esc(mealLabel(slotType))+")</label>"+
     "<div id='pickList'></div>"+
     "<button class='btn block ghost' id='customDish' style='margin-top:6px'>＋ Eigenes Gericht eintragen</button></div>");
   $("#mX").onclick=closeModal;
+  renderNutriPanel($("#nutriPanel"),day,slot);
   const render=()=>{
     const q=($("#pickSearch").value||"").toLowerCase().trim();
     const box=$("#pickList"); box.innerHTML="";
-    const matches=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q))
-      .sort((a,b)=>a.name.localeCompare(b.name,"de"));
-    if(!matches.length){ box.appendChild(el("div","hint","Kein Rezept gefunden – unten »Eigenes Gericht eintragen« übernimmt deine Eingabe.")); }
+    let matches=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q));
+    if(!$("#showAll").checked) matches=matches.filter(r=>(r.mealType||"snack")===slotType);
+    matches.sort((a,b)=>a.name.localeCompare(b.name,"de"));
+    if(!matches.length){ box.appendChild(el("div","hint","Kein passendes Rezept – Haken bei »Alle Mahlzeiten« setzen oder unten ein eigenes Gericht eintragen.")); }
     matches.forEach(r=>{
-        const b=el("button","pickitem","<span>"+esc(r.name)+"</span><small>"+r.ing.length+" Zut.</small>");
+        const kcal=Math.round(recipeNutrients(r).kcal);
+        const b=el("button","pickitem","<span>"+esc(r.name)+"</span><small>"+(kcal?kcal+" kcal":r.ing.length+" Zut.")+"</small>");
         b.onclick=()=>{ state.plan[day][slot]=r.id; save(); closeModal(); renderPlan(); };
         box.appendChild(b);
       });
   };
-  $("#pickSearch").addEventListener("input",render); render();
+  $("#pickSearch").addEventListener("input",render);
+  $("#showAll").addEventListener("change",render);
+  render();
   $("#customDish").onclick=()=>{
     const nm=($("#pickSearch").value||"").trim();
     if(!nm){ $("#pickSearch").focus(); toast("Namen oben eingeben"); return; }
-    const id=newId(); state.recipes[id]={id,name:nm,ing:[]}; state.plan[day][slot]=id; save(); closeModal(); renderPlan(); renderRecipes();
+    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; state.plan[day][slot]=id; save(); closeModal(); renderPlan(); renderRecipes();
     toast("Gericht angelegt");
   };
 }
@@ -586,10 +828,18 @@ function openSlotMenu(day,slot){
   const rows=r.ing.length? r.ing.map((ing,ix)=>
     "<label class='ing-check on' data-ix='"+ix+"'><span class='cb'>✓</span><span class='ig'>"+esc(ing.n)+"</span><span class='camt'>"+esc(amtLabel(ing.a==null?null:ing.a*state.persons,ing.u))+"</span></label>"
   ).join("") : "<p class='hint'>Für dieses Gericht sind noch keine Zutaten hinterlegt. Du kannst sie unter »Rezept bearbeiten« ergänzen.</p>";
+  const rn=recipeNutrients(r);
+  const unk=recipeUnknownIngredients(r);
+  const nutriSum = r.ing.length? "<div class='nutrisum'><span class='ns-lab'>Nährwerte pro Person"+(unk.length?" – unvollständig":"")+"</span><div class='nutriline'>"+
+    NUTR_KEYS.map(k=>"<span><b>"+Math.round(rn[k])+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+"</div>"+
+    (unk.length?"<div class='np-ex' style='margin-top:5px'>⚠︎ Ohne Nährwertdaten (nicht mitgezählt): "+esc(unk.join(", "))+"</div>":"")+"</div>" : "";
+  const stepsBlock = r.steps? "<div class='stepsbox'><div class='stepshd'>👩‍🍳 Zubereitung</div><div class='stepstext'>"+esc(r.steps).replace(/\n/g,"<br>")+"</div></div>" : "";
   openModal(
     "<div class='mhead'><h3>"+esc(r.name)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
-    "<div class='mbody'><div class='hint'>"+esc(dn)+" · "+esc(sn)+" — Mengen für "+state.persons+" Person(en). Zutaten abwählen, die du schon hast:</div>"+
+    "<div class='mbody'><div class='hint'>"+esc(dn)+" · "+esc(sn)+" · "+esc(mealLabel(r.mealType))+" — Mengen für "+state.persons+" Person(en). Zutaten abwählen, die du schon hast:</div>"+
     rows+
+    nutriSum+
+    stepsBlock+
     "<div class='btnrow' style='margin-top:14px'><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='editDish'>Rezept bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
     (r.ing.length?"<div class='mfoot'><button class='btn primary block' id='toCart'>🛒 Ausgewählte in den Einkaufswagen</button></div>":"")
   );
@@ -615,28 +865,36 @@ function openRecipeEdit(id){
     "<select class='unit'>"+unitOpts(ing.u)+"</select>"+
     "<input class='nm' list='ingCatalog' placeholder='Zutat' value='"+esc(ing.n)+"'>"+
     "<button class='del' aria-label='entfernen'>✕</button></div>";
+  const typeOpts=MEAL_TYPES.map(m=>"<option value='"+m.id+"'"+((r.mealType||"snack")===m.id?" selected":"")+">"+esc(m.label)+"</option>").join("");
   openModal(
     "<div class='mhead'><h3>Rezept</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div class='field'><label>Name</label><input class='input' id='rName' value='"+esc(r.name)+"'></div>"+
+    "<div class='field'><label>Kategorie (Mahlzeit)</label><select class='input' id='rType'>"+typeOpts+"</select></div>"+
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
     "<div id='ingList' style='margin-top:6px'>"+r.ing.map(ingRow).join("")+"</div>"+
     "<datalist id='ingCatalog'>"+Object.keys(CATALOG).map(k=>"<option value='"+esc(k.charAt(0).toUpperCase()+k.slice(1))+"'>").join("")+"</datalist>"+
     "<button class='btn sm ghost' id='addIng' style='margin-top:4px'>＋ Zutat</button>"+
+    "<div class='nutrisum' id='rNutri' style='margin-top:14px'></div>"+
+    "<div class='field' style='margin-top:12px'><label>Zubereitung</label><textarea class='input' id='rSteps' rows='5' placeholder='Zubereitungsschritte (eine Zeile pro Schritt) …'>"+esc(r.steps||"")+"</textarea></div>"+
     "</div>"+
     "<div class='mfoot'><button class='btn ghost' id='delRecipe'>Löschen</button><div style='flex:1'></div><button class='btn primary' id='saveRecipe'>Speichern</button></div>");
   $("#mX").onclick=closeModal;
   const ingList=$("#ingList");
-  const bind=(row)=>{ row.querySelector(".del").onclick=()=>row.remove(); };
+  const readRows=()=>$$(".ingrow",ingList).map(row=>{ const n=row.querySelector(".nm").value.trim(); if(!n) return null; return {n,a:parseNum(row.querySelector(".amt").value),u:row.querySelector(".unit").value}; }).filter(Boolean);
+  const updateNutri=()=>{ const rows=readRows(); const rn=recipeNutrients({ing:rows});
+    const unk=rows.filter(x=>x.a!=null && x.n && !NUTRI[x.n.trim().toLowerCase()]).map(x=>x.n);
+    $("#rNutri").innerHTML="<span class='ns-lab'>Nährwerte pro Person (berechnet)"+(unk.length?" – unvollständig":"")+"</span><div class='nutriline'>"+
+      NUTR_KEYS.map(k=>"<span><b>"+Math.round(rn[k])+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+"</div>"+
+      (unk.length?"<div class='np-ex' style='margin-top:5px'>⚠︎ Ohne Nährwertdaten (nicht mitgezählt): "+esc(unk.join(", "))+"</div>":""); };
+  const bind=(row)=>{ row.querySelector(".del").onclick=()=>{row.remove();updateNutri();}; row.querySelectorAll("input,select").forEach(inp=>inp.addEventListener("input",updateNutri)); };
   $$(".ingrow",ingList).forEach(bind);
+  updateNutri();
   $("#addIng").onclick=()=>{ const d=el("div"); d.innerHTML=ingRow({n:"",a:null,u:"g"}); const row=d.firstChild; ingList.appendChild(row); bind(row); row.querySelector(".nm").focus(); };
   $("#saveRecipe").onclick=()=>{
     const nm=$("#rName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
-    const ings=$$(".ingrow",ingList).map(row=>{
-      const n=row.querySelector(".nm").value.trim(); if(!n) return null;
-      return {n, a:parseNum(row.querySelector(".amt").value), u:row.querySelector(".unit").value};
-    }).filter(Boolean);
-    r.name=nm; r.ing=ings; save(); closeModal(); renderRecipes(); renderPlan();
+    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows();
+    save(); closeModal(); renderRecipes(); renderPlan();
     toast("Rezept gespeichert");
   };
   $("#delRecipe").onclick=()=>{
@@ -683,9 +941,22 @@ $("#pMinus").onclick=()=>setPersons(state.persons-1);
 $("#pPlus").onclick=()=>setPersons(state.persons+1);
 
 $("#fillCartBtn").onclick=fillCartFromWeek;
+$("#genWeekBtn").onclick=()=>{ if(confirm("Automatische Beispielwoche erstellen? Der aktuelle Wochenplan wird ersetzt (deine Rezepte bleiben erhalten).")) generateWeek(); };
 $("#recipeSearch").addEventListener("input",renderRecipes);
-function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
+function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",mealType:"snack",steps:"",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
 $("#newRecipeBtn").onclick=createRecipe;
+
+function renderTargets(){
+  const g=$("#targetsGrid"); if(!g) return;
+  if(document.activeElement && document.activeElement.closest && document.activeElement.closest("#targetsGrid")) return; // don't clobber in-progress typing
+  const t=targets();
+  g.innerHTML=NUTR_KEYS.map(k=>"<label class='tgt'><span>"+esc(NUTR_META[k].label)+" ("+NUTR_META[k].unit+")</span><input class='input' data-k='"+k+"' inputmode='numeric' value='"+esc(t[k]||0)+"'></label>").join("");
+}
+$("#saveTargetsBtn").onclick=()=>{
+  const t=Object.assign({},targets());
+  $$("#targetsGrid input").forEach(inp=>{ const v=parseNum(inp.value); if(v!=null&&v>0) t[inp.dataset.k]=v; });
+  state.targets=t; save(); renderPlan(); renderTargets(); toast("Ziele gespeichert");
+};
 
 $("#copyCartBtn").onclick=copyCart;
 $("#shareCartBtn").onclick=shareCart;
