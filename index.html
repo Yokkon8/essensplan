@@ -613,6 +613,23 @@ const PROFILES = [
   {id:"abnehmen", label:"Abnehmen", emoji:"🔥", desc:"Weniger Kalorien, viel Eiweiß & Gemüse", targets:{kcal:1500,protein:110,carbs:120,fat:50,fiber:32}}
 ];
 function profile(id){ return PROFILES.find(p=>p.id===id)||PROFILES[0]; }
+/* personalized daily targets from body weight + goal rate (≈7700 kcal per kg).
+   Falls back to the profile's fixed targets when no current weight is entered. */
+function computeTargets(profileId){
+  const prof=profile(profileId), w=state.currentWeight;
+  if(!(typeof w==="number" && w>0)) return {...prof.targets};
+  const maint=w*32;                                  // rough maintenance kcal/day (~32 kcal/kg)
+  let kcal, ppk;
+  if(profileId==="abnehmen"){ kcal=maint-(state.loseKgPerWeek||0.5)*7700/7; ppk=2.0; }
+  else if(profileId==="muskelaufbau"){ kcal=maint+(state.gainKgPerWeek||0.25)*7700/7; ppk=1.9; }
+  else { kcal=maint; ppk=1.4; }
+  kcal=Math.max(1200, Math.round(kcal/10)*10);
+  const protein=Math.round(w*ppk);
+  const fat=Math.round(kcal*0.28/9);                 // ~28 % of kcal from fat
+  const carbs=Math.max(0, Math.round((kcal - protein*4 - fat*9)/4));
+  const fiber=Math.max(25, Math.round(kcal/1000*14));
+  return {kcal, protein, carbs, fat, fiber};
+}
 /* optional per-recipe goal tags by id (recipes may also carry goals inline) */
 let RECIPE_GOALS={};
 
@@ -733,7 +750,7 @@ function fillDay(order,tg,profId,used,byType,vegOnlyFn){
   return {picks,nut:cur};
 }
 function generateWeek(profileId){
-  const prof=profile(profileId); const tg=prof.targets; const used={};
+  const prof=profile(profileId); const tg=computeTargets(prof.id); const used={};
   const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
   const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
@@ -761,16 +778,35 @@ function generateWeek(profileId){
 }
 function openWeekChooser(){
   const MEAT=[{v:-1,l:"Egal"},{v:0,l:"🌱 Vegetarisch"},{v:1,l:"1 Tag"},{v:2,l:"2 Tage"},{v:3,l:"3 Tage"},{v:4,l:"4 Tage"},{v:5,l:"5 Tage"},{v:6,l:"6 Tage"},{v:7,l:"7 Tage"}];
+  const RATES={abnehmen:{key:"loseKgPerWeek",label:"pro Woche abnehmen",opts:[0.25,0.5,0.75,1]},muskelaufbau:{key:"gainKgPerWeek",label:"pro Woche zunehmen",opts:[0.125,0.25,0.5]}};
+  const numV=(v)=>(typeof v==="number"&&v>0)?fmtNum(v):"";
+  const card=(p)=>{ const r=RATES[p.id];
+    const raterow=r?"<div class='raterow'>"+esc(r.label)+": "+r.opts.map(v=>"<button class='chip mini rate' data-key='"+r.key+"' data-val='"+v+"'>"+fmtNum(v)+" kg</button>").join("")+"</div>":"";
+    return "<div class='profwrap'>"+raterow+"<button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal' id='pkcal-"+p.id+"'></span></button></div>"; };
   openModal("<div class='mhead'><h3>🎯 Wochenplan erstellen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
+    "<div class='wrow'>"+
+      "<label class='wfield'><span>Aktuelles Gewicht</span><span class='winput'><input class='input' id='wCur' inputmode='decimal' placeholder='z. B. 75' value='"+esc(numV(state.currentWeight))+"'><small>kg</small></span></label>"+
+      "<label class='wfield'><span>Zielgewicht (optional)</span><span class='winput'><input class='input' id='wTgt' inputmode='decimal' placeholder='z. B. 70' value='"+esc(numV(state.targetWeight))+"'><small>kg</small></span></label>"+
+    "</div>"+
     "<div class='chooser-lbl'>🍗 An wie vielen Tagen pro Woche Fleisch/Fisch?</div><div class='chips' id='meatChips'></div>"+
     "<button class='btn block ghost' id='foodPrefBtn' style='margin:4px 0 14px'>🚫 Lebensmittel abwählen / Ersatz wählen</button>"+
-    "<p class='hint'>Wähle ein Ziel – die Woche wird automatisch so zusammengestellt, dass die kcal- und Nährstoff-Ziele möglichst genau getroffen werden. Der aktuelle Wochenplan wird ersetzt und die Nährwert-Ziele auf das gewählte Ziel gesetzt"+(state.cheatDay?"; der Cheat-Day bleibt frei":"")+".</p>"+
-    PROFILES.map(p=>"<button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal'>"+p.targets.kcal+"<small>kcal/Tag</small></span></button>").join("")+
+    "<p class='hint' id='chooserHint'></p>"+
+    PROFILES.map(card).join("")+
     "</div>");
   $("#mX").onclick=closeModal;
+  const updateComputed=()=>{
+    const wSet=typeof state.currentWeight==="number"&&state.currentWeight>0;
+    PROFILES.forEach(p=>{ const tg=computeTargets(p.id); const e=$("#pkcal-"+p.id); if(e) e.innerHTML=tg.kcal+"<small>kcal · "+tg.protein+"g Eiweiß</small>"; });
+    $$(".rate").forEach(b=>b.classList.toggle("active", state[b.dataset.key]===parseFloat(b.dataset.val)));
+    const h=$("#chooserHint"); if(h) h.textContent= wSet? "Die kcal-/Nährstoff-Ziele werden aus deinem Gewicht berechnet (Richtwert). Der Wochenplan wird ersetzt." : "Tipp: Gib dein Gewicht ein – dann werden die Ziele persönlich berechnet. Der Wochenplan wird ersetzt.";
+  };
   const renderMeat=()=>{ const mc=$("#meatChips"); mc.innerHTML=""; MEAT.forEach(m=>{ const c=el("button","chip"+(state.meatPerWeek===m.v?" active":""),esc(m.l)); c.onclick=()=>{ state.meatPerWeek=m.v; save(); renderMeat(); }; mc.appendChild(c); }); };
   renderMeat();
+  $("#wCur").oninput=(e)=>{ const v=parseNum(e.target.value); state.currentWeight=(v&&v>0)?v:null; save(); updateComputed(); };
+  $("#wTgt").oninput=(e)=>{ const v=parseNum(e.target.value); state.targetWeight=(v&&v>0)?v:null; save(); updateComputed(); };
+  $$(".rate").forEach(b=>b.onclick=()=>{ state[b.dataset.key]=parseFloat(b.dataset.val); save(); updateComputed(); });
+  updateComputed();
   $$(".profcard").forEach(b=>b.onclick=()=>{ closeModal(); generateWeek(b.dataset.p); switchView("plan"); });
   $("#foodPrefBtn").onclick=()=>{ closeModal(); openFoodSelect(); };
 }
@@ -883,6 +919,7 @@ function seedState(){
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
   return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1,
+    currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
     weeks:{"1":plan,"2":emptyPlan(),"3":emptyPlan(),"4":emptyPlan()}, weekDone:{"1":{},"2":{},"3":{},"4":{}}, weekProfile:{"1":null,"2":null,"3":null,"4":null}, weekAnchor:currentMondayStr(), recipes, cart:[]};
 }
 
@@ -896,7 +933,7 @@ let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
 function PLAN(){ return state.weeks[uiWeek]; }
 function DONE(){ return state.weekDone[uiWeek]; }
 function weekProfile(){ return state.weekProfile? state.weekProfile[uiWeek] : null; }
-function setActiveWeek(w){ uiWeek=(WEEK_KEYS.indexOf(w)>=0)?w:"1"; localStorage.setItem("foodies_week",uiWeek); const pf=state&&state.weekProfile&&state.weekProfile[uiWeek]; if(pf&&PROFILES.some(p=>p.id===pf)) state.targets={...profile(pf).targets}; }
+function setActiveWeek(w){ uiWeek=(WEEK_KEYS.indexOf(w)>=0)?w:"1"; localStorage.setItem("foodies_week",uiWeek); const pf=state&&state.weekProfile&&state.weekProfile[uiWeek]; if(pf&&PROFILES.some(p=>p.id===pf)) state.targets={...computeTargets(pf)}; }
 let saveTimer=null, remoteStamp=null, polling=null, pendingPush=false;
 
 function load(){
@@ -937,7 +974,7 @@ function rollWeeks(st){
   for(let w=1;w<=4;w++){ const src=w+k; st.weeks[""+w]=(src<=4)?ow[""+src]:emptyPlan(); st.weekDone[""+w]=(src<=4)?od[""+src]:{}; st.weekProfile[""+w]=(src<=4)?op[""+src]:null; }
   st.weekAnchor=cur;
 }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; if(typeof s.weekAnchor!=="string") s.weekAnchor=currentMondayStr(); rollWeeks(s); delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; if(typeof s.weekAnchor!=="string") s.weekAnchor=currentMondayStr(); rollWeeks(s); delete s.plan; delete s.done; return s; }
 function persistLocal(){ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
 function save(){ persistLocal(); scheduleCloudPush(); }
 
@@ -959,7 +996,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekAnchor:state.weekAnchor,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekAnchor:state.weekAnchor,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -992,6 +1029,10 @@ async function cloudPullApply(force){
         if(d.targets) state.targets=sanitizeTargets(d.targets);
         if(d.disabledFoods && typeof d.disabledFoods==="object" && !Array.isArray(d.disabledFoods)) state.disabledFoods=d.disabledFoods;
         if(typeof d.meatPerWeek==="number") state.meatPerWeek=d.meatPerWeek;
+        if(typeof d.currentWeight==="number"||d.currentWeight===null) state.currentWeight=d.currentWeight;
+        if(typeof d.targetWeight==="number"||d.targetWeight===null) state.targetWeight=d.targetWeight;
+        if(typeof d.loseKgPerWeek==="number"&&d.loseKgPerWeek>0) state.loseKgPerWeek=d.loseKgPerWeek;
+        if(typeof d.gainKgPerWeek==="number"&&d.gainKgPerWeek>0) state.gainKgPerWeek=d.gainKgPerWeek;
         if(d.substitutions && typeof d.substitutions==="object" && !Array.isArray(d.substitutions)) state.substitutions=d.substitutions;
         state.cheatDay=(typeof d.cheatDay==="string"&&DAYS.some(x=>x.id===d.cheatDay))?d.cheatDay:null;
         if(Array.isArray(d.cart)) state.cart=d.cart;
