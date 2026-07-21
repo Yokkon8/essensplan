@@ -20,6 +20,7 @@
   --radius:16px; --radius-sm:10px;
   --obst:#e8623a; --gemuese:#3f8f6b; --milch:#c9962b; --fleisch:#c0533f;
   --eier:#d8a53a; --getreide:#9a7b4f; --sonstiges:#6f7b86;
+  --fisch:#4a90c2; --huelsen:#a9772f; --nuss:#8a6d3b; --fette:#b8922e;
 }
 @media (prefers-color-scheme: dark){
   :root{ --bg:#181513; --card:#221e1b; --ink:#f0ece6; --muted:#a49a8e; --line:#332d28;
@@ -191,6 +192,28 @@ a{color:var(--brand)}
 .tgt input{padding:9px 10px}
 textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 
+/* v3: goals, cheat-day, food selection, deficit suggestions */
+.btn.ghost.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.daybar button.cheatday{border-color:var(--milch)}
+.daynutri.cheat{background:linear-gradient(90deg,rgba(201,150,43,.14),rgba(232,98,58,.10));border-color:var(--milch)}
+.dn-cheat{font-weight:700;font-size:12.5px;color:var(--milch);text-align:center}
+.profcard{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);color:var(--ink)}
+.profcard .pemoji{font-size:28px;flex:none}
+.profcard .grow{flex:1;min-width:0;display:flex;flex-direction:column}
+.profcard b{font-size:15px} .profcard small{color:var(--muted);font-size:12.5px}
+.profcard .pkcal{font-weight:800;color:var(--brand);text-align:right;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;line-height:1.1}
+.profcard .pkcal small{font-weight:500;color:var(--muted);font-size:10px}
+.recchip{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:5px 11px;margin:4px 5px 0 0;font-size:12.5px;font-weight:600;cursor:pointer}
+.np-recs{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
+.catgroup-h{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:14px 2px 6px}
+.catgroup-h .cdot{width:10px;height:10px;border-radius:50%}
+.foodrow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:6px;cursor:pointer}
+.foodrow .fcb{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:var(--bg);flex:none;display:grid;place-items:center;color:#fff;font-size:14px}
+.foodrow.on .fcb{background:var(--accent);border-color:var(--accent)}
+.foodrow:not(.on){opacity:.55}
+.foodrow .grow{flex:1;font-weight:500}
+.foodrow .fkcal{font-size:11.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
 @media(max-width:760px){
   .daybar{display:flex}
   .weekgrid{grid-template-columns:1fr;gap:10px}
@@ -228,6 +251,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
   <!-- WOCHENPLAN -->
   <section class="view active" id="view-plan">
     <div class="viewhead"><h2>Wochenplan</h2><div class="spacer"></div>
+      <button class="btn sm ghost" id="nutriToggle" title="Nährwerte ein-/ausklappen">📊</button>
       <button class="btn sm" id="genWeekBtn">✨ Beispielwoche</button>
       <button class="btn sm" id="fillCartBtn">🛒 Woche → Wagen</button>
     </div>
@@ -281,6 +305,16 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
       <button class="btn primary sm" id="saveTargetsBtn" style="align-self:flex-start">Ziele speichern</button>
     </div>
     <div class="divider"></div>
+    <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:12px">
+      <h3 style="font-size:16px">🍽️ Lebensmittel & Cheat-Day</h3>
+      <button class="btn sm" id="foodSelectBtn" style="align-self:flex-start">🥗 Lebensmittel-Auswahl öffnen</button>
+      <p class="hint" style="margin:0">Wähle, welche Lebensmittel in Beispielwochen und Vorschlägen berücksichtigt werden.</p>
+      <div class="field" style="margin:0"><label>Cheat-Day (optional)</label>
+        <select class="input" id="cheatDaySel"><option value="">Keiner</option></select>
+        <p class="hint" style="margin:6px 0 0">An diesem Tag gibt es keine Nährstoff-Vorgaben – iss, worauf du Lust hast. 🍕</p>
+      </div>
+    </div>
+    <div class="divider"></div>
     <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:10px">
       <h3 style="font-size:16px">💾 Daten</h3>
       <div class="btnrow">
@@ -327,70 +361,214 @@ const SLOTS = [
 const CATS = [
   {id:"Obst",emoji:"🍎",v:"--obst"},{id:"Gemüse",emoji:"🥦",v:"--gemuese"},
   {id:"Milchprodukte",emoji:"🧀",v:"--milch"},{id:"Fleisch",emoji:"🍗",v:"--fleisch"},
-  {id:"Eier",emoji:"🥚",v:"--eier"},{id:"Getreide",emoji:"🌾",v:"--getreide"},
+  {id:"Fisch",emoji:"🐟",v:"--fisch"},{id:"Eier",emoji:"🥚",v:"--eier"},
+  {id:"Getreide",emoji:"🌾",v:"--getreide"},{id:"Hülsenfrüchte",emoji:"🫘",v:"--huelsen"},
+  {id:"Nüsse & Samen",emoji:"🥜",v:"--nuss"},{id:"Fette",emoji:"🫒",v:"--fette"},
   {id:"Sonstiges",emoji:"🛒",v:"--sonstiges"}
 ];
-const UNITS = ["g","ml","Stk","Scheibe","EL","TL","Prise","Handvoll","Dose","Würfel","Portion",""];
+const UNITS = ["g","ml","Stk","Scheibe","EL","TL","Prise","Handvoll","Dose","Würfel","Portion","Zehe","Stück","Kugel",""];
 
-/* ingredient -> category catalog (from Einkaufsliste sheet) */
-const CATALOG = {
-  "apfel":"Obst","banane":"Obst","birne":"Obst","beeren":"Obst","trauben":"Obst",
-  "melone oder saisonales obst":"Obst","zitrone":"Obst","obst":"Obst",
-  "brokkoli":"Gemüse","kartoffeln":"Gemüse","karotten":"Gemüse","paprika":"Gemüse",
-  "gurken":"Gemüse","tomaten":"Gemüse","zucchini":"Gemüse","champignons":"Gemüse",
-  "zwiebel":"Gemüse","knoblauchzehen":"Gemüse","blattspinat":"Gemüse","salat":"Gemüse",
-  "gemüse nach wahl":"Gemüse","gemüse":"Gemüse",
-  "naturjoghurt":"Milchprodukte","skyr":"Milchprodukte","kräuterquark":"Milchprodukte",
-  "frischkäse":"Milchprodukte","feta":"Milchprodukte","mozzarella":"Milchprodukte",
-  "käse":"Milchprodukte","ricotta":"Milchprodukte","milch":"Milchprodukte",
-  "hähnchen":"Fleisch","hähnchenbrust":"Fleisch","putenbrustaufschnitt":"Fleisch",
-  "ei":"Eier","eier":"Eier",
-  "haferflocken":"Getreide","vollkornreis":"Getreide","vollkornmehl":"Getreide",
-  "vollkornnudeln":"Getreide","vollkorntoast":"Getreide","vollkornbrot":"Getreide",
-  "vollkornbrötchen":"Getreide","lasagneplatten":"Getreide",
-  "walnüsse":"Sonstiges","olivenöl":"Sonstiges","kokosmilch":"Sonstiges","honig":"Sonstiges",
-  "zimt":"Sonstiges","gemüsebrühe":"Sonstiges","mandeln":"Sonstiges","nüsse":"Sonstiges","hefe":"Sonstiges"
-};
-function cat(name){ return CATALOG[(name||"").trim().toLowerCase()] || "Sonstiges"; }
+/* category / nutrients / unit weights are all derived from FOOD_DB (v3, see below) */
 
-/* ============================ NUTRITION (v2) ============================ */
-/* Nutrients per 100 g (approx. reference values). kcal + grams. */
-const NUTRI = {
-  "apfel":{kcal:52,protein:0.3,carbs:14,fat:0.2,fiber:2.4},"banane":{kcal:89,protein:1.1,carbs:23,fat:0.3,fiber:2.6},
-  "birne":{kcal:57,protein:0.4,carbs:15,fat:0.1,fiber:3.1},"beeren":{kcal:45,protein:1.0,carbs:10,fat:0.4,fiber:3.0},
-  "trauben":{kcal:69,protein:0.7,carbs:18,fat:0.2,fiber:0.9},"melone oder saisonales obst":{kcal:34,protein:0.8,carbs:8,fat:0.2,fiber:0.9},
-  "zitrone":{kcal:29,protein:1.1,carbs:9,fat:0.3,fiber:2.8},"obst":{kcal:55,protein:0.7,carbs:13,fat:0.2,fiber:2.3},
-  "brokkoli":{kcal:34,protein:2.8,carbs:7,fat:0.4,fiber:2.6},"kartoffeln":{kcal:77,protein:2.0,carbs:17,fat:0.1,fiber:2.2},
-  "karotten":{kcal:41,protein:0.9,carbs:10,fat:0.2,fiber:2.8},"paprika":{kcal:31,protein:1.0,carbs:6,fat:0.3,fiber:2.1},
-  "gurken":{kcal:15,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5},"tomaten":{kcal:20,protein:0.9,carbs:3.9,fat:0.2,fiber:1.2},
-  "zucchini":{kcal:17,protein:1.2,carbs:3.1,fat:0.3,fiber:1.0},"champignons":{kcal:22,protein:3.1,carbs:3.3,fat:0.3,fiber:1.0},
-  "zwiebel":{kcal:40,protein:1.1,carbs:9,fat:0.1,fiber:1.7},"knoblauchzehen":{kcal:149,protein:6.4,carbs:33,fat:0.5,fiber:2.1},
-  "blattspinat":{kcal:23,protein:2.9,carbs:3.6,fat:0.4,fiber:2.2},"salat":{kcal:15,protein:1.4,carbs:2.9,fat:0.2,fiber:1.3},
-  "gemüse nach wahl":{kcal:30,protein:1.5,carbs:5,fat:0.3,fiber:2.0},"gemüse":{kcal:30,protein:1.5,carbs:5,fat:0.3,fiber:2.0},
-  "naturjoghurt":{kcal:61,protein:3.5,carbs:4.7,fat:3.3,fiber:0},"skyr":{kcal:63,protein:11,carbs:4,fat:0.2,fiber:0},
-  "kräuterquark":{kcal:90,protein:12,carbs:3.5,fat:3.5,fiber:0},"frischkäse":{kcal:250,protein:6,carbs:3,fat:24,fiber:0},
-  "feta":{kcal:264,protein:14,carbs:4,fat:21,fiber:0},"mozzarella":{kcal:250,protein:18,carbs:3,fat:18,fiber:0},
-  "käse":{kcal:350,protein:25,carbs:0.5,fat:27,fiber:0},"ricotta":{kcal:174,protein:11,carbs:3,fat:13,fiber:0},
-  "milch":{kcal:64,protein:3.4,carbs:4.8,fat:3.6,fiber:0},
-  "hähnchen":{kcal:165,protein:31,carbs:0,fat:3.6,fiber:0},"hähnchenbrust":{kcal:165,protein:31,carbs:0,fat:3.6,fiber:0},
-  "putenbrustaufschnitt":{kcal:110,protein:18,carbs:2,fat:3,fiber:0},
-  "ei":{kcal:143,protein:13,carbs:1.1,fat:10,fiber:0},"eier":{kcal:143,protein:13,carbs:1.1,fat:10,fiber:0},
-  "haferflocken":{kcal:372,protein:13,carbs:59,fat:7,fiber:10},"vollkornreis":{kcal:360,protein:7.5,carbs:76,fat:2.8,fiber:3.5},
-  "vollkornmehl":{kcal:340,protein:13,carbs:72,fat:2.5,fiber:10},"vollkornnudeln":{kcal:350,protein:14,carbs:64,fat:2.5,fiber:8},
-  "vollkorntoast":{kcal:250,protein:9,carbs:43,fat:3.5,fiber:6},"vollkornbrot":{kcal:240,protein:9,carbs:41,fat:3.4,fiber:7},
-  "vollkornbrötchen":{kcal:250,protein:9,carbs:45,fat:3.5,fiber:6},"lasagneplatten":{kcal:352,protein:13,carbs:70,fat:2,fiber:5},
-  "walnüsse":{kcal:654,protein:15,carbs:14,fat:65,fiber:6.7},"olivenöl":{kcal:884,protein:0,carbs:0,fat:100,fiber:0},
-  "kokosmilch":{kcal:197,protein:2,carbs:3,fat:21,fiber:0},"honig":{kcal:304,protein:0.3,carbs:82,fat:0,fiber:0.2},
-  "zimt":{kcal:247,protein:4,carbs:81,fat:1.2,fiber:53},"gemüsebrühe":{kcal:5,protein:0.2,carbs:0.8,fat:0.1,fiber:0},
-  "mandeln":{kcal:579,protein:21,carbs:22,fat:50,fiber:12.5},"nüsse":{kcal:620,protein:15,carbs:20,fat:55,fiber:8},
-  "hefe":{kcal:105,protein:12,carbs:12,fat:2,fiber:6}
-};
-/* grams represented by 1 of a non-mass unit (per ingredient), + fallbacks per unit */
-const UNIT_G = {"apfel|Stk":125,"banane|Stk":120,"birne|Stk":150,"zitrone|Stk":90,"obst|Portion":125,"brokkoli|Stk":400,
-  "kartoffeln|Stk":100,"karotten|Stk":70,"paprika|Stk":150,"gurken|Stk":300,"tomaten|Stk":90,"zucchini|Stk":250,
-  "zwiebel|Stk":90,"knoblauchzehen|Stk":4,"salat|Stk":200,"ei|Stk":60,"eier|Stk":60,"vollkornbrot|Scheibe":45,
-  "vollkorntoast|Scheibe":30,"vollkornbrötchen|Stk":70,"lasagneplatten|Stk":12,"olivenöl|EL":12,"honig|EL":21,
-  "nüsse|Handvoll":25,"kokosmilch|Dose":400,"hefe|Würfel":42};
+/* ============================ FOODS + NUTRITION (v3) ============================ */
+/* v3 food database (per 100 g/ml). k=key l=label c=category kc/p/cb/ft/fb=nutrients pu/pg=piece unit+grams h=healthy */
+const FOOD_DB = [
+{k:"apfel",l:"Apfel",c:"Obst",kc:52,p:0.3,cb:14,ft:0.2,fb:2.4,pu:"Stk",pg:130,h:1},
+{k:"banane",l:"Banane",c:"Obst",kc:89,p:1.1,cb:23,ft:0.3,fb:2.6,pu:"Stk",pg:120,h:1},
+{k:"beeren",l:"Beeren",c:"Obst",kc:45,p:1,cb:8,ft:0.4,fb:3.5,pu:"",pg:0,h:1},
+{k:"orange",l:"Orange",c:"Obst",kc:47,p:0.9,cb:12,ft:0.1,fb:2.4,pu:"Stk",pg:150,h:1},
+{k:"ananas",l:"Ananas",c:"Obst",kc:50,p:0.5,cb:13,ft:0.1,fb:1.4,pu:"",pg:0,h:1},
+{k:"mango",l:"Mango",c:"Obst",kc:60,p:0.8,cb:15,ft:0.4,fb:1.6,pu:"Stk",pg:200,h:1},
+{k:"kiwi",l:"Kiwi",c:"Obst",kc:61,p:1.1,cb:15,ft:0.5,fb:3,pu:"Stk",pg:75,h:1},
+{k:"pfirsich",l:"Pfirsich",c:"Obst",kc:39,p:0.9,cb:10,ft:0.3,fb:1.5,pu:"Stk",pg:150,h:1},
+{k:"trauben",l:"Trauben",c:"Obst",kc:69,p:0.7,cb:18,ft:0.2,fb:0.9,pu:"",pg:0,h:1},
+{k:"avocado",l:"Avocado",c:"Obst",kc:160,p:2,cb:9,ft:15,fb:6.7,pu:"Stk",pg:150,h:1},
+{k:"datteln",l:"Datteln",c:"Obst",kc:282,p:2.5,cb:75,ft:0.4,fb:8,pu:"Stk",pg:8,h:1},
+{k:"feigen",l:"Feigen",c:"Obst",kc:74,p:0.8,cb:19,ft:0.3,fb:2.9,pu:"Stk",pg:50,h:1},
+{k:"wassermelone",l:"Wassermelone",c:"Obst",kc:30,p:0.6,cb:8,ft:0.2,fb:0.4,pu:"",pg:0,h:1},
+{k:"aprikose",l:"Aprikose",c:"Obst",kc:48,p:1.4,cb:11,ft:0.4,fb:2,pu:"Stk",pg:35,h:1},
+{k:"pflaume",l:"Pflaume",c:"Obst",kc:46,p:0.7,cb:11,ft:0.3,fb:1.4,pu:"Stk",pg:60,h:1},
+{k:"grapefruit",l:"Grapefruit",c:"Obst",kc:42,p:0.8,cb:11,ft:0.1,fb:1.6,pu:"Stk",pg:250,h:1},
+{k:"brokkoli",l:"Brokkoli",c:"Gemüse",kc:34,p:2.8,cb:7,ft:0.4,fb:2.6,pu:"",pg:0,h:1},
+{k:"spinat",l:"Spinat",c:"Gemüse",kc:23,p:2.9,cb:3.6,ft:0.4,fb:2.2,pu:"",pg:0,h:1},
+{k:"karotte",l:"Karotte",c:"Gemüse",kc:41,p:0.9,cb:10,ft:0.2,fb:2.8,pu:"Stk",pg:60,h:1},
+{k:"paprika",l:"Paprika",c:"Gemüse",kc:31,p:1,cb:6,ft:0.3,fb:2.1,pu:"Stk",pg:120,h:1},
+{k:"gurke",l:"Gurke",c:"Gemüse",kc:15,p:0.7,cb:3.6,ft:0.1,fb:0.5,pu:"Stk",pg:300,h:1},
+{k:"tomate",l:"Tomate",c:"Gemüse",kc:18,p:0.9,cb:3.9,ft:0.2,fb:1.2,pu:"Stk",pg:85,h:1},
+{k:"zucchini",l:"Zucchini",c:"Gemüse",kc:17,p:1.2,cb:3.1,ft:0.3,fb:1,pu:"Stk",pg:200,h:1},
+{k:"champignon",l:"Champignons",c:"Gemüse",kc:22,p:3.1,cb:3.3,ft:0.3,fb:1,pu:"",pg:0,h:1},
+{k:"zwiebel",l:"Zwiebel",c:"Gemüse",kc:40,p:1.1,cb:9.3,ft:0.1,fb:1.7,pu:"Stk",pg:110,h:1},
+{k:"knoblauch",l:"Knoblauch",c:"Gemüse",kc:149,p:6.4,cb:33,ft:0.5,fb:2.1,pu:"Zehe",pg:3,h:1},
+{k:"süßkartoffel",l:"Süßkartoffel",c:"Gemüse",kc:86,p:1.6,cb:20,ft:0.1,fb:3,pu:"Stk",pg:130,h:1},
+{k:"kürbis",l:"Kürbis",c:"Gemüse",kc:26,p:1,cb:6.5,ft:0.1,fb:2.1,pu:"",pg:0,h:1},
+{k:"blumenkohl",l:"Blumenkohl",c:"Gemüse",kc:25,p:1.9,cb:5,ft:0.3,fb:2,pu:"",pg:0,h:1},
+{k:"aubergine",l:"Aubergine",c:"Gemüse",kc:25,p:1,cb:6,ft:0.2,fb:3,pu:"Stk",pg:250,h:1},
+{k:"grüne bohnen",l:"Grüne Bohnen",c:"Gemüse",kc:31,p:1.8,cb:7,ft:0.1,fb:3.4,pu:"",pg:0,h:1},
+{k:"erbse",l:"Erbsen",c:"Gemüse",kc:81,p:5.4,cb:14,ft:0.4,fb:5,pu:"",pg:0,h:1},
+{k:"rote bete",l:"Rote Bete",c:"Gemüse",kc:43,p:1.6,cb:10,ft:0.2,fb:2.8,pu:"",pg:0,h:1},
+{k:"rucola",l:"Rucola",c:"Gemüse",kc:25,p:2.6,cb:3.7,ft:0.7,fb:1.6,pu:"",pg:0,h:1},
+{k:"feldsalat",l:"Feldsalat",c:"Gemüse",kc:14,p:1.8,cb:0.7,ft:0.4,fb:1.5,pu:"",pg:0,h:1},
+{k:"sellerie",l:"Sellerie",c:"Gemüse",kc:21,p:1.2,cb:2.4,ft:0.3,fb:1.6,pu:"",pg:0,h:1},
+{k:"lauch",l:"Lauch",c:"Gemüse",kc:29,p:2.1,cb:3.3,ft:0.3,fb:2.5,pu:"Stange",pg:150,h:1},
+{k:"mais",l:"Mais",c:"Gemüse",kc:86,p:3.2,cb:19,ft:1.2,fb:2.7,pu:"Kolben",pg:100,h:1},
+{k:"hähnchenbrust",l:"Hähnchenbrust",c:"Fleisch",kc:110,p:23,cb:0,ft:1.5,fb:0,pu:"",pg:0,h:1},
+{k:"putenbrust",l:"Putenbrust",c:"Fleisch",kc:105,p:24,cb:0,ft:1,fb:0,pu:"",pg:0,h:1},
+{k:"rinderhackfleisch",l:"Mageres Rinderhackfleisch",c:"Fleisch",kc:137,p:21,cb:0,ft:5,fb:0,pu:"",pg:0,h:1},
+{k:"rinderfilet",l:"Rinderfilet",c:"Fleisch",kc:120,p:22,cb:0,ft:3.5,fb:0,pu:"",pg:0,h:1},
+{k:"schweinefilet",l:"Schweinefilet",c:"Fleisch",kc:110,p:22,cb:0,ft:2,fb:0,pu:"",pg:0,h:1},
+{k:"kalbfleisch",l:"Kalbfleisch",c:"Fleisch",kc:110,p:21,cb:0,ft:2.5,fb:0,pu:"",pg:0,h:1},
+{k:"putenhackfleisch",l:"Putenhackfleisch",c:"Fleisch",kc:149,p:20,cb:0,ft:8,fb:0,pu:"",pg:0,h:1},
+{k:"kochschinken",l:"Magerer Kochschinken",c:"Fleisch",kc:110,p:18,cb:1,ft:3,fb:0,pu:"Scheibe",pg:25,h:1},
+{k:"hähnchenschenkel",l:"Hähnchenschenkel",c:"Fleisch",kc:180,p:18,cb:0,ft:12,fb:0,pu:"Stk",pg:130,h:1},
+{k:"lammfilet",l:"Lammfilet",c:"Fleisch",kc:140,p:21,cb:0,ft:6,fb:0,pu:"",pg:0,h:1},
+{k:"bratwurst",l:"Bratwurst",c:"Fleisch",kc:290,p:13,cb:1,ft:26,fb:0,pu:"Stk",pg:100,h:0},
+{k:"salami",l:"Salami",c:"Fleisch",kc:370,p:22,cb:1,ft:31,fb:0,pu:"Scheibe",pg:5,h:0},
+{k:"lachs",l:"Lachs",c:"Fisch",kc:208,p:20,cb:0,ft:13,fb:0,pu:"",pg:0,h:1},
+{k:"thunfischfrisch",l:"Thunfisch (frisch)",c:"Fisch",kc:144,p:23,cb:0,ft:5,fb:0,pu:"",pg:0,h:1},
+{k:"thunfischdose",l:"Thunfisch (Dose)",c:"Fisch",kc:116,p:26,cb:0,ft:1,fb:0,pu:"Dose",pg:130,h:1},
+{k:"kabeljau",l:"Kabeljau",c:"Fisch",kc:82,p:18,cb:0,ft:0.7,fb:0,pu:"",pg:0,h:1},
+{k:"forelle",l:"Forelle",c:"Fisch",kc:119,p:20,cb:0,ft:3.5,fb:0,pu:"",pg:0,h:1},
+{k:"garnelen",l:"Garnelen",c:"Fisch",kc:99,p:21,cb:0.2,ft:1.4,fb:0,pu:"",pg:0,h:1},
+{k:"hering",l:"Hering",c:"Fisch",kc:158,p:18,cb:0,ft:9,fb:0,pu:"",pg:0,h:1},
+{k:"makrele",l:"Makrele",c:"Fisch",kc:205,p:19,cb:0,ft:14,fb:0,pu:"",pg:0,h:1},
+{k:"seelachs",l:"Seelachs",c:"Fisch",kc:81,p:18,cb:0,ft:0.9,fb:0,pu:"",pg:0,h:1},
+{k:"sardinen",l:"Sardinen",c:"Fisch",kc:165,p:20,cb:0,ft:9,fb:0,pu:"",pg:0,h:1},
+{k:"magerquark",l:"Magerquark",c:"Milchprodukte",kc:67,p:12,cb:4,ft:0.2,fb:0,pu:"",pg:0,h:1},
+{k:"speisequark",l:"Speisequark",c:"Milchprodukte",kc:110,p:12,cb:3.5,ft:5,fb:0,pu:"",pg:0,h:1},
+{k:"naturjoghurt",l:"Naturjoghurt",c:"Milchprodukte",kc:63,p:3.5,cb:4.7,ft:3.5,fb:0,pu:"",pg:0,h:1},
+{k:"griechischer joghurt",l:"Griechischer Joghurt",c:"Milchprodukte",kc:115,p:5,cb:3.5,ft:9,fb:0,pu:"",pg:0,h:1},
+{k:"skyr",l:"Skyr",c:"Milchprodukte",kc:63,p:11,cb:4,ft:0.2,fb:0,pu:"",pg:0,h:1},
+{k:"hüttenkäse",l:"Hüttenkäse",c:"Milchprodukte",kc:98,p:13,cb:2.5,ft:4.3,fb:0,pu:"",pg:0,h:1},
+{k:"frischkäse",l:"Frischkäse",c:"Milchprodukte",kc:253,p:6,cb:3.5,ft:24,fb:0,pu:"",pg:0,h:1},
+{k:"mozzarella",l:"Mozzarella",c:"Milchprodukte",kc:250,p:18,cb:1,ft:20,fb:0,pu:"Kugel",pg:125,h:1},
+{k:"feta",l:"Feta",c:"Milchprodukte",kc:264,p:14,cb:0.5,ft:21,fb:0,pu:"",pg:0,h:1},
+{k:"gouda",l:"Gouda",c:"Milchprodukte",kc:356,p:25,cb:0,ft:28,fb:0,pu:"Scheibe",pg:30,h:1},
+{k:"parmesan",l:"Parmesan",c:"Milchprodukte",kc:398,p:36,cb:0,ft:28,fb:0,pu:"",pg:0,h:1},
+{k:"milch",l:"Milch",c:"Milchprodukte",kc:64,p:3.4,cb:4.8,ft:3.5,fb:0,pu:"",pg:0,h:1},
+{k:"buttermilch",l:"Buttermilch",c:"Milchprodukte",kc:37,p:3.5,cb:4,ft:0.5,fb:0,pu:"",pg:0,h:1},
+{k:"butter",l:"Butter",c:"Milchprodukte",kc:741,p:0.7,cb:0.6,ft:83,fb:0,pu:"",pg:0,h:1},
+{k:"ei",l:"Ei (ganzes Hühnerei)",c:"Eier",kc:155,p:13,cb:1.1,ft:11,fb:0,pu:"Stk",pg:58,h:1},
+{k:"eiweiss",l:"Eiweiß (Eiklar)",c:"Eier",kc:52,p:11,cb:0.7,ft:0.2,fb:0,pu:"Stk",pg:33,h:1},
+{k:"haferflocken",l:"Haferflocken",c:"Getreide",kc:372,p:13.5,cb:59,ft:7,fb:10,pu:"",pg:0,h:1},
+{k:"vollkornbrot",l:"Vollkornbrot",c:"Getreide",kc:210,p:7,cb:38,ft:1.6,fb:7.5,pu:"Scheibe",pg:50,h:1},
+{k:"vollkornreis",l:"Vollkornreis",c:"Getreide",kc:350,p:7.5,cb:72,ft:2.7,fb:3.5,pu:"",pg:0,h:1},
+{k:"basmatireis",l:"Basmatireis",c:"Getreide",kc:350,p:7.5,cb:78,ft:0.9,fb:1.3,pu:"",pg:0,h:1},
+{k:"vollkornnudeln",l:"Vollkornnudeln",c:"Getreide",kc:340,p:13,cb:62,ft:2.5,fb:8,pu:"",pg:0,h:1},
+{k:"quinoa",l:"Quinoa",c:"Getreide",kc:368,p:14,cb:58,ft:6,fb:7,pu:"",pg:0,h:1},
+{k:"bulgur",l:"Bulgur",c:"Getreide",kc:342,p:12,cb:63,ft:1.3,fb:12.5,pu:"",pg:0,h:1},
+{k:"couscous",l:"Couscous",c:"Getreide",kc:358,p:12,cb:72,ft:0.6,fb:5,pu:"",pg:0,h:1},
+{k:"dinkel",l:"Dinkel",c:"Getreide",kc:338,p:15,cb:62,ft:2.7,fb:9,pu:"",pg:0,h:1},
+{k:"hirse",l:"Hirse",c:"Getreide",kc:354,p:10,cb:69,ft:4,fb:3.8,pu:"",pg:0,h:1},
+{k:"vollkornmehl",l:"Vollkornmehl",c:"Getreide",kc:340,p:12,cb:60,ft:2.2,fb:10,pu:"",pg:0,h:1},
+{k:"vollkorntoast",l:"Vollkorntoast",c:"Getreide",kc:240,p:9,cb:40,ft:3.5,fb:6.5,pu:"Scheibe",pg:30,h:1},
+{k:"vollkornbrötchen",l:"Vollkornbrötchen",c:"Getreide",kc:220,p:8,cb:40,ft:2,fb:7,pu:"Stk",pg:70,h:1},
+{k:"knäckebrot",l:"Knäckebrot",c:"Getreide",kc:330,p:10,cb:62,ft:1.5,fb:15,pu:"Scheibe",pg:10,h:1},
+{k:"kartoffeln",l:"Kartoffeln",c:"Gemüse",kc:70,p:2,cb:15,ft:0.1,fb:2,pu:"Stk",pg:120,h:1},
+{k:"maisreiswaffeln",l:"Mais-Reiswaffeln",c:"Getreide",kc:385,p:8,cb:80,ft:2.5,fb:3,pu:"Stk",pg:10,h:1},
+{k:"müsli",l:"Müsli",c:"Getreide",kc:360,p:10,cb:60,ft:8,fb:8,pu:"",pg:0,h:1},
+{k:"cornflakes",l:"Cornflakes",c:"Getreide",kc:375,p:7,cb:84,ft:0.9,fb:3,pu:"",pg:0,h:0},
+{k:"rote linsen",l:"Rote Linsen",c:"Hülsenfrüchte",kc:353,p:24,cb:52,ft:1.5,fb:11,pu:"",pg:0,h:1},
+{k:"braune linsen",l:"Braune Linsen",c:"Hülsenfrüchte",kc:336,p:24,cb:49,ft:1.8,fb:11,pu:"",pg:0,h:1},
+{k:"kichererbsen",l:"Kichererbsen",c:"Hülsenfrüchte",kc:364,p:19,cb:61,ft:6,fb:17,pu:"",pg:0,h:1},
+{k:"schwarze bohnen",l:"Schwarze Bohnen",c:"Hülsenfrüchte",kc:341,p:21,cb:62,ft:1.4,fb:15,pu:"",pg:0,h:1},
+{k:"kidneybohnen",l:"Kidneybohnen",c:"Hülsenfrüchte",kc:337,p:23,cb:60,ft:1.1,fb:25,pu:"",pg:0,h:1},
+{k:"weiße bohnen",l:"Weiße Bohnen",c:"Hülsenfrüchte",kc:333,p:21,cb:60,ft:1.2,fb:15,pu:"",pg:0,h:1},
+{k:"edamame",l:"Edamame",c:"Hülsenfrüchte",kc:121,p:12,cb:9,ft:5,fb:5,pu:"",pg:0,h:1},
+{k:"tofu",l:"Tofu",c:"Hülsenfrüchte",kc:127,p:15,cb:2,ft:8,fb:1,pu:"",pg:0,h:1},
+{k:"tempeh",l:"Tempeh",c:"Hülsenfrüchte",kc:192,p:20,cb:8,ft:11,fb:5,pu:"",pg:0,h:1},
+{k:"mandeln",l:"Mandeln",c:"Nüsse \u0026 Samen",kc:579,p:21.2,cb:21.6,ft:49.9,fb:12.5,pu:"Handvoll",pg:25,h:1},
+{k:"walnüsse",l:"Walnüsse",c:"Nüsse \u0026 Samen",kc:654,p:15.2,cb:13.7,ft:65.2,fb:6.7,pu:"Handvoll",pg:25,h:1},
+{k:"cashewkerne",l:"Cashewkerne",c:"Nüsse \u0026 Samen",kc:553,p:18.2,cb:30.2,ft:43.9,fb:3.3,pu:"Handvoll",pg:25,h:1},
+{k:"haselnüsse",l:"Haselnüsse",c:"Nüsse \u0026 Samen",kc:628,p:15,cb:16.7,ft:60.8,fb:9.7,pu:"Handvoll",pg:25,h:1},
+{k:"erdnüsse",l:"Erdnüsse",c:"Nüsse \u0026 Samen",kc:567,p:25.8,cb:16.1,ft:49.2,fb:8.5,pu:"Handvoll",pg:30,h:1},
+{k:"erdnussbutter",l:"Erdnussbutter",c:"Nüsse \u0026 Samen",kc:588,p:25.1,cb:20,ft:50.4,fb:6,pu:"EL",pg:16,h:1},
+{k:"chiasamen",l:"Chiasamen",c:"Nüsse \u0026 Samen",kc:486,p:16.5,cb:42.1,ft:30.7,fb:34.4,pu:"EL",pg:12,h:1},
+{k:"leinsamen",l:"Leinsamen",c:"Nüsse \u0026 Samen",kc:534,p:18.3,cb:28.9,ft:42.2,fb:27.3,pu:"EL",pg:10,h:1},
+{k:"kürbiskerne",l:"Kürbiskerne",c:"Nüsse \u0026 Samen",kc:559,p:30.2,cb:10.7,ft:49,fb:6,pu:"Handvoll",pg:25,h:1},
+{k:"sonnenblumenkerne",l:"Sonnenblumenkerne",c:"Nüsse \u0026 Samen",kc:584,p:20.8,cb:20,ft:51.5,fb:8.6,pu:"Handvoll",pg:25,h:1},
+{k:"mandelmus",l:"Mandelmus",c:"Nüsse \u0026 Samen",kc:614,p:21,cb:19,ft:55.5,fb:10.3,pu:"EL",pg:15,h:1},
+{k:"olivenöl",l:"Olivenöl",c:"Fette",kc:884,p:0,cb:0,ft:100,fb:0,pu:"EL",pg:10,h:1},
+{k:"rapsöl",l:"Rapsöl",c:"Fette",kc:884,p:0,cb:0,ft:100,fb:0,pu:"EL",pg:10,h:1},
+{k:"kokosöl",l:"Kokosöl",c:"Fette",kc:862,p:0,cb:0,ft:100,fb:0,pu:"EL",pg:10,h:1},
+{k:"avocadoöl",l:"Avocadoöl",c:"Fette",kc:884,p:0,cb:0,ft:100,fb:0,pu:"EL",pg:10,h:1},
+{k:"leinöl",l:"Leinöl",c:"Fette",kc:884,p:0,cb:0,ft:100,fb:0,pu:"EL",pg:10,h:1},
+{k:"margarine",l:"Margarine",c:"Fette",kc:720,p:0.2,cb:0.4,ft:80,fb:0,pu:"",pg:0,h:1},
+{k:"honig",l:"Honig",c:"Sonstiges",kc:304,p:0.3,cb:82.4,ft:0,fb:0.2,pu:"TL",pg:7,h:1},
+{k:"ahornsirup",l:"Ahornsirup",c:"Sonstiges",kc:260,p:0,cb:67,ft:0.1,fb:0,pu:"EL",pg:20,h:1},
+{k:"dunkleschokolade",l:"Dunkle Schokolade (85%)",c:"Sonstiges",kc:600,p:10,cb:19,ft:46,fb:12,pu:"Stück",pg:5,h:1},
+{k:"gemüsebrühe",l:"Gemüsebrühe",c:"Sonstiges",kc:5,p:0.2,cb:0.5,ft:0.2,fb:0,pu:"",pg:0,h:1},
+{k:"tomatenmark",l:"Tomatenmark",c:"Sonstiges",kc:82,p:4.3,cb:12,ft:0.5,fb:4,pu:"EL",pg:15,h:1},
+{k:"kokosmilch",l:"Kokosmilch",c:"Sonstiges",kc:197,p:2,cb:3,ft:20,fb:0,pu:"Dose",pg:400,h:1},
+{k:"hefe",l:"Hefe",c:"Sonstiges",kc:105,p:12,cb:11,ft:0.5,fb:7,pu:"Würfel",pg:42,h:1},
+{k:"zimt",l:"Zimt",c:"Sonstiges",kc:247,p:4,cb:27.5,ft:1.2,fb:53,pu:"TL",pg:3,h:1},
+{k:"kakaopulver",l:"Kakaopulver",c:"Sonstiges",kc:228,p:19.6,cb:13,ft:13.7,fb:33,pu:"EL",pg:5,h:1},
+{k:"sojasauce",l:"Sojasauce",c:"Sonstiges",kc:55,p:8,cb:5,ft:0.6,fb:0.8,pu:"EL",pg:15,h:1},
+{k:"pizza",l:"Pizza (Margherita)",c:"Sonstiges",kc:266,p:11,cb:33,ft:10,fb:2.3,pu:"Stk",pg:300,h:0},
+{k:"pommes",l:"Pommes frites",c:"Sonstiges",kc:312,p:3.4,cb:41,ft:15,fb:3.8,pu:"Portion",pg:150,h:0},
+{k:"hamburger",l:"Hamburger",c:"Sonstiges",kc:295,p:17,cb:24,ft:14,fb:1.5,pu:"Stk",pg:110,h:0},
+{k:"schokoriegel",l:"Schokoriegel",c:"Sonstiges",kc:488,p:5.5,cb:60,ft:24,fb:1.8,pu:"Stk",pg:50,h:0},
+{k:"milchschokolade",l:"Milchschokolade",c:"Sonstiges",kc:535,p:7.3,cb:57,ft:30,fb:2.4,pu:"Tafel",pg:100,h:0},
+{k:"kartoffelchips",l:"Kartoffelchips",c:"Sonstiges",kc:536,p:6.6,cb:50,ft:34,fb:4.4,pu:"Tüte",pg:175,h:0},
+{k:"eiscreme",l:"Eiscreme (Vanille)",c:"Sonstiges",kc:207,p:3.5,cb:24,ft:11,fb:0.7,pu:"Kugel",pg:50,h:0},
+{k:"croissant",l:"Croissant",c:"Sonstiges",kc:406,p:8.2,cb:42,ft:23,fb:2.6,pu:"Stk",pg:60,h:0},
+{k:"donut",l:"Donut",c:"Sonstiges",kc:452,p:6,cb:51,ft:25,fb:1.8,pu:"Stk",pg:60,h:0},
+{k:"cola",l:"Cola",c:"Sonstiges",kc:42,p:0,cb:10.6,ft:0,fb:0,pu:"Glas",pg:200,h:0},
+{k:"gummibärchen",l:"Gummibärchen",c:"Sonstiges",kc:343,p:6.9,cb:77,ft:0.2,fb:0,pu:"Tüte",pg:100,h:0},
+{k:"weißbrot",l:"Weißbrot",c:"Sonstiges",kc:265,p:9,cb:49,ft:3.2,fb:2.7,pu:"Scheibe",pg:30,h:0},
+{k:"birne",l:"Birne",c:"Obst",kc:57,p:0.4,cb:15,ft:0.1,fb:3.1,pu:"Stk",pg:150,h:1},
+{k:"käse",l:"Käse",c:"Milchprodukte",kc:350,p:25,cb:0.5,ft:27,fb:0,pu:"Scheibe",pg:30,h:1},
+{k:"kräuterquark",l:"Kräuterquark",c:"Milchprodukte",kc:90,p:12,cb:3.5,ft:3.5,fb:0,pu:"",pg:0,h:1},
+{k:"ricotta",l:"Ricotta",c:"Milchprodukte",kc:174,p:11,cb:3,ft:13,fb:0,pu:"",pg:0,h:1},
+{k:"lasagneplatten",l:"Lasagneplatten",c:"Getreide",kc:352,p:13,cb:70,ft:2,fb:5,pu:"Stk",pg:12,h:1},
+{k:"hefe",l:"Hefe",c:"Sonstiges",kc:105,p:12,cb:12,ft:2,fb:6,pu:"Würfel",pg:42,h:1},
+{k:"zimt",l:"Zimt",c:"Sonstiges",kc:247,p:4,cb:81,ft:1.2,fb:53,pu:"Prise",pg:0.5,h:1},
+{k:"salat",l:"Salat",c:"Gemüse",kc:15,p:1.4,cb:2.9,ft:0.2,fb:1.3,pu:"Stk",pg:200,h:1},
+{k:"nüsse",l:"Nüsse (gemischt)",c:"Nüsse \u0026 Samen",kc:620,p:15,cb:20,ft:55,fb:8,pu:"Handvoll",pg:25,h:1},
+{k:"putenbrustaufschnitt",l:"Putenbrustaufschnitt",c:"Fleisch",kc:110,p:18,cb:2,ft:3,fb:0,pu:"Scheibe",pg:25,h:1},
+{k:"obst",l:"Obst (nach Wahl)",c:"Obst",kc:55,p:0.7,cb:13,ft:0.2,fb:2.3,pu:"Portion",pg:125,h:1},
+{k:"gemüse nach wahl",l:"Gemüse (nach Wahl)",c:"Gemüse",kc:30,p:1.5,cb:5,ft:0.3,fb:2,pu:"",pg:0,h:1},
+];
+const NEW_RECIPES = [
+{name:"Hähnchen-Reis-Pfanne mit Brokkoli",mealType:"mittag",goals:["muskelaufbau","ausgewogen"],steps:"Vollkornreis nach Packungsangabe in Salzwasser garen. Hähnchenbrust in Streifen schneiden und im heißen Olivenöl scharf anbraten, mit Salz und Pfeffer würzen. Zwiebel und Knoblauch zugeben, dann Paprika und Brokkoli hinzufügen und einige Minuten mitbraten, bis das Gemüse bissfest ist. Mit dem Reis anrichten und servieren.",ing:[i("Hähnchenbrust",180,"g"),i("Vollkornreis",80,"g"),i("Brokkoli",150,"g"),i("Paprika",100,"g"),i("Zwiebel",50,"g"),i("Knoblauch",1,"Stk"),i("Olivenöl",1,"EL")]},
+{name:"Rinderhack-Quinoa-Bowl mit Kidneybohnen",mealType:"mittag",goals:["muskelaufbau","ausgewogen"],steps:"Quinoa gründlich waschen und in der doppelten Menge Wasser etwa 15 Minuten quellen lassen. Zwiebel und Paprika im Olivenöl anschwitzen, das Rinderhackfleisch zugeben und krümelig braten. Tomatenmark, gewürfelte Tomate und abgetropfte Kidneybohnen unterrühren und kurz köcheln lassen. Mit Salz, Pfeffer und Paprikapulver abschmecken und über der Quinoa in einer Bowl anrichten.",ing:[i("Mageres Rinderhackfleisch",150,"g"),i("Quinoa",70,"g"),i("Kidneybohnen",80,"g"),i("Tomate",100,"g"),i("Zwiebel",50,"g"),i("Paprika",80,"g"),i("Tomatenmark",1,"EL"),i("Olivenöl",1,"EL")]},
+{name:"Ofenlachs mit Süßkartoffel und Spinat",mealType:"mittag",goals:["muskelaufbau","ausgewogen"],steps:"Süßkartoffel schälen, in Spalten schneiden, mit etwas Olivenöl vermengen und bei 200 Grad rund 25 Minuten im Ofen backen. Den Lachs die letzten 15 Minuten mitbacken oder in der Pfanne braten und mit Salz und Pfeffer würzen. Spinat mit dem gehackten Knoblauch im restlichen Öl zusammenfallen lassen. Alles zusammen anrichten und servieren.",ing:[i("Lachs",200,"g"),i("Süßkartoffel",200,"g"),i("Spinat",150,"g"),i("Knoblauch",1,"Stk"),i("Olivenöl",1,"EL")]},
+{name:"Putenbrust-Pfanne mit Vollkornnudeln",mealType:"abend",goals:["muskelaufbau","ausgewogen"],steps:"Vollkornnudeln in Salzwasser bissfest kochen. Die Putenbrust in Streifen schneiden und im Olivenöl anbraten, salzen und pfeffern. Champignons, Zucchini und gewürfelte Tomate zugeben und einige Minuten mitbraten. Nudeln unterheben, kurz durchschwenken und mit geriebenem Parmesan bestreut servieren.",ing:[i("Putenbrust",180,"g"),i("Vollkornnudeln",70,"g"),i("Zucchini",100,"g"),i("Champignons",100,"g"),i("Tomate",100,"g"),i("Parmesan",15,"g"),i("Olivenöl",1,"EL")]},
+{name:"Thunfisch-Bowl mit Edamame und Avocado",mealType:"abend",goals:["muskelaufbau","ausgewogen"],steps:"Vollkornreis garen und lauwarm abkühlen lassen. Edamame kurz in kochendem Wasser blanchieren. Das Thunfischfilet im heißen Olivenöl von beiden Seiten kurz scharf anbraten, sodass es innen noch rosa bleibt, dann in Scheiben schneiden. Reis, Edamame, Gurke, Tomate und Avocado in einer Bowl anrichten, den Thunfisch darauflegen und mit Salz und Pfeffer würzen.",ing:[i("Thunfisch (frisch)",180,"g"),i("Vollkornreis",70,"g"),i("Edamame",80,"g"),i("Avocado",50,"g"),i("Gurke",80,"g"),i("Tomate",80,"g"),i("Olivenöl",1,"EL")]},
+{name:"Tofu-Gemüse-Pfanne mit Quinoa",mealType:"abend",goals:["muskelaufbau","ausgewogen"],steps:"Quinoa waschen und in der doppelten Menge Wasser etwa 15 Minuten garen. Tofu trocken tupfen, würfeln und im Olivenöl rundum knusprig anbraten. Brokkoli, Paprika und Edamame zugeben und einige Minuten mitbraten, mit Sojasauce ablöschen. Mit der Quinoa mischen und mit gerösteten Kürbiskernen bestreut servieren.",ing:[i("Tofu",200,"g"),i("Quinoa",70,"g"),i("Edamame",80,"g"),i("Brokkoli",120,"g"),i("Paprika",80,"g"),i("Kürbiskerne",15,"g"),i("Sojasauce",1,"EL"),i("Olivenöl",1,"EL")]},
+{name:"Hähnchen-Brokkoli-Pfanne mit Quinoa",mealType:"mittag",goals:["abnehmen"],steps:"Quinoa nach Packungsanweisung in Gemüsebrühe garen. Hähnchenbrust in Streifen schneiden und im Olivenöl mit Zwiebel und Knoblauch anbraten. Brokkoli und Paprika zugeben und bissfest garen, mit Sojasauce ablöschen und würzen. Zusammen mit dem Quinoa servieren.",ing:[i("Hähnchenbrust",150,"g"),i("Brokkoli",200,"g"),i("Paprika",100,"g"),i("Quinoa",50,"g"),i("Zwiebel",0.5,"Stk"),i("Knoblauch",1,"Stk"),i("Olivenöl",1,"EL"),i("Sojasauce",1,"EL")]},
+{name:"Thunfisch-Bohnen-Salat",mealType:"mittag",goals:["abnehmen"],steps:"Kidneybohnen abspülen und abtropfen lassen. Tomate, Gurke und Zwiebel in mundgerechte Stücke schneiden und mit Rucola in einer Schüssel mischen. Abgetropften Thunfisch und Bohnen untermischen. Mit Olivenöl anmachen, würzen und mit zerbröseltem Feta bestreuen.",ing:[i("Thunfisch (Dose)",1,"Dose"),i("Kidneybohnen",100,"g"),i("Tomate",150,"g"),i("Gurke",100,"g"),i("Rucola",1,"Handvoll"),i("Zwiebel",0.5,"Stk"),i("Feta",30,"g"),i("Olivenöl",1,"EL")]},
+{name:"Rote-Linsen-Gemüse-Curry",mealType:"mittag",goals:["abnehmen"],steps:"Zwiebel und Knoblauch fein hacken und andünsten. Karotte und Zucchini in Würfel schneiden, kurz mitbraten, dann Tomatenmark zugeben. Rote Linsen, gewürfelte Tomate, Kokosmilch und Gemüsebrühe zugeben und 15 Minuten köcheln, bis die Linsen weich sind. Abschmecken und heiß servieren.",ing:[i("Rote Linsen",70,"g"),i("Karotte",100,"g"),i("Zucchini",100,"g"),i("Tomate",100,"g"),i("Zwiebel",0.5,"Stk"),i("Knoblauch",1,"Stk"),i("Kokosmilch",50,"ml"),i("Tomatenmark",1,"EL"),i("Gemüsebrühe",200,"ml")]},
+{name:"Ofenlachs mit mediterranem Gemüse",mealType:"abend",goals:["abnehmen"],steps:"Ofen auf 200 Grad vorheizen. Zucchini, Paprika, Tomate und Zwiebel in Stücke schneiden, mit Olivenöl, gehacktem Knoblauch, Salz und Pfeffer mischen und auf ein Blech geben. Lachsfilet daraufsetzen und würzen. Alles zusammen etwa 18 bis 20 Minuten backen, bis der Lachs gar ist.",ing:[i("Lachs",130,"g"),i("Zucchini",150,"g"),i("Paprika",100,"g"),i("Tomate",100,"g"),i("Zwiebel",0.5,"Stk"),i("Knoblauch",1,"Stk"),i("Olivenöl",1,"EL")]},
+{name:"Putenbrust mit Blumenkohlreis",mealType:"abend",goals:["abnehmen"],steps:"Blumenkohl im Mixer oder mit der Reibe zu reisgroßen Stücken zerkleinern. Putenbrust würfeln und im Olivenöl mit Zwiebel und Knoblauch anbraten, Champignons zugeben. Blumenkohlreis und Erbsen zufügen und 5 bis 7 Minuten bei mittlerer Hitze garen. Kräftig mit Salz und Pfeffer abschmecken und servieren.",ing:[i("Putenbrust",150,"g"),i("Blumenkohl",250,"g"),i("Champignons",100,"g"),i("Erbsen",50,"g"),i("Zwiebel",0.5,"Stk"),i("Knoblauch",1,"Stk"),i("Olivenöl",1,"EL")]},
+{name:"Garnelen-Zucchini-Zoodles",mealType:"abend",goals:["abnehmen"],steps:"Zucchini mit dem Spiralschneider zu Nudeln (Zoodles) verarbeiten. Knoblauch im Olivenöl anschwitzen, Tomatenmark und gewürfelte Tomate zugeben und zu einer Sauce einkochen. Garnelen darin 3 bis 4 Minuten garen, dann die Zoodles unterheben und kurz erwärmen. Mit Rucola, Salz und Pfeffer abschmecken.",ing:[i("Garnelen",150,"g"),i("Zucchini",250,"g"),i("Tomate",150,"g"),i("Knoblauch",1,"Stk"),i("Tomatenmark",1,"EL"),i("Rucola",1,"Handvoll"),i("Olivenöl",1,"EL")]},
+{name:"Skyr-Beeren-Bowl mit Haferflocken",mealType:"fruehstueck",goals:["ausgewogen","muskelaufbau"],steps:"Skyr in eine Schüssel geben und mit dem Honig glattrühren. Haferflocken und Chiasamen unterrühren und kurz quellen lassen. Mit Beeren und grob gehackten Mandeln toppen und servieren.",ing:[i("Skyr",150,"g"),i("Beeren",100,"g"),i("Haferflocken",40,"g"),i("Chiasamen",1,"EL"),i("Mandeln",15,"g"),i("Honig",1,"TL")]},
+{name:"Overnight Oats mit Banane und Leinsamen",mealType:"fruehstueck",goals:["ausgewogen","abnehmen"],steps:"Haferflocken, Leinsamen und Zimt mit der Milch verrühren. Abgedeckt über Nacht im Kühlschrank quellen lassen. Am Morgen mit der in Scheiben geschnittenen Banane belegen und genießen.",ing:[i("Haferflocken",50,"g"),i("Milch",150,"ml"),i("Banane",1,"Stk"),i("Leinsamen",1,"EL"),i("Zimt",null,"Prise")]},
+{name:"Rührei mit Spinat und Avocado",mealType:"fruehstueck",goals:["ausgewogen","muskelaufbau"],steps:"Olivenöl in einer Pfanne erhitzen und den Spinat kurz zusammenfallen lassen. Die verquirlten Eier dazugeben und unter Rühren stocken lassen. Mit gewürfelter Tomate mischen und mit Vollkornbrot und Avocadoscheiben servieren.",ing:[i("Ei (ganzes Hühnerei)",3,"Stk"),i("Spinat",50,"g"),i("Tomate",1,"Stk"),i("Avocado",0.5,"Stk"),i("Vollkornbrot",1,"Scheibe"),i("Olivenöl",1,"TL")]},
+{name:"Herzhaftes Vollkornbrot mit Frischkäse und Gurke",mealType:"fruehstueck",goals:["ausgewogen","abnehmen"],steps:"Die Vollkornbrotscheiben mit Frischkäse bestreichen. Gurke und Tomate in dünne Scheiben schneiden und darauf verteilen. Mit frischem Rucola belegen und servieren.",ing:[i("Vollkornbrot",2,"Scheibe"),i("Frischkäse",30,"g"),i("Gurke",80,"g"),i("Tomate",1,"Stk"),i("Rucola",1,"Handvoll")]},
+{name:"Griechischer Joghurt mit Beeren und Walnüssen",mealType:"snack",goals:["ausgewogen","muskelaufbau"],steps:"Den griechischen Joghurt in eine Schale geben und mit Honig verrühren. Beeren daraufgeben und mit grob gehackten Walnüssen bestreuen. Sofort als sättigender Snack genießen.",ing:[i("Griechischer Joghurt",150,"g"),i("Beeren",80,"g"),i("Walnüsse",15,"g"),i("Honig",1,"TL")]},
+{name:"Apfel mit Erdnussbutter",mealType:"snack",goals:["ausgewogen"],steps:"Den Apfel waschen, entkernen und in Spalten schneiden. Die Erdnussbutter als Dip daneben geben. Die Apfelspalten in die Erdnussbutter tunken und genießen.",ing:[i("Apfel",1,"Stk"),i("Erdnussbutter",1,"EL")]},
+{name:"Hüttenkäse mit Gemüsesticks und Knäckebrot",mealType:"snack",goals:["ausgewogen","abnehmen"],steps:"Karotte und Paprika waschen und in mundgerechte Sticks schneiden. Den Hüttenkäse in eine kleine Schale füllen. Gemüsesticks und Knäckebrot dazu servieren und in den Hüttenkäse dippen.",ing:[i("Hüttenkäse",100,"g"),i("Karotte",1,"Stk"),i("Paprika",0.5,"Stk"),i("Knäckebrot",2,"Scheibe")]},
+{name:"Hähnchen-Quinoa-Bowl mit Brokkoli",mealType:"mittag",goals:["ausgewogen"],steps:"Quinoa nach Packungsanweisung in Gemüsebrühe garen. Brokkoli und Karotte in Salzwasser oder gedämpft bissfest kochen. Hähnchenbrust in Streifen schneiden, in Olivenöl mit gepresstem Knoblauch anbraten und mit Sojasauce ablöschen. Alles in einer Bowl anrichten und mit Sonnenblumenkernen bestreuen.",ing:[i("Hähnchenbrust",150,"g"),i("Quinoa",60,"g"),i("Brokkoli",150,"g"),i("Karotte",80,"g"),i("Olivenöl",1,"EL"),i("Knoblauch",1,"Stk"),i("Sojasauce",1,"EL"),i("Sonnenblumenkerne",1,"EL")]},
+{name:"Lachsfilet mit Süßkartoffel und Spinat",mealType:"mittag",goals:["ausgewogen"],steps:"Süßkartoffel würfeln, mit etwas Olivenöl vermengen und bei 200 Grad ca. 25 Minuten im Ofen rösten. Lachsfilet würzen und in einer Pfanne von beiden Seiten goldbraun braten. Spinat mit gepresstem Knoblauch in wenig Öl zusammenfallen lassen. Alles gemeinsam anrichten und servieren.",ing:[i("Lachs",140,"g"),i("Süßkartoffel",200,"g"),i("Spinat",120,"g"),i("Olivenöl",1,"EL"),i("Knoblauch",1,"Stk")]},
+{name:"Putenpfanne mit Vollkornreis und Paprika",mealType:"mittag",goals:["ausgewogen"],steps:"Vollkornreis nach Packungsanweisung garen. Putenbrust würfeln und in Olivenöl scharf anbraten, danach herausnehmen. Zwiebel, Paprika und Zucchini im selben Topf andünsten, Tomatenmark kurz mitrösten und mit Gemüsebrühe ablöschen. Pute zurückgeben, kurz köcheln lassen und mit dem Reis servieren.",ing:[i("Putenbrust",150,"g"),i("Vollkornreis",60,"g"),i("Paprika",120,"g"),i("Zucchini",100,"g"),i("Zwiebel",50,"g"),i("Olivenöl",1,"EL"),i("Tomatenmark",1,"EL"),i("Gemüsebrühe",100,"ml")]},
+{name:"Kabeljau mit Kartoffeln und grünen Bohnen",mealType:"abend",goals:["ausgewogen"],steps:"Kartoffeln schälen, würfeln und in Salzwasser weich kochen. Grüne Bohnen in wenig Wasser bissfest garen und mit gepresstem Knoblauch in etwas Olivenöl schwenken. Kabeljau würzen und in einer Pfanne mit Olivenöl vorsichtig von beiden Seiten braten. Alles gemeinsam auf dem Teller anrichten.",ing:[i("Kabeljau",160,"g"),i("Kartoffeln",200,"g"),i("Grüne Bohnen",150,"g"),i("Olivenöl",1,"EL"),i("Knoblauch",1,"Stk")]},
+{name:"Vollkornnudeln mit Tomaten-Linsen-Sauce",mealType:"abend",goals:["ausgewogen"],steps:"Vollkornnudeln in Salzwasser bissfest kochen. Zwiebel und Knoblauch in Olivenöl andünsten, Tomatenmark kurz mitrösten. Gewürfelte Tomaten und rote Linsen zugeben, mit etwas Wasser aufgießen und ca. 15 Minuten köcheln, bis die Linsen weich sind. Mit den Nudeln vermengen und mit geriebenem Parmesan bestreuen.",ing:[i("Vollkornnudeln",70,"g"),i("Rote Linsen",40,"g"),i("Tomate",200,"g"),i("Zwiebel",50,"g"),i("Knoblauch",1,"Stk"),i("Tomatenmark",1,"EL"),i("Olivenöl",1,"EL"),i("Parmesan",15,"g")]},
+];
+
+const NUTRI={}, UNIT_G={}, CATALOG={}, FOOD_LABELS={}, FOOD_HEALTHY={}, FOOD_PG={}, ALIAS={};
+const FOOD_LIST = FOOD_DB.filter((f,ix)=>FOOD_DB.findIndex(g=>g.k===f.k)===ix); // unique foods (first wins)
+FOOD_LIST.forEach(f=>{ const k=f.k;
+  NUTRI[k]={kcal:f.kc,protein:f.p,carbs:f.cb,fat:f.ft,fiber:f.fb};
+  CATALOG[k]=f.c; FOOD_LABELS[k]=f.l; FOOD_HEALTHY[k]=!!f.h; FOOD_PG[k]=f.pg;
+  ALIAS[(f.l||"").trim().toLowerCase()]=k;
+  if(f.pu) UNIT_G[k+"|"+f.pu]=f.pg;
+});
+UNIT_G["brokkoli|Stk"]=350; // whole broccoli head (the food itself has no piece weight)
+/* aliases: original recipe ingredient names (plurals/variants) -> canonical food key */
+[["karotten","karotte"],["gurken","gurke"],["tomaten","tomate"],["champignons","champignon"],["hähnchen","hähnchenbrust"],["blattspinat","spinat"],["knoblauchzehen","knoblauch"]].forEach(p=>{ if(NUTRI[p[1]]) ALIAS[p[0]]=p[1]; });
+function resolveFood(name){ const l=(name||"").trim().toLowerCase(); if(NUTRI[l]) return l; if(ALIAS[l]) return ALIAS[l]; return l; }
+function cat(name){ return CATALOG[resolveFood(name)] || "Sonstiges"; }
+function foodLabel(key){ return FOOD_LABELS[key] || (key? key.charAt(0).toUpperCase()+key.slice(1):""); }
 const DEFAULT_UNIT_G = {"Stk":100,"Scheibe":40,"EL":15,"TL":5,"Dose":400,"Würfel":42,"Handvoll":25,"Portion":125,"Prise":0.5,"":0};
 
 const NUTR_KEYS = ["kcal","protein","carbs","fat","fiber"];
@@ -401,6 +579,16 @@ const EXAMPLE_FOODS = {
   kcal:"z. B. Haferflocken, Nüsse, Vollkornbrot",protein:"z. B. Skyr, Quark, Hähnchen, Eier, Linsen",
   carbs:"z. B. Vollkornreis, Kartoffeln, Haferflocken",fat:"z. B. Olivenöl, Nüsse, Käse",
   fiber:"z. B. Vollkornbrot, Haferflocken, Gemüse, Hülsenfrüchte"};
+
+/* v3: goal profiles for the example weeks */
+const PROFILES = [
+  {id:"ausgewogen", label:"Ausgewogen", emoji:"⚖️", desc:"Ausgewogene, gesunde Mischkost", targets:{kcal:2000,protein:60,carbs:250,fat:70,fiber:30}},
+  {id:"muskelaufbau", label:"Muskelaufbau", emoji:"💪", desc:"Mehr Kalorien & viel Eiweiß", targets:{kcal:2600,protein:140,carbs:280,fat:85,fiber:32}},
+  {id:"abnehmen", label:"Abnehmen", emoji:"🔥", desc:"Weniger Kalorien, viel Eiweiß & Gemüse", targets:{kcal:1500,protein:110,carbs:120,fat:50,fiber:32}}
+];
+function profile(id){ return PROFILES.find(p=>p.id===id)||PROFILES[0]; }
+/* optional per-recipe goal tags by id (recipes may also carry goals inline) */
+let RECIPE_GOALS={};
 
 const MEAL_TYPES = [{id:"fruehstueck",label:"Frühstück"},{id:"mittag",label:"Mittag"},{id:"abend",label:"Abend"},{id:"snack",label:"Snack"}];
 const SLOT_TYPE = {b:"fruehstueck",s1:"snack",l:"mittag",s2:"snack",d:"abend"};
@@ -442,15 +630,20 @@ function ingGrams(ing){
   if(ing.a==null) return 0;
   const u=ing.u||"";
   if(u==="g"||u==="ml") return ing.a;
-  const name=(ing.n||"").trim().toLowerCase();
-  const g = (UNIT_G[name+"|"+u]!=null) ? UNIT_G[name+"|"+u]
-          : (DEFAULT_UNIT_G[u]!=null ? DEFAULT_UNIT_G[u] : 100);
+  const key=resolveFood(ing.n);
+  let g=UNIT_G[key+"|"+u];
+  if(g==null){
+    const PIECE={Stk:1,"Stück":1};                       // only generic single-item units map to the food's own piece
+    if(PIECE[u] && FOOD_PG[key]) g=FOOD_PG[key];
+    else if(DEFAULT_UNIT_G[u]!=null) g=DEFAULT_UNIT_G[u];
+    else g=100;
+  }
   return ing.a*g;
 }
-function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !NUTRI[ing.n.trim().toLowerCase()]) out.push(ing.n); }); return out; }
+function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !NUTRI[resolveFood(ing.n)]) out.push(ing.n); }); return out; }
 function sanitizeTargets(t){ const o={...DEFAULT_TARGETS}; if(t&&typeof t==="object"&&!Array.isArray(t)) NUTR_KEYS.forEach(k=>{ if(typeof t[k]==="number"&&isFinite(t[k])&&t[k]>0) o[k]=t[k]; }); return o; }
 function ingNutrients(ing){
-  const base=NUTRI[(ing.n||"").trim().toLowerCase()]; if(!base) return null;
+  const base=NUTRI[resolveFood(ing.n)]; if(!base) return null;
   const f=ingGrams(ing)/100;
   return {kcal:base.kcal*f,protein:base.protein*f,carbs:base.carbs*f,fat:base.fat*f,fiber:base.fiber*f};
 }
@@ -459,43 +652,101 @@ function addNut(a,b){ NUTR_KEYS.forEach(k=>a[k]+=(b[k]||0)); return a; }
 function recipeNutrients(r){ const t=zeroNut(); if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ const n=ingNutrients(ing); if(n) addNut(t,n); }); return t; }
 function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; const rid=state.plan[dayId]&&state.plan[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
+/* v3: food selection + deficit suggestions */
+function foodEnabled(key){ return !state.disabledFoods || !state.disabledFoods[key]; }
+function recipeAvailable(r){ return r && Array.isArray(r.ing) && r.ing.every(ing=>{ if(ing.a==null) return true; const k=resolveFood(ing.n); if(!NUTRI[k] || SUGGEST_EXCLUDE[CATALOG[k]]) return true; return foodEnabled(k); }); }
+const SUGGEST_EXCLUDE={"Fette":1,"Sonstiges":1}; // oils/spices/sweeteners: nutrient-dense per 100g but eaten in tiny amounts
+function foodsRichIn(nutrient,n,healthyOnly){
+  return Object.keys(NUTRI).filter(k=>foodEnabled(k) && (!healthyOnly||FOOD_HEALTHY[k]) && !SUGGEST_EXCLUDE[CATALOG[k]] && NUTRI[k][nutrient]>0)
+    .sort((a,b)=>NUTRI[b][nutrient]-NUTRI[a][nutrient]).slice(0,n).map(k=>foodLabel(k));
+}
+function recipesRichIn(nutrient,n,mealType){
+  return Object.values(state.recipes).filter(r=>r.ing.length && recipeAvailable(r) && (!mealType||r.mealType===mealType))
+    .map(r=>({r,v:recipeNutrients(r)[nutrient]})).filter(x=>x.v>0)
+    .sort((a,b)=>b.v-a.v).slice(0,n).map(x=>x.r);
+}
 
 /* Auto-generate a nutrient-balanced example week */
-function scoreCandidate(cur,rn,usedCount,tg){
+function scoreCandidate(cur,rn,usedCount,tg,goalBonus){
   let s=0;
   NUTR_KEYS.forEach(k=>{ const t=tg[k]; if(!t) return;
     const need=Math.max(0,t-cur[k]);
     s += Math.min(rn[k],need)/t;                         // reward filling a deficit
-    const over=Math.max(0,(cur[k]+rn[k])-t*1.2)/t;       // penalise big overshoot
-    if(k==="kcal"||k==="fat") s -= over*0.6;
+    const over=Math.max(0,(cur[k]+rn[k])-t)/t;           // penalise overshoot past the target
+    if(k==="kcal") s -= over*2.2;                        // keep total calories near the goal (esp. for Abnehmen)
+    else if(k==="fat") s -= over*0.4;
   });
   s -= usedCount*0.25;            // encourage variety across the week
+  s += (goalBonus||0);            // prefer recipes tagged with the chosen goal
   s += Math.random()*0.05;        // small jitter so each week differs
   return s;
 }
-function generateWeek(){
-  const tg=targets(), used={};
-  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length);
-  const order=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
-  const np={};
+function generateWeek(profileId){
+  const prof=profile(profileId); const tg=prof.targets; const used={};
+  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
+  const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
+  const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // fewer snacks for weight loss
+  const np={}; let placed=0;
   DAYS.forEach(d=>{
     np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
+    if(d.id===state.cheatDay){                           // cheat day: anything goes, pick randomly, ignore targets
+      fullOrder.forEach(([slot,type])=>{ const c=byType(type); if(!c.length) return; np[d.id][slot]=c[Math.floor(Math.random()*c.length)].id; placed++; });
+      return;
+    }
     const cur=zeroNut();
     order.forEach(([slot,type])=>{
       const cands=byType(type); if(!cands.length) return;
       let best=null,bs=-1e9;
-      cands.forEach(r=>{ const sc=scoreCandidate(cur,recipeNutrients(r),used[r.id]||0,tg); if(sc>bs){bs=sc;best=r;} });
-      if(best){ np[d.id][slot]=best.id; used[best.id]=(used[best.id]||0)+1; addNut(cur,recipeNutrients(best)); }
+      cands.forEach(r=>{ const gb=(r.goals&&r.goals.indexOf(prof.id)>=0)?0.6:0; const sc=scoreCandidate(cur,recipeNutrients(r),used[r.id]||0,tg,gb); if(sc>bs){bs=sc;best=r;} });
+      if(best){ np[d.id][slot]=best.id; used[best.id]=(used[best.id]||0)+1; addNut(cur,recipeNutrients(best)); placed++; }
     });
   });
-  state.plan=normalizePlan(np); save(); renderPlan();
-  toast("Beispielwoche erstellt ✨");
+  if(!placed){ toast("Keine passenden Rezepte – bitte Lebensmittel-Auswahl prüfen"); return; }
+  state.targets={...tg}; state.plan=normalizePlan(np); save(); renderAll();
+  toast(prof.emoji+" Beispielwoche erstellt: "+prof.label);
+}
+function openWeekChooser(){
+  openModal("<div class='mhead'><h3>✨ Beispielwoche erstellen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'><p class='hint'>Wähle ein Ziel – die Woche wird automatisch passend & nährstoff-ausgewogen befüllt. Der aktuelle Plan wird ersetzt"+(state.cheatDay?", der Cheat-Day bleibt frei nach Lust und Laune":"")+".</p>"+
+    PROFILES.map(p=>"<button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal'>"+p.targets.kcal+"<small>kcal/Tag</small></span></button>").join("")+
+    "</div>");
+  $("#mX").onclick=closeModal;
+  $$(".profcard").forEach(b=>b.onclick=()=>{ closeModal(); generateWeek(b.dataset.p); switchView("plan"); });
+}
+function openFoodSelect(){
+  openModal("<div class='mhead'><h3>🍽️ Lebensmittel-Auswahl</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'><p class='hint'>Abgewählte Lebensmittel werden in den Beispielwochen und Vorschlägen nicht mehr berücksichtigt.</p>"+
+    "<input class='searchbox' id='foodSearch' placeholder='Lebensmittel suchen …' autocomplete='off'>"+
+    "<div class='btnrow' style='margin-bottom:10px'><button class='btn sm ghost' id='foodAll'>Alle an</button><button class='btn sm ghost' id='foodNone'>Alle aus</button><span class='tag' id='foodCount'></span></div>"+
+    "<div id='foodList'></div></div>");
+  $("#mX").onclick=closeModal;
+  const render=()=>{
+    const q=($("#foodSearch").value||"").toLowerCase().trim();
+    const box=$("#foodList"); box.innerHTML="";
+    const onCount=FOOD_LIST.filter(f=>foodEnabled(f.k)).length;
+    $("#foodCount").textContent=onCount+" / "+FOOD_LIST.length+" aktiv";
+    CATS.forEach(c=>{
+      const foods=FOOD_LIST.filter(f=>f.c===c.id && (!q||f.l.toLowerCase().includes(q))).sort((a,b)=>a.l.localeCompare(b.l,"de"));
+      if(!foods.length) return;
+      box.appendChild(el("div","catgroup-h","<span class='cdot' style='background:var("+c.v+")'></span>"+c.emoji+" "+esc(c.id)));
+      foods.forEach(f=>{ const on=foodEnabled(f.k);
+        const row=el("div","foodrow"+(on?" on":""),"<span class='fcb'>"+(on?"✓":"")+"</span><span class='grow'>"+esc(f.l)+"</span><span class='fkcal'>"+f.kc+" kcal"+(f.h?"":" 🍕")+"</span>");
+        row.onclick=()=>{ if(foodEnabled(f.k)) state.disabledFoods[f.k]=true; else delete state.disabledFoods[f.k]; save(); render(); };
+        box.appendChild(row);
+      });
+    });
+  };
+  $("#foodSearch").addEventListener("input",render);
+  $("#foodAll").onclick=()=>{ state.disabledFoods={}; save(); render(); };
+  $("#foodNone").onclick=()=>{ FOOD_LIST.forEach(f=>state.disabledFoods[f.k]=true); save(); render(); };
+  render();
 }
 
 function normalizeRecipes(recipes){
   Object.values(recipes||{}).forEach(r=>{
     if(!r.mealType) r.mealType=MEAL_TYPE[r.id]||"snack";
     if(typeof r.steps!=="string") r.steps=STEPS[r.id]||"";
+    if(!Array.isArray(r.goals)) r.goals=RECIPE_GOALS[r.id]||["ausgewogen"];
     if(!Array.isArray(r.ing)) r.ing=[];
   });
   return recipes;
@@ -549,15 +800,17 @@ const SEED_PLAN = {
   so:{b:"r06",s1:"r13",l:"r27",s2:"r20",d:"r34"}
 };
 function seedState(){
-  const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",ing:r.ing.map(x=>({...x}))});
+  const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",goals:["ausgewogen"],ing:r.ing.map(x=>({...x}))});
+  NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
-  return {persons:4, targets:{...DEFAULT_TARGETS}, plan, recipes, cart:[]};
+  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, plan, recipes, cart:[]};
 }
 
 /* ============================ STATE ============================ */
 const LS_KEY="foodies_state_v1", LS_CLOUD="foodies_cloud_v1";
 let state = load();
 let uiDay = "mo";
+let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
 let saveTimer=null, remoteStamp=null, polling=null, pendingPush=false;
 
 function load(){
@@ -565,7 +818,7 @@ function load(){
   return seedState();
 }
 function normalizePlan(p){ const np={}; DAYS.forEach(d=>{ const src=(p&&p[d.id])||{}; np[d.id]={}; SLOTS.forEach(s=>np[d.id][s.id]=(src[s.id]!=null?src[s.id]:null)); }); return np; }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); s.plan=normalizePlan(s.plan); return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; s.plan=normalizePlan(s.plan); return s; }
 function persistLocal(){ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
 function save(){ persistLocal(); scheduleCloudPush(); }
 
@@ -587,7 +840,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,plan:state.plan,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,plan:state.plan,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -618,6 +871,8 @@ async function cloudPullApply(force){
         if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
+        if(d.disabledFoods && typeof d.disabledFoods==="object" && !Array.isArray(d.disabledFoods)) state.disabledFoods=d.disabledFoods;
+        state.cheatDay=(typeof d.cheatDay==="string"&&DAYS.some(x=>x.id===d.cheatDay))?d.cheatDay:null;
         if(Array.isArray(d.cart)) state.cart=d.cart;
         remoteStamp=row.updated_at; persistLocal(); renderAll();
       }
@@ -650,11 +905,14 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+" <button class='undo'>"+esc(label)+"</button>"; t.classList.add("show"); t.querySelector(".undo").onclick=()=>{ fn(); t.classList.remove("show"); }; clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ============================ RENDER ============================ */
-function renderAll(){ $("#pVal").textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets(); }
+function renderAll(){ $("#pVal").textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets();
+  const cs=$("#cheatDaySel"); if(cs){ if(cs.options.length<=1){ DAYS.forEach(d=>{ const o=el("option"); o.value=d.id; o.textContent=d.name; cs.appendChild(o); }); } cs.value=state.cheatDay||""; }
+}
 
 function dayNutriEl(dayId){
+  const wrap=el("div","daynutri"+(dayId===state.cheatDay?" cheat":""));
+  if(dayId===state.cheatDay){ wrap.innerHTML="<div class='dn-cheat'>🍕 Cheat-Day – alles erlaubt</div>"; return wrap; }
   const n=dayNutrients(dayId), t=targets();
-  const wrap=el("div","daynutri");
   const bars=["protein","carbs","fat","fiber"].map(k=>{
     const pct=t[k]?Math.min(100,Math.round(n[k]/t[k]*100)):0;
     const ok=t[k] && n[k]>=t[k]*0.9;
@@ -668,12 +926,13 @@ function renderPlan(){
   const grid=$("#weekGrid"); grid.innerHTML="";
   const bar=$("#dayBar"); bar.innerHTML="";
   DAYS.forEach(d=>{
-    const b=el("button",d.id===uiDay?"active":"",esc(d.name)+"<small>"+d.short+"</small>");
+    const cheat=d.id===state.cheatDay;
+    const b=el("button",(d.id===uiDay?"active":"")+(cheat?" cheatday":""),esc(d.name)+(cheat?" 🍕":"")+"<small>"+d.short+"</small>");
     b.onclick=()=>{uiDay=d.id;renderPlan();};
     bar.appendChild(b);
     const col=el("div","daycol"+(d.id===uiDay?" showday":""));
-    col.appendChild(el("div","dayname",esc(d.name)));
-    col.appendChild(dayNutriEl(d.id));
+    col.appendChild(el("div","dayname",esc(d.name)+(cheat?" 🍕":"")));
+    if(nutriOpen || cheat) col.appendChild(dayNutriEl(d.id));
     SLOTS.forEach(s=>{
       const rid=state.plan[d.id][s.id]; const r=rid?recipe(rid):null;
       const card=el("div","slotcard"+(r?" filled":""));
@@ -711,19 +970,29 @@ function renderRecipes(){
     list.appendChild(row);
   });
 }
-function renderNutriPanel(container,day,exceptSlot){
-  const n=dayNutrients(day,exceptSlot), t=targets();
+function renderNutriPanel(container,day,slot){
+  if(day===state.cheatDay){ container.innerHTML="<div class='npanel'><div class='np-line ok'>🍕 Cheat-Day – heute darfst du essen, worauf du Lust hast! Keine Nährstoff-Vorgaben.</div></div>"; return; }
+  const n=dayNutrients(day,slot), t=targets();
   const covered=[], missing=[];
   NUTR_KEYS.forEach(k=>{ const pct=t[k]?n[k]/t[k]:1; if(pct>=0.9) covered.push(k); else missing.push({k,gap:Math.max(0,t[k]-n[k])}); });
   let html="<div class='npanel'><div class='np-title'>Nährstoffe für "+esc(DAYS.find(d=>d.id===day).name)+" – bereits durch andere Mahlzeiten geplant:</div>";
   html+= covered.length? "<div class='np-line ok'>✓ Ausreichend gedeckt: "+covered.map(k=>esc(NUTR_META[k].label)).join(", ")+"</div>"
                         : "<div class='np-line'>Für heute ist noch nichts abgedeckt.</div>";
   if(missing.length){
-    html+="<div class='np-miss-title'>Fehlt für heute noch:</div>";
-    missing.forEach(m=>{ html+="<div class='np-line miss'><b>"+esc(NUTR_META[m.k].label)+"</b> – ca. "+Math.round(m.gap)+" "+NUTR_META[m.k].unit+"<span class='np-ex'>"+esc(EXAMPLE_FOODS[m.k])+"</span></div>"; });
+    html+="<div class='np-miss-title'>Fehlt noch – so gleichst du es aus:</div>";
+    missing.forEach(m=>{ const foods=foodsRichIn(m.k,3,true).join(", ");
+      html+="<div class='np-line miss'><b>"+esc(NUTR_META[m.k].label)+"</b> ca. "+Math.round(m.gap)+" "+NUTR_META[m.k].unit+
+        "<span class='np-ex'>🥗 Lebensmittel: "+esc(foods)+"</span>"+
+        "<span class='np-recs' data-k='"+m.k+"'></span></div>"; });
   } else { html+="<div class='np-line ok'>Klasse – für heute ist ernährungstechnisch alles abgedeckt. 🎉</div>"; }
   html+="</div>";
   container.innerHTML=html;
+  const slotType=SLOT_TYPE[slot]||"snack";
+  $$(".np-recs",container).forEach(span=>{
+    const recs=recipesRichIn(span.dataset.k,2,slotType); if(!recs.length) return;
+    span.innerHTML="🍽️ Rezepte: ";
+    recs.forEach(r=>{ const b=el("button","recchip",esc(r.name)); b.onclick=()=>{ state.plan[day][slot]=r.id; save(); closeModal(); renderPlan(); }; span.appendChild(b); });
+  });
 }
 
 function renderCart(){
@@ -873,7 +1142,7 @@ function openRecipeEdit(id){
     "<div class='field'><label>Kategorie (Mahlzeit)</label><select class='input' id='rType'>"+typeOpts+"</select></div>"+
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
     "<div id='ingList' style='margin-top:6px'>"+r.ing.map(ingRow).join("")+"</div>"+
-    "<datalist id='ingCatalog'>"+Object.keys(CATALOG).map(k=>"<option value='"+esc(k.charAt(0).toUpperCase()+k.slice(1))+"'>").join("")+"</datalist>"+
+    "<datalist id='ingCatalog'>"+Object.keys(NUTRI).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>"+
     "<button class='btn sm ghost' id='addIng' style='margin-top:4px'>＋ Zutat</button>"+
     "<div class='nutrisum' id='rNutri' style='margin-top:14px'></div>"+
     "<div class='field' style='margin-top:12px'><label>Zubereitung</label><textarea class='input' id='rSteps' rows='5' placeholder='Zubereitungsschritte (eine Zeile pro Schritt) …'>"+esc(r.steps||"")+"</textarea></div>"+
@@ -941,7 +1210,11 @@ $("#pMinus").onclick=()=>setPersons(state.persons-1);
 $("#pPlus").onclick=()=>setPersons(state.persons+1);
 
 $("#fillCartBtn").onclick=fillCartFromWeek;
-$("#genWeekBtn").onclick=()=>{ if(confirm("Automatische Beispielwoche erstellen? Der aktuelle Wochenplan wird ersetzt (deine Rezepte bleiben erhalten).")) generateWeek(); };
+$("#genWeekBtn").onclick=openWeekChooser;
+$("#nutriToggle").onclick=()=>{ nutriOpen=!nutriOpen; localStorage.setItem("foodies_nutri_open",nutriOpen?"1":"0"); $("#nutriToggle").classList.toggle("active",nutriOpen); renderPlan(); };
+$("#nutriToggle").classList.toggle("active",nutriOpen);
+$("#foodSelectBtn").onclick=openFoodSelect;
+$("#cheatDaySel").onchange=(e)=>{ state.cheatDay=e.target.value||null; save(); renderPlan(); };
 $("#recipeSearch").addEventListener("input",renderRecipes);
 function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",mealType:"snack",steps:"",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
 $("#newRecipeBtn").onclick=createRecipe;
