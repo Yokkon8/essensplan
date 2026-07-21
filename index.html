@@ -220,12 +220,24 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .np-recs{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
 .catgroup-h{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:14px 2px 6px}
 .catgroup-h .cdot{width:10px;height:10px;border-radius:50%}
-.foodrow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:6px;cursor:pointer}
-.foodrow .fcb{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:var(--bg);flex:none;display:grid;place-items:center;color:#fff;font-size:14px}
-.foodrow.on .fcb{background:var(--accent);border-color:var(--accent)}
-.foodrow:not(.on){opacity:.55}
-.foodrow .grow{flex:1;font-weight:500}
-.foodrow .fkcal{font-size:11.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.foodrow{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.foodmain{display:flex;align-items:center;gap:11px;padding:9px 12px;cursor:pointer}
+.foodrow.off .foodmain{background:rgba(192,83,63,.07)}
+.foodmain .fcb{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:var(--bg);flex:none;display:grid;place-items:center;font-size:13px}
+.foodrow.off .fcb{border-color:var(--fleisch)}
+.foodmain .grow{flex:1;font-weight:500}
+.foodrow.off .grow{text-decoration:line-through;color:var(--muted)}
+.foodmain .fkcal{font-size:11.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.fsub{display:flex;align-items:center;gap:6px;padding:2px 12px 10px;font-size:12px;color:var(--muted)}
+.fsub select{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.menubtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:19px;box-shadow:var(--shadow);flex:none;display:grid;place-items:center}
+.menurow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
+.menulbl{font-weight:600}
+.weekbar{display:flex;gap:8px;margin-bottom:10px}
+.weekbtn{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:9px 12px;font-weight:700;font-size:14px;box-shadow:var(--shadow)}
+.weekbtn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.chooser-lbl{font-weight:700;font-size:13px;margin:2px 2px 8px}
+.rowcard.unavail{opacity:.5}
 
 @media(max-width:760px){
   .daybar{display:flex}
@@ -249,12 +261,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
         <div class="sub">Familien-Essensplan</div>
       </div>
       <div class="spacer"></div>
-      <div class="persons">
-        <label>Personen</label>
-        <button class="pbtn" id="pMinus" aria-label="weniger">–</button>
-        <span class="pval" id="pVal">4</span>
-        <button class="pbtn" id="pPlus" aria-label="mehr">+</button>
-      </div>
+      <button class="menubtn" id="menuBtn" aria-label="Menü">☰</button>
     </div>
     <div class="syncpill" id="syncPill" title="Sync-Status"><span class="dot"></span><span class="txt">Lokal gespeichert</span></div>
   </div>
@@ -263,10 +270,8 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 <main class="wrap">
   <!-- WOCHENPLAN -->
   <section class="view active" id="view-plan">
-    <div class="viewhead"><h2>Wochenplan</h2><div class="spacer"></div>
-      <button class="btn sm" id="genWeekBtn">🎯 Plan erstellen</button>
-      <button class="btn sm" id="fillCartBtn">🛒 Woche → Wagen</button>
-    </div>
+    <div class="viewhead"><h2>Wochenplan</h2></div>
+    <div class="weekbar" id="weekBar"></div>
     <div class="daybar" id="dayBar"></div>
     <div class="weekgrid" id="weekGrid"></div>
   </section>
@@ -319,8 +324,8 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <div class="divider"></div>
     <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:12px">
       <h3 style="font-size:16px">🍽️ Lebensmittel & Cheat-Day</h3>
-      <button class="btn sm" id="foodSelectBtn" style="align-self:flex-start">🥗 Lebensmittel-Auswahl öffnen</button>
-      <p class="hint" style="margin:0">Wähle, welche Lebensmittel in Beispielwochen und Vorschlägen berücksichtigt werden.</p>
+      <button class="btn sm" id="foodSelectBtn" style="align-self:flex-start">🚫 Lebensmittel, die ich nicht mag</button>
+      <p class="hint" style="margin:0">Abgewählte Lebensmittel blenden ihre Rezepte aus und werden nicht eingeplant. Für jedes einen Ersatz wählbar.</p>
       <div class="field" style="margin:0"><label>Cheat-Day (optional)</label>
         <select class="input" id="cheatDaySel"><option value="">Keiner</option></select>
         <p class="hint" style="margin:6px 0 0">An diesem Tag gibt es keine Nährstoff-Vorgaben – iss, worauf du Lust hast. 🍕</p>
@@ -579,8 +584,14 @@ UNIT_G["brokkoli|Stk"]=350; // whole broccoli head (the food itself has no piece
 /* aliases: original recipe ingredient names (plurals/variants) -> canonical food key */
 [["karotten","karotte"],["gurken","gurke"],["tomaten","tomate"],["champignons","champignon"],["hähnchen","hähnchenbrust"],["blattspinat","spinat"],["knoblauchzehen","knoblauch"]].forEach(p=>{ if(NUTRI[p[1]]) ALIAS[p[0]]=p[1]; });
 function resolveFood(name){ const l=(name||"").trim().toLowerCase(); if(NUTRI[l]) return l; if(ALIAS[l]) return ALIAS[l]; return l; }
-function cat(name){ return CATALOG[resolveFood(name)] || "Sonstiges"; }
+function cat(name){ return CATALOG[effFood(resolveFood(name))] || "Sonstiges"; }
 function foodLabel(key){ return FOOD_LABELS[key] || (key? key.charAt(0).toUpperCase()+key.slice(1):""); }
+/* substitution: if a food is disliked and has a valid enabled replacement, use that instead */
+const GENERIC={"gemüse nach wahl":1,"obst":1};
+function has(o,k){ return o!=null && Object.prototype.hasOwnProperty.call(o,k); }   // guard against inherited props ("constructor" etc.)
+function effFood(key){ if(state && has(state.disabledFoods,key) && state.disabledFoods[key] && state.substitutions){ const s=state.substitutions[key]; if(s && has(NUTRI,s) && !(has(state.disabledFoods,s)&&state.disabledFoods[s])) return s; } return key; }
+function ingFoodKey(ing){ return effFood(resolveFood(ing&&ing.n)); }
+function ingDisplayName(ing){ const o=resolveFood(ing&&ing.n), e=effFood(o); if(e!==o) return foodLabel(e)+" (statt "+(foodLabel(o)||(ing&&ing.n))+")"; return ing&&ing.n; }
 const DEFAULT_UNIT_G = {"Stk":100,"Scheibe":40,"EL":15,"TL":5,"Dose":400,"Würfel":42,"Handvoll":25,"Portion":125,"Prise":0.5,"":0};
 
 const NUTR_KEYS = ["kcal","protein","carbs","fat","fiber"];
@@ -642,38 +653,41 @@ function ingGrams(ing){
   if(ing.a==null) return 0;
   const u=ing.u||"";
   if(u==="g"||u==="ml") return ing.a;
-  const key=resolveFood(ing.n);
+  const key=ingFoodKey(ing), orig=resolveFood(ing&&ing.n);
   let g=UNIT_G[key+"|"+u];
+  if(g==null && key!==orig) g=UNIT_G[orig+"|"+u];        // keep the recipe's intended portion when substituted
   if(g==null){
     const PIECE={Stk:1,"Stück":1};                       // only generic single-item units map to the food's own piece
     if(PIECE[u] && FOOD_PG[key]) g=FOOD_PG[key];
+    else if(PIECE[u] && key!==orig && FOOD_PG[orig]) g=FOOD_PG[orig];
     else if(DEFAULT_UNIT_G[u]!=null) g=DEFAULT_UNIT_G[u];
     else g=100;
   }
   return ing.a*g;
 }
-function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !NUTRI[resolveFood(ing.n)]) out.push(ing.n); }); return out; }
+function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !has(NUTRI,resolveFood(ing.n))) out.push(ing.n); }); return out; }
 function sanitizeTargets(t){ const o={...DEFAULT_TARGETS}; if(t&&typeof t==="object"&&!Array.isArray(t)) NUTR_KEYS.forEach(k=>{ if(typeof t[k]==="number"&&isFinite(t[k])&&t[k]>0) o[k]=t[k]; }); return o; }
 function ingNutrients(ing){
-  const base=NUTRI[resolveFood(ing.n)]; if(!base) return null;
+  const bk=ingFoodKey(ing); const base=has(NUTRI,bk)?NUTRI[bk]:null; if(!base) return null;
   const f=ingGrams(ing)/100;
   return {kcal:base.kcal*f,protein:base.protein*f,carbs:base.carbs*f,fat:base.fat*f,fiber:base.fiber*f};
 }
 function zeroNut(){ return {kcal:0,protein:0,carbs:0,fat:0,fiber:0}; }
 function addNut(a,b){ NUTR_KEYS.forEach(k=>a[k]+=(b[k]||0)); return a; }
 function recipeNutrients(r){ const t=zeroNut(); if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ const n=ingNutrients(ing); if(n) addNut(t,n); }); return t; }
-function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; const rid=state.plan[dayId]&&state.plan[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
+function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
 /* "gegessen/gekocht" tracking: sum only the marked meals so the day shows what's already eaten and what's still free */
 function doneKey(day,slot){ return day+"|"+slot; }
-function isDone(day,slot){ return !!(state.done && state.done[doneKey(day,slot)]); }
-function toggleDone(day,slot){ if(!state.done) state.done={}; const k=doneKey(day,slot); if(state.done[k]) delete state.done[k]; else state.done[k]=true; save(); }
-function clearDone(day,slot){ if(state.done) delete state.done[doneKey(day,slot)]; }
-function dayEaten(dayId){ const t=zeroNut(); SLOTS.forEach(s=>{ if(!isDone(dayId,s.id)) return; const rid=state.plan[dayId]&&state.plan[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
-function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && state.plan[dayId] && state.plan[dayId][s.id]); }
+function isDone(day,slot){ const d=DONE(); return !!(d && d[doneKey(day,slot)]); }
+function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); if(d[k]) delete d[k]; else d[k]=true; save(); }
+function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
+function dayEaten(dayId){ const t=zeroNut(); SLOTS.forEach(s=>{ if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
+function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]); }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
 /* v3: food selection + deficit suggestions */
-function foodEnabled(key){ return !state.disabledFoods || !state.disabledFoods[key]; }
-function recipeAvailable(r){ return r && Array.isArray(r.ing) && r.ing.every(ing=>{ if(ing.a==null) return true; const k=resolveFood(ing.n); if(!NUTRI[k] || SUGGEST_EXCLUDE[CATALOG[k]]) return true; return foodEnabled(k); }); }
+function foodEnabled(key){ return !(has(state.disabledFoods,key) && state.disabledFoods[key]); }
+function isVeg(r){ return r && Array.isArray(r.ing) && r.ing.every(ing=>{ const c=CATALOG[ingFoodKey(ing)]; return c!=="Fleisch" && c!=="Fisch"; }); }
+function recipeAvailable(r){ return r && Array.isArray(r.ing) && r.ing.every(ing=>{ const k=resolveFood(ing.n); if(!has(NUTRI,k) || has(GENERIC,k)) return true; if(foodEnabled(k)) return true; const s=has(state.substitutions,k)&&state.substitutions[k]; return !!(s && has(NUTRI,s) && foodEnabled(s)); }); }
 const SUGGEST_EXCLUDE={"Fette":1,"Sonstiges":1}; // oils/spices/sweeteners: nutrient-dense per 100g but eaten in tiny amounts
 function foodsRichIn(nutrient,n,healthyOnly){
   return Object.keys(NUTRI).filter(k=>foodEnabled(k) && (!healthyOnly||FOOD_HEALTHY[k]) && !SUGGEST_EXCLUDE[CATALOG[k]] && NUTRI[k][nutrient]>0)
@@ -703,10 +717,12 @@ function scoreCandidate(cur,rn,usedCount,tg,goalBonus){
 /* weighted squared relative distance of a day's totals from the target (kcal & protein weighted most) */
 function dayDistance(n,tg){ let d=0; NUTR_KEYS.forEach(k=>{ if(!tg[k]) return; let rel=(n[k]-tg[k])/tg[k]; if((k==="protein"||k==="fiber")&&rel>0) rel=0; /* more protein/fibre than target is fine */ const w=k==="kcal"?3:k==="protein"?1.6:k==="fiber"?0.8:0.4; d+=w*rel*rel; }); return d; }
 /* fill one day with a randomized greedy pass (top-3 pick) so best-of-K can explore */
-function fillDay(order,tg,profId,used,byType){
+function fillDay(order,tg,profId,used,byType,vegOnlyFn){
   const picks={}, usedDay={}; const cur=zeroNut();
   order.forEach(([slot,type])=>{
-    const cands=byType(type); if(!cands.length) return;
+    let cands=byType(type);
+    if(vegOnlyFn && vegOnlyFn(slot)){ const v=cands.filter(isVeg); if(v.length) cands=v; }   // veg-only slot (falls back if none)
+    if(!cands.length) return;
     const scored=cands.map(r=>({r,s:scoreCandidate(cur,recipeNutrients(r),(used[r.id]||0)+(usedDay[r.id]||0)*2,tg,(r.goals&&r.goals.indexOf(profId)>=0)?0.6:0)+Math.random()*0.15})).sort((a,b)=>b.s-a.s);
     const top=scored.slice(0,3); const pick=top[Math.floor(Math.random()*top.length)].r;
     picks[slot]=pick.id; usedDay[pick.id]=(usedDay[pick.id]||0)+1; addNut(cur,recipeNutrients(pick));
@@ -717,7 +733,11 @@ function generateWeek(profileId){
   const prof=profile(profileId); const tg=prof.targets; const used={};
   const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
-  const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // fewer snacks for weight loss
+  const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
+  const meatLimited = typeof state.meatPerWeek==="number" && state.meatPerWeek>=0;
+  const meatAllowed=new Set();
+  if(meatLimited){ const mains=[]; DAYS.forEach(d=>{ if(d.id===state.cheatDay) return; ["l","d"].forEach(sl=>mains.push(d.id+"|"+sl)); }); for(let i=mains.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=mains[i]; mains[i]=mains[j]; mains[j]=t; } mains.slice(0,state.meatPerWeek).forEach(x=>meatAllowed.add(x)); }
+  const vegOnlyFor=(dayId,slot)=>{ if(!meatLimited) return false; if(slot==="l"||slot==="d") return !meatAllowed.has(dayId+"|"+slot); return true; }; // meat only in the chosen main-meal slots
   const np={}; let placed=0;
   DAYS.forEach(d=>{
     np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
@@ -727,47 +747,67 @@ function generateWeek(profileId){
     }
     // best of many attempts: keep the day whose totals land closest to the goal's kcal/nutrients
     let best=null,bd=1e9;
-    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
+    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,(slot)=>vegOnlyFor(d.id,slot)); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
     if(best){ Object.keys(best.picks).forEach(slot=>{ np[d.id][slot]=best.picks[slot]; used[best.picks[slot]]=(used[best.picks[slot]]||0)+1; placed++; }); }
   });
   if(!placed){ toast("Keine passenden Rezepte – bitte Lebensmittel-Auswahl prüfen"); return; }
-  state.targets={...tg}; state.plan=normalizePlan(np); save(); renderAll();
-  toast(prof.emoji+" Plan erstellt: "+prof.label);
+  const emptyTypes=[...new Set(order.map(x=>x[1]))].filter(t=>byType(t).length===0);   // meal types with no candidates
+  state.targets={...tg}; state.weeks[uiWeek]=normalizePlan(np); if(state.weekProfile) state.weekProfile[uiWeek]=prof.id; save(); renderAll();
+  if(emptyTypes.length) toast("Plan erstellt – aber keine Rezepte für: "+emptyTypes.map(mealLabel).join(", "));
+  else toast(prof.emoji+" Plan erstellt: "+prof.label);
 }
 function openWeekChooser(){
+  const MEAT=[{v:-1,l:"Egal"},{v:0,l:"🌱 Vegetarisch"},{v:2,l:"2×"},{v:4,l:"4×"},{v:7,l:"7×"},{v:10,l:"10×"}];
   openModal("<div class='mhead'><h3>🎯 Wochenplan erstellen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
-    "<div class='mbody'><p class='hint'>Wähle ein Ziel – die Woche wird automatisch so zusammengestellt, dass sie die kcal- und Nährstoff-Ziele möglichst genau trifft. Der aktuelle Plan wird ersetzt"+(state.cheatDay?", der Cheat-Day bleibt frei nach Lust und Laune":"")+".</p>"+
+    "<div class='mbody'>"+
+    "<div class='chooser-lbl'>🍗 Fleisch/Fisch pro Woche (Mittag &amp; Abend):</div><div class='chips' id='meatChips'></div>"+
+    "<p class='hint'>Wähle ein Ziel – die Woche wird automatisch so zusammengestellt, dass die kcal- und Nährstoff-Ziele möglichst genau getroffen werden. Der aktuelle Wochenplan wird ersetzt und die Nährwert-Ziele auf das gewählte Ziel gesetzt"+(state.cheatDay?"; der Cheat-Day bleibt frei":"")+".</p>"+
     PROFILES.map(p=>"<button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal'>"+p.targets.kcal+"<small>kcal/Tag</small></span></button>").join("")+
+    "<div class='divider' style='margin:12px 0'></div>"+
+    "<button class='btn block ghost' id='foodPrefBtn'>🚫 Lebensmittel abwählen / Ersatz wählen</button>"+
     "</div>");
   $("#mX").onclick=closeModal;
+  const renderMeat=()=>{ const mc=$("#meatChips"); mc.innerHTML=""; MEAT.forEach(m=>{ const c=el("button","chip"+(state.meatPerWeek===m.v?" active":""),esc(m.l)); c.onclick=()=>{ state.meatPerWeek=m.v; save(); renderMeat(); }; mc.appendChild(c); }); };
+  renderMeat();
   $$(".profcard").forEach(b=>b.onclick=()=>{ closeModal(); generateWeek(b.dataset.p); switchView("plan"); });
+  $("#foodPrefBtn").onclick=()=>{ closeModal(); openFoodSelect(); };
 }
 function openFoodSelect(){
-  openModal("<div class='mhead'><h3>🍽️ Lebensmittel-Auswahl</h3><button class='iconbtn' id='mX'>✕</button></div>"+
-    "<div class='mbody'><p class='hint'>Abgewählte Lebensmittel werden in den Beispielwochen und Vorschlägen nicht mehr berücksichtigt.</p>"+
+  openModal("<div class='mhead'><h3>🚫 Lebensmittel, die ich nicht mag</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'><p class='hint'>Tippe ein Lebensmittel an, um es abzuwählen. Rezepte damit werden dann ausgeblendet und nicht eingeplant. Optional wählst du einen <b>Ersatz</b> – dann bleiben die Rezepte erhalten und nutzen das Ersatz-Lebensmittel.</p>"+
     "<input class='searchbox' id='foodSearch' placeholder='Lebensmittel suchen …' autocomplete='off'>"+
-    "<div class='btnrow' style='margin-bottom:10px'><button class='btn sm ghost' id='foodAll'>Alle an</button><button class='btn sm ghost' id='foodNone'>Alle aus</button><span class='tag' id='foodCount'></span></div>"+
+    "<div class='btnrow' style='margin-bottom:10px'><button class='btn sm ghost' id='foodReset'>↺ Alles zurücksetzen</button><span class='tag' id='foodCount'></span></div>"+
     "<div id='foodList'></div></div>");
   $("#mX").onclick=closeModal;
   const render=()=>{
     const q=($("#foodSearch").value||"").toLowerCase().trim();
     const box=$("#foodList"); box.innerHTML="";
-    const onCount=FOOD_LIST.filter(f=>foodEnabled(f.k)).length;
-    $("#foodCount").textContent=onCount+" / "+FOOD_LIST.length+" aktiv";
+    const offCount=FOOD_LIST.filter(f=>!foodEnabled(f.k)).length;
+    $("#foodCount").textContent=offCount?(offCount+" abgewählt"):"nichts abgewählt";
     CATS.forEach(c=>{
-      const foods=FOOD_LIST.filter(f=>f.c===c.id && (!q||f.l.toLowerCase().includes(q))).sort((a,b)=>a.l.localeCompare(b.l,"de"));
+      const foods=FOOD_LIST.filter(f=>f.c===c.id && !has(GENERIC,f.k) && (!q||f.l.toLowerCase().includes(q))).sort((a,b)=>a.l.localeCompare(b.l,"de"));
       if(!foods.length) return;
       box.appendChild(el("div","catgroup-h","<span class='cdot' style='background:var("+c.v+")'></span>"+c.emoji+" "+esc(c.id)));
       foods.forEach(f=>{ const on=foodEnabled(f.k);
-        const row=el("div","foodrow"+(on?" on":""),"<span class='fcb'>"+(on?"✓":"")+"</span><span class='grow'>"+esc(f.l)+"</span><span class='fkcal'>"+f.kc+" kcal"+(f.h?"":" 🍕")+"</span>");
-        row.onclick=()=>{ if(foodEnabled(f.k)) state.disabledFoods[f.k]=true; else delete state.disabledFoods[f.k]; save(); render(); };
+        const row=el("div","foodrow"+(on?"":" off"));
+        const main=el("div","foodmain","<span class='fcb'>"+(on?"":"🚫")+"</span><span class='grow'>"+esc(f.l)+"</span><span class='fkcal'>"+f.kc+" kcal"+(f.h?"":" 🍕")+"</span>");
+        main.onclick=()=>{ if(foodEnabled(f.k)){ state.disabledFoods[f.k]=true; } else { delete state.disabledFoods[f.k]; if(state.substitutions) delete state.substitutions[f.k]; } save(); render(); };
+        row.appendChild(main);
+        if(!on){
+          const alts=FOOD_LIST.filter(g=>g.c===f.c && g.k!==f.k && foodEnabled(g.k)).sort((a,b)=>a.l.localeCompare(b.l,"de"));
+          const cur=(state.substitutions&&state.substitutions[f.k])||"";
+          const sub=el("div","fsub","↔ Ersatz: <select class='subsel'><option value=''>— keiner (Rezepte ausblenden) —</option>"+alts.map(g=>"<option value='"+g.k+"'"+(g.k===cur?" selected":"")+">"+esc(g.l)+"</option>").join("")+"</select>");
+          const sel=sub.querySelector(".subsel");
+          sel.onclick=(e)=>e.stopPropagation();
+          sel.onchange=(e)=>{ if(!state.substitutions) state.substitutions={}; if(e.target.value) state.substitutions[f.k]=e.target.value; else delete state.substitutions[f.k]; save(); render(); };
+          row.appendChild(sub);
+        }
         box.appendChild(row);
       });
     });
   };
   $("#foodSearch").addEventListener("input",render);
-  $("#foodAll").onclick=()=>{ state.disabledFoods={}; save(); render(); };
-  $("#foodNone").onclick=()=>{ FOOD_LIST.forEach(f=>state.disabledFoods[f.k]=true); save(); render(); };
+  $("#foodReset").onclick=()=>{ state.disabledFoods={}; state.substitutions={}; save(); render(); };
   render();
 }
 
@@ -840,14 +880,21 @@ function seedState(){
   const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",goals:["ausgewogen"],ing:r.ing.map(x=>({...x}))});
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
-  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, done:{}, plan, recipes, cart:[]};
+  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1,
+    weeks:{"1":plan,"2":emptyPlan()}, weekDone:{"1":{},"2":{}}, weekProfile:{"1":null,"2":null}, recipes, cart:[]};
 }
 
 /* ============================ STATE ============================ */
 const LS_KEY="foodies_state_v1", LS_CLOUD="foodies_cloud_v1";
 let state = load();
 let uiDay = "mo";
+let uiWeek = (localStorage.getItem("foodies_week")==="2")?"2":"1";
 let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
+/* two-week planning: the active week's plan/done/profile come from these accessors */
+function PLAN(){ return state.weeks[uiWeek]; }
+function DONE(){ return state.weekDone[uiWeek]; }
+function weekProfile(){ return state.weekProfile? state.weekProfile[uiWeek] : null; }
+function setActiveWeek(w){ uiWeek=(w==="2")?"2":"1"; localStorage.setItem("foodies_week",uiWeek); const pf=state&&state.weekProfile&&state.weekProfile[uiWeek]; if(pf&&PROFILES.some(p=>p.id===pf)) state.targets={...profile(pf).targets}; }
 let saveTimer=null, remoteStamp=null, polling=null, pendingPush=false;
 
 function load(){
@@ -855,7 +902,20 @@ function load(){
   return seedState();
 }
 function normalizePlan(p){ const np={}; DAYS.forEach(d=>{ const src=(p&&p[d.id])||{}; np[d.id]={}; SLOTS.forEach(s=>np[d.id][s.id]=(src[s.id]!=null?src[s.id]:null)); }); return np; }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.done||typeof s.done!=="object"||Array.isArray(s.done)) s.done={}; s.plan=normalizePlan(s.plan); return s; }
+function emptyPlan(){ return normalizePlan(null); }
+/* normalize the two-week structures from either the new shape (weeks/weekDone/weekProfile) or a legacy single plan/done */
+function normWeeks(s){
+  let weeks=s.weeks, wd=s.weekDone, wp=s.weekProfile;
+  if(!weeks || typeof weeks!=="object" || Array.isArray(weeks)){
+    return { weeks:{"1":normalizePlan(s.plan), "2":emptyPlan()},
+             weekDone:{"1":(s.done&&typeof s.done==="object"&&!Array.isArray(s.done)?s.done:{}), "2":{}},
+             weekProfile:{"1":null,"2":null} };
+  }
+  const nw={},nd={},npf={};
+  ["1","2"].forEach(k=>{ nw[k]=normalizePlan(weeks[k]); nd[k]=(wd&&wd[k]&&typeof wd[k]==="object"&&!Array.isArray(wd[k]))?wd[k]:{}; npf[k]=(wp&&typeof wp[k]==="string")?wp[k]:null; });
+  return {weeks:nw, weekDone:nd, weekProfile:npf};
+}
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.plan; delete s.done; return s; }
 function persistLocal(){ try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
 function save(){ persistLocal(); scheduleCloudPush(); }
 
@@ -877,7 +937,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,done:state.done,plan:state.plan,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -904,15 +964,16 @@ async function cloudPullApply(force){
     if(row){
       if(force || !sameStamp(row.updated_at,remoteStamp)){
         const d=row.data||{};
-        if(d.plan) state.plan=normalizePlan(d.plan);
+        if(d.weeks || d.plan){ const t=normWeeks(d); state.weeks=t.weeks; state.weekDone=t.weekDone; state.weekProfile=t.weekProfile; }
         if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
         if(d.disabledFoods && typeof d.disabledFoods==="object" && !Array.isArray(d.disabledFoods)) state.disabledFoods=d.disabledFoods;
-        if(d.done && typeof d.done==="object" && !Array.isArray(d.done)) state.done=d.done;
+        if(typeof d.meatPerWeek==="number") state.meatPerWeek=d.meatPerWeek;
+        if(d.substitutions && typeof d.substitutions==="object" && !Array.isArray(d.substitutions)) state.substitutions=d.substitutions;
         state.cheatDay=(typeof d.cheatDay==="string"&&DAYS.some(x=>x.id===d.cheatDay))?d.cheatDay:null;
         if(Array.isArray(d.cart)) state.cart=d.cart;
-        remoteStamp=row.updated_at; persistLocal(); renderAll();
+        remoteStamp=row.updated_at; setActiveWeek(uiWeek); persistLocal(); renderAll();
       }
       setSync("ok");
     } else { await cloudPush(); setSync("ok"); }
@@ -943,7 +1004,7 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+" <button class='undo'>"+esc(label)+"</button>"; t.classList.add("show"); t.querySelector(".undo").onclick=()=>{ fn(); t.classList.remove("show"); }; clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ============================ RENDER ============================ */
-function renderAll(){ $("#pVal").textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets();
+function renderAll(){ const pv=$("#pVal"); if(pv) pv.textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets();
   const cs=$("#cheatDaySel"); if(cs){ if(cs.options.length<=1){ DAYS.forEach(d=>{ const o=el("option"); o.value=d.id; o.textContent=d.name; cs.appendChild(o); }); } cs.value=state.cheatDay||""; }
 }
 
@@ -973,6 +1034,8 @@ function dayNutriEl(dayId){
 
 function renderPlan(){
   const grid=$("#weekGrid"); grid.innerHTML="";
+  const wb=$("#weekBar"); if(wb){ wb.innerHTML=""; [["1","Woche 1"],["2","Woche 2"]].forEach(([w,lbl])=>{ const pf=state.weekProfile&&state.weekProfile[w]; const p=PROFILES.find(x=>x.id===pf); const b=el("button","weekbtn"+(uiWeek===w?" active":""),esc(lbl)+(p?" "+p.emoji:"")); b.onclick=()=>{ setActiveWeek(w); renderAll(); }; wb.appendChild(b); }); }
+  const abnehmenWeek = weekProfile()==="abnehmen";
   const bar=$("#dayBar"); bar.innerHTML="";
   DAYS.forEach(d=>{
     const cheat=d.id===state.cheatDay;
@@ -983,7 +1046,8 @@ function renderPlan(){
     col.appendChild(el("div","dayname",esc(d.name)+(cheat?" 🍕":"")));
     col.appendChild(dayNutriEl(d.id));
     SLOTS.forEach(s=>{
-      const rid=state.plan[d.id][s.id]; const r=rid?recipe(rid):null;
+      if(s.id==="s2" && abnehmenWeek) return;            // Abnehmen-Woche: kein zweiter Snack
+      const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
       const done=r && isDone(d.id,s.id);
       const card=el("div","slotcard"+(r?" filled":"")+(done?" done":""));
       card.appendChild(el("div","slotlabel",esc(s.name)));
@@ -997,25 +1061,26 @@ function renderPlan(){
   });
 }
 
-let recipeFilter="all";
+let recipeFilter="all", recipeDiet="all";
 function renderRecipes(){
   const q=($("#recipeSearch").value||"").toLowerCase().trim();
   const fc=$("#recipeFilter");
-  if(fc){ fc.innerHTML=""; [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{
-    const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label));
-    c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); };
-    fc.appendChild(c);
-  }); }
+  if(fc){ fc.innerHTML="";
+    [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{ const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); }; fc.appendChild(c); });
+    [{id:"all",label:"Alle"},{id:"veg",label:"🌱 Vegetarisch"},{id:"meat",label:"🍗 Mit Fleisch/Fisch"}].forEach(m=>{ const c=el("button","chip diet"+(recipeDiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeDiet=m.id; renderRecipes(); }; fc.appendChild(c); });
+  }
   const list=$("#recipeList"); list.innerHTML="";
   let rs=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q));
   if(recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
+  if(recipeDiet==="veg") rs=rs.filter(isVeg); else if(recipeDiet==="meat") rs=rs.filter(r=>!isVeg(r));
   rs.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   if(!rs.length){ list.appendChild(el("div","empty-state","<div class='big'>📖</div>Keine Rezepte gefunden.")); return; }
   rs.forEach(r=>{
-    const row=el("div","rowcard");
+    const avail=recipeAvailable(r), veg=isVeg(r);
+    const row=el("div","rowcard"+(avail?"":" unavail"));
     const kcal=Math.round(recipeNutrients(r).kcal);
-    const ingTxt=r.ing.length? r.ing.map(x=>x.n).join(", ") : "Noch keine Zutaten";
-    row.innerHTML="<div class='grow'><div class='title'>"+esc(r.name)+"</div><div class='meta'>"+esc(ingTxt)+"</div></div>"+
+    const ingTxt=r.ing.length? r.ing.map(x=>ingDisplayName(x)).join(", ") : "Noch keine Zutaten";
+    row.innerHTML="<div class='grow'><div class='title'>"+esc(r.name)+(veg?" 🌱":"")+"</div><div class='meta'>"+esc(ingTxt)+"</div>"+(avail?"":"<div class='meta' style='color:var(--fleisch)'>🚫 enthält abgewähltes Lebensmittel</div>")+"</div>"+
       "<div class='rmeta'><span class='tag'>"+esc(mealLabel(r.mealType))+"</span>"+(kcal?"<span class='kcaltag'>"+kcal+" kcal</span>":"")+"</div>";
     row.onclick=()=>openRecipeEdit(r.id);
     list.appendChild(row);
@@ -1042,7 +1107,7 @@ function renderNutriPanel(container,day,slot){
   $$(".np-recs",container).forEach(span=>{
     const recs=recipesRichIn(span.dataset.k,2,slotType); if(!recs.length) return;
     span.innerHTML="🍽️ Rezepte: ";
-    recs.forEach(r=>{ const b=el("button","recchip",esc(r.name)); b.onclick=()=>{ clearDone(day,slot); state.plan[day][slot]=r.id; save(); closeModal(); renderPlan(); }; span.appendChild(b); });
+    recs.forEach(r=>{ const b=el("button","recchip",esc(r.name)); b.onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=r.id; save(); closeModal(); renderPlan(); }; span.appendChild(b); });
   });
 }
 
@@ -1075,8 +1140,11 @@ function renderCart(){
 function addIngredientsToCart(ings,mult){
   mult = mult||1;
   ings.forEach(ing=>{
-    const name=ing.n, unit=ing.u||"", c=cat(name);
-    const amount = ing.a==null? null : ing.a*mult;
+    const o=resolveFood(ing.n), ek=effFood(o);
+    const name=(ek!==o && FOOD_LABELS[ek])?FOOD_LABELS[ek]:ing.n;
+    let unit=ing.u||"", amount=(ing.a==null?null:ing.a*mult);
+    if(ek!==o && unit!=="g" && unit!=="ml" && UNIT_G[ek+"|"+unit]==null){ amount=(ing.a==null?null:ingGrams(ing)*mult); unit="g"; } // substitute uses a different measure -> grams
+    const c=CATALOG[ek]||cat(ing.n);
     const key=name.toLowerCase()+"|"+unit;
     let ex=state.cart.find(x=>(x.name.toLowerCase()+"|"+(x.unit||""))===key);
     if(ex){ if(ex.amount==null) ex.amount=amount; else if(amount!=null) ex.amount+=amount; ex.checked=false; }
@@ -1087,7 +1155,7 @@ function addIngredientsToCart(ings,mult){
 function fillCartFromWeek(){
   let count=0;
   DAYS.forEach(d=>SLOTS.forEach(s=>{
-    const rid=state.plan[d.id][s.id]; const r=rid?recipe(rid):null;
+    const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
     if(r&&r.ing.length){ addIngredientsToCart(r.ing,state.persons); count+=r.ing.length; }
   }));
   renderCart();
@@ -1112,21 +1180,27 @@ function openPicker(day,slot){
     "<div id='nutriPanel'></div>"+
     "<input class='searchbox' id='pickSearch' placeholder='Gericht suchen …' autocomplete='off'>"+
     "<label class='togglerow'><input type='checkbox' id='showAll'> Alle Mahlzeiten zeigen (nicht nur "+esc(mealLabel(slotType))+")</label>"+
+    "<div class='chips' id='pickDiet'></div>"+
     "<div id='pickList'></div>"+
     "<button class='btn block ghost' id='customDish' style='margin-top:6px'>＋ Eigenes Gericht eintragen</button></div>");
   $("#mX").onclick=closeModal;
   renderNutriPanel($("#nutriPanel"),day,slot);
+  let pdiet="all";
   const render=()=>{
+    const dc=$("#pickDiet"); dc.innerHTML="";
+    [{id:"all",label:"Alle"},{id:"veg",label:"🌱 Vegetarisch"},{id:"meat",label:"🍗 Mit Fleisch/Fisch"}].forEach(m=>{ const c=el("button","chip"+(pdiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ pdiet=m.id; render(); }; dc.appendChild(c); });
     const q=($("#pickSearch").value||"").toLowerCase().trim();
     const box=$("#pickList"); box.innerHTML="";
     let matches=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q));
     if(!$("#showAll").checked) matches=matches.filter(r=>(r.mealType||"snack")===slotType);
+    if(pdiet==="veg") matches=matches.filter(isVeg); else if(pdiet==="meat") matches=matches.filter(r=>!isVeg(r));
+    matches=matches.filter(recipeAvailable);   // hide recipes with disliked foods
     matches.sort((a,b)=>a.name.localeCompare(b.name,"de"));
     if(!matches.length){ box.appendChild(el("div","hint","Kein passendes Rezept – Haken bei »Alle Mahlzeiten« setzen oder unten ein eigenes Gericht eintragen.")); }
     matches.forEach(r=>{
         const kcal=Math.round(recipeNutrients(r).kcal);
         const b=el("button","pickitem","<span>"+esc(r.name)+"</span><small>"+(kcal?kcal+" kcal":r.ing.length+" Zut.")+"</small>");
-        b.onclick=()=>{ clearDone(day,slot); state.plan[day][slot]=r.id; save(); closeModal(); renderPlan(); };
+        b.onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=r.id; save(); closeModal(); renderPlan(); };
         box.appendChild(b);
       });
   };
@@ -1136,17 +1210,17 @@ function openPicker(day,slot){
   $("#customDish").onclick=()=>{
     const nm=($("#pickSearch").value||"").trim();
     if(!nm){ $("#pickSearch").focus(); toast("Namen oben eingeben"); return; }
-    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; clearDone(day,slot); state.plan[day][slot]=id; save(); closeModal(); renderPlan(); renderRecipes();
+    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; clearDone(day,slot); PLAN()[day][slot]=id; save(); closeModal(); renderPlan(); renderRecipes();
     toast("Gericht angelegt");
   };
 }
 
 /* slot menu when a dish is set: show ingredients, add to cart, change, clear */
 function openSlotMenu(day,slot){
-  const rid=state.plan[day][slot], r=recipe(rid);
+  const rid=PLAN()[day][slot], r=recipe(rid);
   const dn=DAYS.find(d=>d.id===day).name, sn=SLOTS.find(s=>s.id===slot).name;
   const rows=r.ing.length? r.ing.map((ing,ix)=>
-    "<label class='ing-check on' data-ix='"+ix+"'><span class='cb'>✓</span><span class='ig'>"+esc(ing.n)+"</span><span class='camt'>"+esc(amtLabel(ing.a==null?null:ing.a*state.persons,ing.u))+"</span></label>"
+    "<label class='ing-check on' data-ix='"+ix+"'><span class='cb'>✓</span><span class='ig'>"+esc(ingDisplayName(ing))+"</span><span class='camt'>"+esc(amtLabel(ing.a==null?null:ing.a*state.persons,ing.u))+"</span></label>"
   ).join("") : "<p class='hint'>Für dieses Gericht sind noch keine Zutaten hinterlegt. Du kannst sie unter »Rezept bearbeiten« ergänzen.</p>";
   const rn=recipeNutrients(r);
   const unk=recipeUnknownIngredients(r);
@@ -1174,7 +1248,7 @@ function openSlotMenu(day,slot){
   $("#doneBtn").onclick=()=>{ toggleDone(day,slot); closeModal(); renderPlan(); };
   $("#changeDish").onclick=()=>{ closeModal(); openPicker(day,slot); };
   $("#editDish").onclick=()=>{ closeModal(); openRecipeEdit(rid); };
-  $("#clearDish").onclick=()=>{ clearDone(day,slot); state.plan[day][slot]=null; save(); closeModal(); renderPlan(); };
+  $("#clearDish").onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=null; save(); closeModal(); renderPlan(); };
 }
 
 /* recipe editor */
@@ -1194,7 +1268,7 @@ function openRecipeEdit(id){
     "<div class='field'><label>Kategorie (Mahlzeit)</label><select class='input' id='rType'>"+typeOpts+"</select></div>"+
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
     "<div id='ingList' style='margin-top:6px'>"+r.ing.map(ingRow).join("")+"</div>"+
-    "<datalist id='ingCatalog'>"+Object.keys(NUTRI).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>"+
+    "<datalist id='ingCatalog'>"+Object.keys(NUTRI).filter(foodEnabled).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>"+
     "<button class='btn sm ghost' id='addIng' style='margin-top:4px'>＋ Zutat</button>"+
     "<div class='nutrisum' id='rNutri' style='margin-top:14px'></div>"+
     "<div class='field' style='margin-top:12px'><label>Zubereitung</label><textarea class='input' id='rSteps' rows='5' placeholder='Zubereitungsschritte (eine Zeile pro Schritt) …'>"+esc(r.steps||"")+"</textarea></div>"+
@@ -1220,7 +1294,7 @@ function openRecipeEdit(id){
   };
   $("#delRecipe").onclick=()=>{
     if(!confirm("Rezept löschen: "+r.name+"?\nEs wird auch aus dem Wochenplan entfernt.")) return;
-    DAYS.forEach(d=>SLOTS.forEach(s=>{ if(state.plan[d.id][s.id]===id) state.plan[d.id][s.id]=null; }));
+    ["1","2"].forEach(w=>DAYS.forEach(d=>SLOTS.forEach(s=>{ if(state.weeks[w][d.id][s.id]===id) state.weeks[w][d.id][s.id]=null; })));
     delete state.recipes[id]; save(); closeModal(); renderRecipes(); renderPlan();
     toast("Rezept gelöscht");
   };
@@ -1257,12 +1331,21 @@ function switchView(name){
 }
 $$("nav.tabs button").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
 
-function setPersons(v){ state.persons=Math.max(1,Math.min(30,v)); $("#pVal").textContent=state.persons; save(); if(modalOpen())return; }
-$("#pMinus").onclick=()=>setPersons(state.persons-1);
-$("#pPlus").onclick=()=>setPersons(state.persons+1);
-
-$("#fillCartBtn").onclick=fillCartFromWeek;
-$("#genWeekBtn").onclick=openWeekChooser;
+function setPersons(v){ state.persons=Math.max(1,Math.min(30,v)); const pv=$("#pVal"); if(pv) pv.textContent=state.persons; save(); }
+function openMenu(){
+  openModal("<div class='mhead'><h3>☰ Menü</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'>"+
+    "<div class='menurow'><span class='menulbl'>👥 Personen</span><span class='persons'><button class='pbtn' id='pMinus' aria-label='weniger'>–</button><span class='pval' id='pVal'>"+state.persons+"</span><button class='pbtn' id='pPlus' aria-label='mehr'>+</button></span></div>"+
+    "<button class='btn block primary' id='mGen' style='margin-top:14px'>🎯 Plan erstellen</button>"+
+    "<button class='btn block' id='mCart' style='margin-top:8px'>🛒 Woche → Wagen</button>"+
+    "</div>");
+  $("#mX").onclick=closeModal;
+  $("#pMinus").onclick=()=>setPersons(state.persons-1);
+  $("#pPlus").onclick=()=>setPersons(state.persons+1);
+  $("#mGen").onclick=()=>{ closeModal(); openWeekChooser(); };
+  $("#mCart").onclick=()=>{ closeModal(); fillCartFromWeek(); };
+}
+$("#menuBtn").onclick=openMenu;
 $("#foodSelectBtn").onclick=openFoodSelect;
 $("#cheatDaySel").onchange=(e)=>{ state.cheatDay=e.target.value||null; save(); renderPlan(); };
 $("#recipeSearch").addEventListener("input",renderRecipes);
@@ -1313,6 +1396,7 @@ $("#resetBtn").onclick=()=>{ if(confirm("Alles auf die ursprünglichen Beispield
 $("#syncPill").onclick=()=>switchView("settings");
 
 /* ============================ BOOT ============================ */
+setActiveWeek(uiWeek);
 renderAll();
 setSync(cloudConfig()?"busy":"local");
 if(cloudConfig()){ cloudPullApply(true); startPolling(); }
