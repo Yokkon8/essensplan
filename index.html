@@ -318,7 +318,35 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .glasses{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .glass{font-size:20px;line-height:1;width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--chip);opacity:.38;filter:grayscale(.5)}
 .glass.on{opacity:1;filter:none;background:rgba(80,160,220,.22);border-color:rgba(80,160,220,.6)}
+.glass.extra.on{background:rgba(232,185,35,.28);border-color:rgba(232,185,35,.65)}
+.glass.plus{opacity:1;filter:none;color:var(--brand);font-weight:800;background:var(--card);border-style:dashed}
 .glass:active{transform:scale(.9)}
+.cheatbtn.on{background:#e8b923;color:#3a2f00;border-color:#e8b923}
+.cheatchip.active{background:#e8b923;border-color:#e8b923;color:#3a2f00}
+.infonote{background:var(--chip);border-radius:10px;padding:8px 11px;margin:2px 2px 10px}
+.slotcard.extra{border-left:3px solid var(--accent)}
+.slotrm{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13px;flex:none;margin-left:4px}
+.addmeal{width:100%;margin-top:8px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:10px;padding:9px;font-weight:600;font-size:13px}
+.addmeal:active{transform:scale(.99)}
+.planbox{margin-top:14px;background:var(--chip);border-radius:12px;padding:11px 12px}
+.pb-h{font-weight:700;font-size:13.5px;margin-bottom:8px}
+.pb-row{display:flex;gap:6px;align-items:stretch}
+.pb-row .input{flex:1;min-width:0;padding:8px 9px}
+.pb-row .btn{flex:none;white-space:nowrap}
+.pb-def{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px}
+.pb-def input{width:18px;height:18px;flex:none}
+.pb-note{font-size:12.5px;color:var(--muted);margin-top:6px}
+.trainbtn{width:100%;margin:2px 0 4px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.trainbtn.on{border-color:var(--accent);color:var(--accent)}
+.trlist{background:var(--chip);border-radius:10px;padding:8px 10px}
+.tritem{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13.5px} .tritem span{flex:1;min-width:0} .tritem b{font-variant-numeric:tabular-nums}
+.trsum{font-size:12.5px;color:var(--muted);margin-top:6px;border-top:1px solid var(--line);padding-top:6px}
+.trest{background:var(--chip);border-radius:10px;padding:9px 11px;margin-top:8px;font-size:13px}
+.dn-burn{font-size:12.5px;color:var(--accent);font-weight:600;margin-top:2px}
+.aquashelf{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:linear-gradient(180deg,rgba(80,160,220,.16),transparent);border-radius:12px;padding:10px;margin-bottom:12px}
+.aqua-lbl{font-weight:700;font-size:13px;margin-right:4px}
+.gold-nug.aqua{font-size:24px}
+.celeb-emoji.aqua{background:rgba(80,160,220,.18)}
 .bande-info{margin-top:14px;background:var(--chip);border-radius:12px;padding:12px 14px;font-size:13.5px}
 .bande-info b{font-size:14px} .bande-info p{margin:7px 0 0;line-height:1.4}
 .weeknav{flex:none;width:42px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:22px;line-height:1;box-shadow:var(--shadow)}
@@ -369,7 +397,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 <main class="wrap">
   <!-- WOCHENPLAN -->
   <section class="view active" id="view-plan">
-    <div class="viewhead"><h2>Wochenplan</h2></div>
+    <div class="viewhead"><h2>Wochenplan</h2><div class="spacer"></div><button class="btn sm cheatbtn" id="cheatBtn">⚡ Cheat-Day</button></div>
     <div class="weekbar" id="weekBar"></div>
     <div class="daybar" id="dayBar"></div>
     <div class="weekgrid" id="weekGrid"></div>
@@ -380,9 +408,11 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <div class="viewhead"><h2>Rezepte</h2><div class="spacer"></div>
       <button class="btn sm primary" id="newRecipeBtn">＋ Neu</button>
     </div>
+    <p class="hint infonote">ℹ️ Alle Mengenangaben gelten für <b>1 Person</b>. Im Einkaufswagen werden sie automatisch mit der Personenzahl multipliziert.</p>
     <input class="searchbox" id="recipeSearch" placeholder="Rezept suchen …" autocomplete="off">
     <div class="chips" id="recipeDietFilter"></div>
     <div class="chips" id="recipeFilter"></div>
+    <button class="btn sm ghost" id="recipeFoodBtn" style="align-self:flex-start;margin:0 2px 8px">🚫 Lebensmittel abwählen / Ersatz wählen</button>
     <div class="list" id="recipeList"></div>
   </section>
 
@@ -423,13 +453,10 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     </div>
     <div class="divider"></div>
     <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:12px">
-      <h3 style="font-size:16px">🍽️ Lebensmittel & Cheat-Day</h3>
+      <h3 style="font-size:16px">🍽️ Lebensmittel</h3>
       <button class="btn sm" id="foodSelectBtn" style="align-self:flex-start">🚫 Lebensmittel, die ich nicht mag</button>
       <p class="hint" style="margin:0">Abgewählte Lebensmittel blenden ihre Rezepte aus und werden nicht eingeplant. Für jedes einen Ersatz wählbar.</p>
-      <div class="field" style="margin:0"><label>Cheat-Day (optional)</label>
-        <select class="input" id="cheatDaySel"><option value="">Keiner</option></select>
-        <p class="hint" style="margin:6px 0 0">An diesem Tag gibt es keine Nährstoff-Vorgaben – iss, worauf du Lust hast. 🍕</p>
-      </div>
+      <p class="hint" style="margin:0">⚡ Den <b>Cheat-Day</b> wählst du jetzt direkt im Reiter <b>Plan</b> – oben rechts, für jede Woche einzeln.</p>
     </div>
     <div class="divider"></div>
     <div class="rowcard" style="flex-direction:column;align-items:stretch;gap:10px">
@@ -824,15 +851,101 @@ function ingNutrients(ing){
 function zeroNut(){ return {kcal:0,protein:0,carbs:0,fat:0,fiber:0}; }
 function addNut(a,b){ NUTR_KEYS.forEach(k=>a[k]+=(b[k]||0)); return a; }
 function recipeNutrients(r){ const t=zeroNut(); if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ const n=ingNutrients(ing); if(n) addNut(t,n); }); return t; }
-function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
+function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; if(abn&&s.id==="s2") return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); addNut(t,extrasNut(dayId)); return t; }
 /* "gegessen/gekocht" tracking: sum only the marked meals so the day shows what's already eaten and what's still free */
 function doneKey(day,slot){ return day+"|"+slot; }
 function isDone(day,slot){ const d=DONE(); return !!(d && d[doneKey(day,slot)]); }
 function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); if(d[k]) delete d[k]; else d[k]=true; checkStreak(); save(); }
 function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
-function dayEaten(dayId){ const t=zeroNut(); SLOTS.forEach(s=>{ if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); return t; }
-function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]); }
+function dayEaten(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); dayExtras(dayId).forEach(e=>{ if(isDone(dayId,e.id)){ const r=state.recipes[e.rid]; if(r) addNut(t,recipeNutrients(r)); } }); return t; }
+function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]) || dayExtras(dayId).some(e=>isDone(dayId,e.id)); }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
+/* per-week cheat day: state.weekCheat[weekKey]=dayId|null, with a per-key edit timestamp weekCheatAt[weekKey] so cloud merge converges (last-write-wins). No global fallback — a missing key simply means "no cheat". */
+function cheatDayOf(k){ const v=state.weekCheat && state.weekCheat[k]; return (typeof v==="string" && DAYS.some(d=>d.id===v)) ? v : null; }
+function cheatDay(){ return cheatDayOf(uiWeek); }
+function setCheatDay(dayId){ ensureWeek(uiWeek); if(!state.weekCheat) state.weekCheat={}; if(!state.weekCheatAt) state.weekCheatAt={}; state.weekCheat[uiWeek]=(typeof dayId==="string"&&DAYS.some(d=>d.id===dayId))?dayId:null; state.weekCheatAt[uiWeek]=new Date().toISOString(); save(); renderPlan(); }
+/* ---- extra meals per day: state.weekExtra[weekKey][dayId] = [{id, rid}] (a "+" per day, all plans) ---- */
+const MT_SLOT={fruehstueck:"b",mittag:"l",abend:"d",snack:"s1"};
+const SLOT_LABEL2={b:"Frühstück",s1:"Snack 1",l:"Mittag",s2:"Snack 2",d:"Abend"};
+function dayExtras(dayId){ const w=state.weekExtra&&state.weekExtra[uiWeek]; const l=w&&w[dayId]; return Array.isArray(l)?l.filter(e=>e&&!e.del):[]; }   // filters out soft-deleted (tombstoned) extras
+function newExtraId(){ return "x"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36); }
+function addExtraMeal(dayId,rid){ ensureWeek(uiWeek); if(!state.weekExtra) state.weekExtra={}; if(!state.weekExtra[uiWeek]) state.weekExtra[uiWeek]={}; if(!Array.isArray(state.weekExtra[uiWeek][dayId])) state.weekExtra[uiWeek][dayId]=[]; state.weekExtra[uiWeek][dayId].push({id:newExtraId(),rid}); }
+function removeExtra(dayId,exId){ const l=state.weekExtra&&state.weekExtra[uiWeek]&&state.weekExtra[uiWeek][dayId]; if(Array.isArray(l)){ const e=l.find(x=>x&&x.id===exId); if(e) e.del=true; }  clearDone(dayId,exId); }   // soft-delete so the removal syncs (union merge would otherwise re-add it)
+function extrasNut(dayId){ const t=zeroNut(); dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r) addNut(t,recipeNutrients(r)); }); return t; }
+/* ---- manual locks per day/slot: state.weekLocks[weekKey][dayId][slot]=true (a slot the user set by hand; rebalance keeps it) ---- */
+function lockSet(dayId){ const s=new Set(); const w=state.weekLocks&&state.weekLocks[uiWeek], d=w&&w[dayId]; if(d) Object.keys(d).forEach(sl=>{ if(d[sl]) s.add(sl); }); return s; }
+function setLock(dayId,slot,on){ if(!state.weekLocks) state.weekLocks={}; if(!state.weekLocks[uiWeek]) state.weekLocks[uiWeek]={}; if(!state.weekLocks[uiWeek][dayId]) state.weekLocks[uiWeek][dayId]={}; if(on) state.weekLocks[uiWeek][dayId][slot]=true; else delete state.weekLocks[uiWeek][dayId][slot]; }
+/* ---- rebalance a day's non-locked base slots to hit the targets again, keeping manual dishes + extras fixed ---- */
+const BASE_ORDER=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
+function recipesByType(t){ return Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r)); }
+function weekOrder(){ return weekProfile()==="abnehmen" ? BASE_ORDER.filter(x=>x[0]!=="s2") : BASE_ORDER; }
+function rebalanceDay(dayId){
+  if(cheatDay()===dayId) return;                                  // cheat day has no targets
+  const tg=targets(), profId=weekProfile(), order=weekOrder(), locks=lockSet(dayId);
+  const fixed={}; order.forEach(([slot])=>{ if(locks.has(slot) && PLAN()[dayId][slot]) fixed[slot]=PLAN()[dayId][slot]; });
+  const baseNut=extrasNut(dayId), used={};
+  let best=null,bd=1e9;
+  for(let k=0;k<80;k++){ const day=fillDay(order,tg,profId,used,recipesByType,{fixed,baseNut}); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
+  if(best){ order.forEach(([slot])=>{ if(!locks.has(slot) && best.picks[slot]) PLAN()[dayId][slot]=best.picks[slot]; }); }   // only replace a non-locked slot that actually got a pick — never wipe an existing dish to null
+}
+/* ---- training per day: state.weekTrain[weekKey][dayId]=[{id,label,kcal,del?}]; burned kcal free up the day's balance ---- */
+const TRAININGS=[
+  {id:"spazieren",e:"🚶",label:"Spazieren",per30:120},{id:"joggen",e:"🏃",label:"Joggen",per30:300},
+  {id:"radfahren",e:"🚴",label:"Radfahren",per30:240},{id:"schwimmen",e:"🏊",label:"Schwimmen",per30:300},
+  {id:"kraft",e:"🏋️",label:"Krafttraining",per30:200},{id:"yoga",e:"🧘",label:"Yoga / Dehnen",per30:110},
+  {id:"hiit",e:"🔥",label:"HIIT",per30:350},{id:"ballsport",e:"⚽",label:"Ballsport",per30:260},
+  {id:"tanzen",e:"💃",label:"Tanzen",per30:200},{id:"wandern",e:"🥾",label:"Wandern",per30:260}
+];
+const TRAIN_DUR=[15,30,45,60,90];
+function trainKcal(per30,dur){ const w=state.currentWeight; const f=(typeof w==="number"&&w>0)?w/70:1; return Math.max(1,Math.round(per30*(dur/30)*f)); }
+function dayTrainings(dayId){ const w=state.weekTrain&&state.weekTrain[uiWeek]; const l=w&&w[dayId]; return Array.isArray(l)?l.filter(e=>e&&!e.del):[]; }
+function addTraining(dayId,label,kcal){ ensureWeek(uiWeek); if(!state.weekTrain) state.weekTrain={}; if(!state.weekTrain[uiWeek]) state.weekTrain[uiWeek]={}; if(!Array.isArray(state.weekTrain[uiWeek][dayId])) state.weekTrain[uiWeek][dayId]=[]; state.weekTrain[uiWeek][dayId].push({id:"t"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36),label,kcal:Math.max(0,Math.round(kcal))}); }
+function removeTraining(dayId,tId){ const l=state.weekTrain&&state.weekTrain[uiWeek]&&state.weekTrain[uiWeek][dayId]; if(Array.isArray(l)){ const e=l.find(x=>x&&x.id===tId); if(e) e.del=true; } }
+function dayBurn(dayId){ return dayTrainings(dayId).reduce((s,e)=>s+(+e.kcal||0),0); }
+function trainingEl(dayId){ const burn=dayBurn(dayId); const b=el("button","trainbtn"+(burn?" on":""), burn?("🏋️ Training · "+burn+" kcal verbrannt"):"🏋️ Training erfassen"); b.onclick=()=>openTrainChooser(dayId); return b; }
+function openTrainChooser(dayId){
+  let selType=TRAININGS[0], selDur=30;
+  const dn=DAYS.find(d=>d.id===dayId).name;
+  const draw=()=>{
+    const list=dayTrainings(dayId);
+    const logged=list.length? "<div class='trlist'>"+list.map(t=>"<div class='tritem'><span>"+esc(t.label)+"</span><b>"+t.kcal+" kcal</b><button class='slotrm' data-t='"+esc(t.id)+"'>✕</button></div>").join("")+"<div class='trsum'>Gesamt verbrannt: <b>"+dayBurn(dayId)+" kcal</b> → so viel mehr darfst du heute essen.</div></div>" : "<p class='hint'>Noch kein Training erfasst.</p>";
+    const est=trainKcal(selType.per30,selDur), wSet=(typeof state.currentWeight==="number"&&state.currentWeight>0);
+    openModal("<div class='mhead'><h3>🏋️ Training · "+esc(dn)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+      "<div class='mbody'>"+logged+
+      "<div class='pb-h' style='margin-top:12px'>Neues Training</div>"+
+      "<div class='chips' id='trTypes'>"+TRAININGS.map(t=>"<button class='chip"+(t.id===selType.id?" active":"")+"' data-t='"+t.id+"'>"+t.e+" "+esc(t.label)+"</button>").join("")+"</div>"+
+      "<div class='raterow' style='margin-top:8px'>Dauer: "+TRAIN_DUR.map(d=>"<button class='chip mini trdur"+(d===selDur?" active":"")+"' data-d='"+d+"'>"+d+" min</button>").join("")+"</div>"+
+      "<div class='trest'>Geschätzt: <b>"+est+" kcal</b> verbrannt"+(wSet?" (für "+esc(fmtNum(state.currentWeight))+" kg)":" · Richtwert – Gewicht im Plan-Dialog eingeben für genauere Werte")+"</div>"+
+      "<button class='btn block primary' id='trAdd' style='margin-top:10px'>➕ Training hinzufügen</button>"+
+      "</div>");
+    $("#mX").onclick=closeModal;
+    $$("#trTypes .chip").forEach(b=>b.onclick=()=>{ selType=TRAININGS.find(t=>t.id===b.dataset.t)||selType; draw(); });
+    $$(".trdur").forEach(b=>b.onclick=()=>{ selDur=+b.dataset.d||30; draw(); });
+    $$(".tritem .slotrm").forEach(b=>b.onclick=()=>{ removeTraining(dayId,b.dataset.t); save(); draw(); renderPlan(); });
+    $("#trAdd").onclick=()=>{ const kc=trainKcal(selType.per30,selDur); addTraining(dayId, selType.e+" "+selType.label, kc); save(); draw(); renderPlan(); toast("🏋️ Training erfasst – +"+kc+" kcal frei"); };
+  };
+  draw();
+}
+/* ---- water rewards: 💧 Tropfen (one per day the water goal is met) + Aqua's glänzender Tropfen (7 consecutive days) ---- */
+function dateStrOf(weekKey,dayId){ const d=slotDate(weekKey,dayId); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
+function dropsCount(){ return (state.rewards&&state.rewards.dropDays)?Object.keys(state.rewards.dropDays).length:0; }
+function waterStreak(){ if(!state.rewards||!state.rewards.dropDays) return 0; let d=todayStr(); if(!state.rewards.dropDays[d]) d=shiftDays(d,-1); let n=0; while(state.rewards.dropDays[d]&&n<400){ n++; d=shiftDays(d,-1); } return n; }
+function aquaDeserved(){ if(!state.rewards||!state.rewards.dropDays) return 0; const t=todayStr(); const days=Object.keys(state.rewards.dropDays).filter(x=>x<=t).sort(); let total=0,run=0,prev=null; days.forEach(x=>{ run=(prev&&shiftDays(prev,1)===x)?run+1:1; if(run%7===0) total++; prev=x; }); return total; }
+function celebrateAqua(){ enqueueCeleb("<div class='celeb-emoji aqua'>✨💧</div><h4>Glänzender Tropfen!</h4><p>7 Tage am Stück genug getrunken – <b>Aqua</b> ist begeistert:</p><p class='quip'>»Bleib schön hydriert, Chef – du perlst nur so vor Energie!«</p>"); }
+function checkAqua(){ if(!state.rewards) return; const deserved=aquaDeserved(); while((state.rewards.aquaCount||0)<deserved){ const n=(state.rewards.aquaCount||0)+1; state.rewards.aquaCount=n; state.rewards.nuggets.push({id:"aqua_"+n, char:"aqua", milestone:n, at:todayStr(), water:true}); celebrateAqua(); } }
+function maybeAwardDrop(weekKey,dayId){ if(!state.rewards) return; const cnt=(state.weekWater[weekKey]&&state.weekWater[weekKey][dayId])||0; const ds=dateStrOf(weekKey,dayId); if(ds>todayStr()) return; if(cnt>=waterGoalGlasses()){ if(!state.rewards.dropDays) state.rewards.dropDays={}; if(!state.rewards.dropDays[ds]){ state.rewards.dropDays[ds]=true; if(!rewardSilent) toast("💧 +1 Tropfen! Wasserziel erreicht 🎉"); checkAqua(); } } }
+function openCheatChooser(){
+  const opts=[{id:"",name:"Kein Cheat-Day"}].concat(DAYS.map(d=>({id:d.id,name:d.name})));
+  openModal("<div class='mhead'><h3>⚡ Cheat-Day</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'>"+
+    "<p class='weigh-lead'>Schummel-Tag für <b>KW "+weekLabel(uiWeek).kw+"</b> ("+esc(weekLabel(uiWeek).range)+")</p>"+
+    "<p class='hint'>An diesem Tag gibt's keine Nährstoff-Vorgaben – Knusper 🐥 dreht sich einfach kurz um und drückt beide Augen zu. 🍕⚡ Jede Woche einzeln wählbar.</p>"+
+    "<div class='chips' id='cheatChips'></div>"+
+    "</div>");
+  $("#mX").onclick=closeModal;
+  const render=()=>{ const mc=$("#cheatChips"); mc.innerHTML=""; opts.forEach(o=>{ const active=(cheatDay()||"")===o.id; const c=el("button","chip"+(active?" active":"")+(o.id?" cheatchip":""),o.id?("⚡ "+esc(o.name)):esc(o.name)); c.onclick=()=>{ setCheatDay(o.id||null); render(); }; mc.appendChild(c); }); };
+  render();
+}
 /* v3: food selection + deficit suggestions */
 function foodEnabled(key){ return !(has(state.disabledFoods,key) && state.disabledFoods[key]); }
 function isVeg(r){ return r && Array.isArray(r.ing) && r.ing.every(ing=>{ const c=CATALOG[ingFoodKey(ing)]; return c!=="Fleisch" && c!=="Fisch"; }); }
@@ -872,11 +985,16 @@ function scoreCandidate(cur,rn,usedCount,tg,goalBonus){
 /* weighted squared relative distance of a day's totals from the target (kcal & protein weighted most) */
 function dayDistance(n,tg){ let d=0; NUTR_KEYS.forEach(k=>{ if(!tg[k]) return; let rel=(n[k]-tg[k])/tg[k]; if((k==="protein"||k==="fiber")&&rel>0) rel=0; /* more protein/fibre than target is fine */ const w=k==="kcal"?3:k==="protein"?1.6:k==="fiber"?0.8:0.4; d+=w*rel*rel; }); return d; }
 /* fill one day with a randomized greedy pass (top-3 pick) so best-of-K can explore */
-function fillDay(order,tg,profId,used,byType,allowFn){
-  const picks={}, usedDay={}; const cur=zeroNut();
+function fillDay(order,tg,profId,used,byType,opts){
+  opts=opts||{}; const allowFn=opts.allowFn, blockIds=opts.blockIds, fixed=opts.fixed, baseNut=opts.baseNut;
+  const picks={}, usedDay={}; const cur=zeroNut(); if(baseNut) addNut(cur,baseNut);   // baseNut = extra meals already on the day
+  const orderSlots=new Set(order.map(x=>x[0]));
+  if(fixed){ Object.keys(fixed).forEach(slot=>{ if(!orderSlots.has(slot)) return; const r=fixed[slot]&&state.recipes[fixed[slot]]; if(r){ picks[slot]=fixed[slot]; usedDay[fixed[slot]]=(usedDay[fixed[slot]]||0)+1; addNut(cur,recipeNutrients(r)); } }); }   // locked/standard slots
   order.forEach(([slot,type])=>{
+    if(picks[slot]) return;                                        // fixed slot already placed
     let cands=byType(type);
     if(allowFn){ const pred=allowFn(slot); if(pred){ const f=cands.filter(pred); if(f.length) cands=f; } }   // per day/slot diet filter (falls back if none match)
+    if(blockIds && blockIds.size){ const f=cands.filter(r=>!blockIds.has(r.id)); if(f.length) cands=f; }     // don't repeat yesterday's dishes (falls back if none left)
     if(!cands.length) return;
     const scored=cands.map(r=>({r,s:scoreCandidate(cur,recipeNutrients(r),(used[r.id]||0)+(usedDay[r.id]||0)*2,tg,(r.goals&&r.goals.indexOf(profId)>=0)?0.6:0)+Math.random()*0.15})).sort((a,b)=>b.s-a.s);
     const top=scored.slice(0,3); const pick=top[Math.floor(Math.random()*top.length)].r;
@@ -885,12 +1003,14 @@ function fillDay(order,tg,profId,used,byType,allowFn){
   return {picks,nut:cur};
 }
 function generateWeek(profileId){
-  const prof=profile(profileId); const tg=computeTargets(prof.id); const used={};
+  const prof=profile(profileId); const tg=computeTargets(prof.id); const used={}; let prevIds=new Set();
+  const cd=cheatDay();
   const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
   const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
+  const defs={}; SLOTS.forEach(s=>{ const rid=state.defaults&&state.defaults[s.id]; if(rid && state.recipes[rid] && recipeAvailable(state.recipes[rid])) defs[s.id]=rid; }); // standard meals (always the same)
   const shuffle=(a)=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; };
-  const pickDays=(n)=>{ const days=shuffle(DAYS.filter(d=>d.id!==state.cheatDay).map(d=>d.id)); return new Set(days.slice(0,Math.max(0,Math.min(7,n)))); };
+  const pickDays=(n)=>{ const days=shuffle(DAYS.filter(d=>d.id!==cd).map(d=>d.id)); return new Set(days.slice(0,Math.max(0,Math.min(7,n)))); };
   const meatLimited = typeof state.meatPerWeek==="number" && state.meatPerWeek>=0;   // -1 = egal (jeden Tag), 0 = nie, N = an N Tagen
   const fishLimited = typeof state.fishPerWeek==="number" && state.fishPerWeek>=0;
   const meatDays = meatLimited ? pickDays(state.meatPerWeek) : null;
@@ -903,18 +1023,22 @@ function generateWeek(profileId){
   const np={}; let placed=0;
   DAYS.forEach(d=>{
     np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
-    if(d.id===state.cheatDay){                           // cheat day: anything goes, pick randomly, ignore targets
-      fullOrder.forEach(([slot,type])=>{ const c=byType(type); if(!c.length) return; np[d.id][slot]=c[Math.floor(Math.random()*c.length)].id; placed++; });
+    if(d.id===cd){                                       // cheat day: anything goes, pick randomly, ignore targets
+      fullOrder.forEach(([slot,type])=>{ let c=byType(type); if(!c.length) return; const f=c.filter(r=>!prevIds.has(r.id)); if(f.length) c=f; np[d.id][slot]=c[Math.floor(Math.random()*c.length)].id; placed++; });
+      prevIds=new Set(Object.values(np[d.id]).filter(Boolean));
       return;
     }
-    // best of many attempts: keep the day whose totals land closest to the goal's kcal/nutrients
+    // best of many attempts: keep the day whose totals land closest to the goal's kcal/nutrients (no dish repeated from the day before)
     let best=null,bd=1e9;
-    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,allowFor(d.id)); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
+    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,{allowFn:allowFor(d.id),blockIds:prevIds,fixed:defs,baseNut:extrasNut(d.id)}); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
     if(best){ Object.keys(best.picks).forEach(slot=>{ np[d.id][slot]=best.picks[slot]; used[best.picks[slot]]=(used[best.picks[slot]]||0)+1; placed++; }); }
+    prevIds=new Set(Object.values(np[d.id]).filter(Boolean));
   });
   if(!placed){ toast("Keine passenden Rezepte – bitte Lebensmittel-Auswahl prüfen"); return; }
   const emptyTypes=[...new Set(order.map(x=>x[1]))].filter(t=>byType(t).length===0);   // meal types with no candidates
-  state.targets={...tg}; state.weeks[uiWeek]=normalizePlan(np); if(state.weekProfile) state.weekProfile[uiWeek]=prof.id; save(); renderAll();
+  state.targets={...tg}; state.weeks[uiWeek]=normalizePlan(np); if(state.weekProfile) state.weekProfile[uiWeek]=prof.id;
+  if(!state.weekLocks) state.weekLocks={}; state.weekLocks[uiWeek]={};   // fresh plan → no manual locks yet
+  save(); renderAll();
   if(emptyTypes.length) toast("Plan erstellt – aber keine Rezepte für: "+emptyTypes.map(mealLabel).join(", "));
   else toast(prof.emoji+" Plan erstellt: "+prof.label);
 }
@@ -1085,7 +1209,7 @@ const SEED_PLAN = {
   sa:{b:"r05",s1:"r12",l:"r26",s2:"r19",d:"r33"},
   so:{b:"r06",s1:"r13",l:"r27",s2:"r20",d:"r34"}
 };
-function defaultRewards(){ return { nuggets:[], goldCount:0, streakBest:0, awardedStreaks:[], lastWeighMonth:null }; }
+function defaultRewards(){ return { nuggets:[], goldCount:0, streakBest:0, awardedStreaks:[], lastWeighMonth:null, dropDays:{}, aquaCount:0 }; }
 function seedState(){
   const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",goals:["ausgewogen"],ing:r.ing.map(x=>({...x}))});
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
@@ -1094,7 +1218,7 @@ function seedState(){
   return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1, fishPerWeek:-1,
     currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
     height:null, age:null, sex:"n", activity:1.375,
-    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}},
+    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekLocks:{}, defaults:{},
     weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
     recipes, cart:[]};
 }
@@ -1162,7 +1286,7 @@ function weekLabel(k){ const mo=weekMonday(k), su=new Date(mo.getTime()); su.set
 function dayDateStr(k,dayIdx){ const d=weekMonday(k); d.setDate(d.getDate()+dayIdx); return fmtDM(d); }
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
 function ymStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2); }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
 function pruneEmptyWeeks(){                                // drop only fully-empty scaffolding weeks; any used week is permanent (stats depend on it)
   const ck=currentMondayStr();
   Object.keys(state.weeks).forEach(k=>{
@@ -1171,7 +1295,10 @@ function pruneEmptyWeeks(){                                // drop only fully-em
     const emptyD=!state.weekDone[k]||Object.keys(state.weekDone[k]).length===0;
     const noPf=!state.weekProfile[k];
     const emptyW=!state.weekWater||!state.weekWater[k]||Object.keys(state.weekWater[k]).length===0;
-    if(emptyP&&emptyD&&noPf&&emptyW){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; }
+    const noCheat=!(state.weekCheat && state.weekCheat[k]);
+    const noExtra=!(state.weekExtra && state.weekExtra[k] && Object.keys(state.weekExtra[k]).some(dy=>Array.isArray(state.weekExtra[k][dy]) && state.weekExtra[k][dy].length));   // keep the week while any entry (incl. a del-tombstone) exists, so the removal can sync
+    const noTrain=!(state.weekTrain && state.weekTrain[k] && Object.keys(state.weekTrain[k]).some(dy=>Array.isArray(state.weekTrain[k][dy]) && state.weekTrain[k][dy].length));
+    if(emptyP&&emptyD&&noPf&&emptyW&&noCheat&&noExtra&&noTrain){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; if(state.weekCheat) delete state.weekCheat[k]; if(state.weekCheatAt) delete state.weekCheatAt[k]; if(state.weekExtra) delete state.weekExtra[k]; if(state.weekTrain) delete state.weekTrain[k]; if(state.weekLocks) delete state.weekLocks[k]; }
   });
 }
 function persistLocal(){ pruneEmptyWeeks(); try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
@@ -1195,7 +1322,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -1220,6 +1347,8 @@ function mergeRewards(r){ if(!r||typeof r!=="object"||Array.isArray(r)) return;
   state.rewards.streakBest=Math.max(state.rewards.streakBest||0, r.streakBest||0);
   state.rewards.awardedStreaks=[...new Set([...(state.rewards.awardedStreaks||[]), ...(Array.isArray(r.awardedStreaks)?r.awardedStreaks:[])])];
   if((r.lastWeighMonth||"")>(state.rewards.lastWeighMonth||"")) state.rewards.lastWeighMonth=r.lastWeighMonth;
+  if(r.dropDays && typeof r.dropDays==="object" && !Array.isArray(r.dropDays)){ if(!state.rewards.dropDays) state.rewards.dropDays={}; Object.keys(r.dropDays).forEach(dd=>{ if(r.dropDays[dd]) state.rewards.dropDays[dd]=true; }); }   // union water-goal days
+  state.rewards.aquaCount=Math.max(state.rewards.aquaCount||0, r.aquaCount||0);
 }
 async function cloudPullApply(force){
   const c=cloudConfig(); if(!c) return;
@@ -1237,6 +1366,11 @@ async function cloudPullApply(force){
           Object.keys(state.weekDone||{}).forEach(k=>{ if(t.weekDone[k] && state.weekDone[k] && t.weekDone[k]!==state.weekDone[k]){ Object.keys(state.weekDone[k]).forEach(dk=>{ if(state.weekDone[k][dk]) t.weekDone[k][dk]=true; }); } });   // union cook-marks per week so a second device's marks are never lost
           state.weeks=t.weeks; state.weekDone=t.weekDone; state.weekProfile=t.weekProfile; }
         if(d.weekWater && typeof d.weekWater==="object" && !Array.isArray(d.weekWater)){ if(!state.weekWater) state.weekWater={}; Object.keys(d.weekWater).forEach(k=>{ if(!WK_RE.test(k)) return; const rw=d.weekWater[k]||{}; if(!state.weekWater[k]) state.weekWater[k]={}; Object.keys(rw).forEach(dk=>{ state.weekWater[k][dk]=Math.max(state.weekWater[k][dk]||0, (+rw[dk]||0)); }); }); }   // union water glasses by max per day
+        if(d.weekCheat && typeof d.weekCheat==="object" && !Array.isArray(d.weekCheat)){ if(!state.weekCheat) state.weekCheat={}; if(!state.weekCheatAt) state.weekCheatAt={}; const rAt=(d.weekCheatAt&&typeof d.weekCheatAt==="object"&&!Array.isArray(d.weekCheatAt))?d.weekCheatAt:{}; Object.keys(d.weekCheat).forEach(k=>{ if(!WK_RE.test(k)) return; const lt=state.weekCheatAt[k]||"", rt=rAt[k]||""; if(!(k in state.weekCheat) || rt>lt){ state.weekCheat[k]=d.weekCheat[k]; state.weekCheatAt[k]=rt||lt; } }); }   // last-write-wins by per-key timestamp → converges across devices
+        if(d.weekExtra && typeof d.weekExtra==="object" && !Array.isArray(d.weekExtra)){ if(!state.weekExtra) state.weekExtra={}; Object.keys(d.weekExtra).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekExtra[k]||{}; if(!state.weekExtra[k]) state.weekExtra[k]={}; Object.keys(rd).forEach(dy=>{ const rlist=Array.isArray(rd[dy])?rd[dy]:[]; const llist=Array.isArray(state.weekExtra[k][dy])?state.weekExtra[k][dy]:[]; const by={}; llist.concat(rlist).forEach(e=>{ if(e&&e.id){ const p=by[e.id]; by[e.id]=p?{id:e.id,rid:p.rid||e.rid,del:!!(p.del||e.del)}:{id:e.id,rid:e.rid,del:!!e.del}; } }); state.weekExtra[k][dy]=Object.values(by); }); }); }   // union extra meals by id; a soft-delete (del) on either side wins so removals converge
+        if(d.weekTrain && typeof d.weekTrain==="object" && !Array.isArray(d.weekTrain)){ if(!state.weekTrain) state.weekTrain={}; Object.keys(d.weekTrain).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekTrain[k]||{}; if(!state.weekTrain[k]) state.weekTrain[k]={}; Object.keys(rd).forEach(dy=>{ const rlist=Array.isArray(rd[dy])?rd[dy]:[]; const llist=Array.isArray(state.weekTrain[k][dy])?state.weekTrain[k][dy]:[]; const by={}; llist.concat(rlist).forEach(e=>{ if(e&&e.id){ const p=by[e.id]; by[e.id]=p?{id:e.id,label:p.label||e.label,kcal:p.kcal||e.kcal,del:!!(p.del||e.del)}:{id:e.id,label:e.label,kcal:e.kcal,del:!!e.del}; } }); state.weekTrain[k][dy]=Object.values(by); }); }); }   // union trainings by id; del wins
+        // weekLocks are intentionally NOT synced — they are a per-device hint for rebalance/regenerate; syncing a monotonic union would resurrect cleared locks
+        if(d.defaults && typeof d.defaults==="object" && !Array.isArray(d.defaults)) state.defaults={...d.defaults, ...state.defaults};   // per-slot merge keeps each device's independent standard-meal picks
         if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
@@ -1258,6 +1392,7 @@ async function cloudPullApply(force){
         if(d.substitutions && typeof d.substitutions==="object" && !Array.isArray(d.substitutions)) state.substitutions=d.substitutions;
         state.cheatDay=(typeof d.cheatDay==="string"&&DAYS.some(x=>x.id===d.cheatDay))?d.cheatDay:null;
         if(Array.isArray(d.cart)) state.cart=d.cart;
+        checkStreak(); grantPendingAwards(); checkAqua();   // grant rewards that only complete via the merge of another device's data (idempotent)
         remoteStamp=row.updated_at; setActiveWeek(uiWeek); persistLocal(); renderAll();
       }
       setSync("ok");
@@ -1290,16 +1425,16 @@ function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+" 
 
 /* ============================ RENDER ============================ */
 function renderAll(){ const pv=$("#pVal"); if(pv) pv.textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets(); renderStats();
-  const cs=$("#cheatDaySel"); if(cs){ if(cs.options.length<=1){ DAYS.forEach(d=>{ const o=el("option"); o.value=d.id; o.textContent=d.name; cs.appendChild(o); }); } cs.value=state.cheatDay||""; }
 }
 
 function dayNutriEl(dayId){
-  const wrap=el("div","daynutri"+(dayId===state.cheatDay?" cheat":"")+(nutriOpen?"":" collapsed"));
-  if(dayId===state.cheatDay){ wrap.innerHTML="<div class='dn-cheat'>🍕 Cheat-Day – alles erlaubt</div>"; return wrap; }
-  const eaten=dayEaten(dayId), planned=dayNutrients(dayId), t=targets();
-  const freeK=Math.max(0,Math.round(t.kcal-eaten.kcal));
+  const cheatId=cheatDay();
+  const wrap=el("div","daynutri"+(dayId===cheatId?" cheat":"")+(nutriOpen?"":" collapsed"));
+  if(dayId===cheatId){ wrap.innerHTML="<div class='dn-cheat'>⚡🍕 Cheat-Day – alles erlaubt</div>"; return wrap; }
+  const eaten=dayEaten(dayId), planned=dayNutrients(dayId), t=targets(), burn=dayBurn(dayId);
+  const freeK=Math.max(0,Math.round(t.kcal-eaten.kcal+burn));   // training burns kcal → more free budget for the day
   if(!nutriOpen){
-    wrap.innerHTML="<button class='dn-head' type='button'><span class='dn-lbl'>📊 Nährwerte"+(anyDone(dayId)?" · frei "+freeK+" kcal":"")+"</span><span class='dn-chev'>▸</span></button>";
+    wrap.innerHTML="<button class='dn-head' type='button'><span class='dn-lbl'>📊 Nährwerte"+((anyDone(dayId)||burn)?" · frei "+freeK+" kcal":"")+(burn?" 🏋️":"")+"</span><span class='dn-chev'>▸</span></button>";
   } else {
     const bars=["protein","carbs","fat","fiber"].map(k=>{
       const pct=t[k]?Math.min(100,Math.round(eaten[k]/t[k]*100)):0;
@@ -1310,6 +1445,7 @@ function dayNutriEl(dayId){
     wrap.innerHTML=
       "<button class='dn-head' type='button'><span class='dn-kcal'>Gegessen ≈ "+Math.round(eaten.kcal)+" <small>/ "+Math.round(t.kcal)+" kcal</small></span><span class='dn-chev'>▾</span></button>"+
       "<div class='dn-free-kcal'>Noch frei heute: <b>"+freeK+" kcal</b></div>"+
+      (burn>0?"<div class='dn-burn'>🏋️ +"+burn+" kcal frei durch Training</div>":"")+
       "<div class='dn-bars'>"+bars+"</div>"+
       "<div class='dn-planned'>Geplant gesamt: "+Math.round(planned.kcal)+" kcal</div>";
   }
@@ -1318,16 +1454,18 @@ function dayNutriEl(dayId){
 }
 
 /* ---- water tracking: one glass = 500 ml; goal glasses from body weight (~35 ml/kg), tap to fill ---- */
-function waterGoalGlasses(){ const w=state.currentWeight; const ml=(typeof w==="number"&&w>0)?w*35:2000; return Math.max(4, Math.min(14, Math.round(ml/500))); }
+const ML_PER_GLASS=250;
+function waterGoalGlasses(){ const w=state.currentWeight; const ml=(typeof w==="number"&&w>0)?w*35:2000; return Math.max(6, Math.min(28, Math.round(ml/ML_PER_GLASS))); }
 function waterCount(dayId){ const wk=state.weekWater&&state.weekWater[uiWeek]; return Math.max(0,(wk&&+wk[dayId])||0); }
-function setWaterCount(dayId,n){ ensureWeek(uiWeek); const g=waterGoalGlasses(); n=Math.max(0,Math.min(g,n)); if(n<=0) delete state.weekWater[uiWeek][dayId]; else state.weekWater[uiWeek][dayId]=n; save(); renderPlan(); }
-function fmtL(g){ return String(Math.round(g*0.5*10)/10).replace(".",",")+" L"; }
+function setWaterCount(dayId,n){ ensureWeek(uiWeek); n=Math.max(0,Math.min(40,n)); if(n<=0) delete state.weekWater[uiWeek][dayId]; else state.weekWater[uiWeek][dayId]=n; maybeAwardDrop(uiWeek,dayId); save(); renderPlan(); }
+function fmtL(glasses){ return String(Math.round(glasses*ML_PER_GLASS/100)/10).replace(".",",")+" L"; }
 function waterEl(dayId){
-  const g=waterGoalGlasses(), c=Math.min(waterCount(dayId),g);
+  const g=waterGoalGlasses(), c=waterCount(dayId), shown=Math.max(g,c);
   const wrap=el("div","waterrow");
-  wrap.appendChild(el("div","water-head","💧 Wasser <small>"+esc(fmtL(c)+" / "+fmtL(g)+" · "+c+"/"+g+" Gläser à 500 ml")+"</small>"));
+  wrap.appendChild(el("div","water-head","💧 Wasser <small>"+esc(fmtL(c)+" / "+fmtL(g)+" · "+c+"/"+g+" Gläser à 250 ml")+"</small>"));
   const glasses=el("div","glasses");
-  for(let i=0;i<g;i++){ const on=i<c; const b=el("button","glass"+(on?" on":""),"🥛"); b.title=((i+1)*500)+" ml"; b.setAttribute("aria-label",(i+1)+". Glas"); b.onclick=()=>setWaterCount(dayId, (i+1===c)? i : i+1); glasses.appendChild(b); }
+  for(let i=0;i<shown;i++){ const on=i<c, extra=i>=g; const b=el("button","glass"+(on?" on":"")+(extra&&on?" extra":""),"🥛"); b.title=((i+1)*ML_PER_GLASS)+" ml"; b.setAttribute("aria-label",(i+1)+". Glas"); b.onclick=()=>setWaterCount(dayId,(i+1===c)?i:i+1); glasses.appendChild(b); }
+  const plus=el("button","glass plus","＋"); plus.title="Weiteres Glas (+250 ml)"; plus.setAttribute("aria-label","Weiteres Glas hinzufügen"); plus.onclick=()=>setWaterCount(dayId,c+1); glasses.appendChild(plus);
   wrap.appendChild(glasses);
   return wrap;
 }
@@ -1365,15 +1503,17 @@ function renderPlan(){
     }
   }
   const abnehmenWeek = weekProfile()==="abnehmen";
+  const cb=$("#cheatBtn"); if(cb){ const cd0=cheatDay(); const dd=cd0?DAYS.find(x=>x.id===cd0):null; cb.innerHTML=dd?("⚡ "+esc(dd.short)+" 🍕"):"⚡ Cheat-Day"; cb.classList.toggle("on",!!cd0); }
   const bar=$("#dayBar"); bar.innerHTML="";
   DAYS.forEach(d=>{
-    const cheat=d.id===state.cheatDay;
-    const b=el("button",(d.id===uiDay?"active":"")+(cheat?" cheatday":""),esc(d.name)+(cheat?" 🍕":"")+"<small>"+esc(d.short+" "+dayDateStr(uiWeek,DAYS.indexOf(d)))+"</small>");
+    const cheat=d.id===cheatDay();
+    const b=el("button",(d.id===uiDay?"active":"")+(cheat?" cheatday":""),esc(d.name)+(cheat?" ⚡":"")+"<small>"+esc(d.short+" "+dayDateStr(uiWeek,DAYS.indexOf(d)))+"</small>");
     b.onclick=()=>{uiDay=d.id;renderPlan();};
     bar.appendChild(b);
     const col=el("div","daycol"+(d.id===uiDay?" showday":""));
-    col.appendChild(el("div","dayname",esc(d.name)+(cheat?" 🍕":"")));
+    col.appendChild(el("div","dayname",esc(d.name)+(cheat?" ⚡🍕":"")));
     col.appendChild(dayNutriEl(d.id));
+    col.appendChild(trainingEl(d.id));
     SLOTS.forEach(s=>{
       if(s.id==="s2" && abnehmenWeek) return;            // Abnehmen-Woche: kein zweiter Snack
       const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
@@ -1386,6 +1526,15 @@ function renderPlan(){
       if(r){ const chk=el("button","slotcheck"+(done?" on":""),done?"✓":""); chk.title=done?"Als nicht gegessen markieren":"Als gegessen markieren"; chk.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; card.appendChild(chk); }
       col.appendChild(card);
     });
+    dayExtras(d.id).forEach(e=>{ const er=recipe(e.rid), edone=isDone(d.id,e.id);
+      const ecard=el("div","slotcard extra"+(er?" filled":"")+(edone?" done":""));
+      ecard.appendChild(el("div","slotlabel","➕ Extra"));
+      const ebtn=el("button","slotbtn"+(er?"":" empty"),er?esc(er.name):"+ Gericht"); ebtn.onclick=()=>openPicker(d.id,null,{extraId:e.id,slotType:(er&&er.mealType)||"snack"}); ecard.appendChild(ebtn);
+      if(er){ const echk=el("button","slotcheck"+(edone?" on":""),edone?"✓":""); echk.title=edone?"Als nicht gegessen markieren":"Als gegessen markieren"; echk.onclick=(ev)=>{ ev.stopPropagation(); toggleDone(d.id,e.id); renderPlan(); }; ecard.appendChild(echk); }
+      const erm=el("button","slotrm","✕"); erm.title="Extra entfernen"; erm.onclick=(ev)=>{ ev.stopPropagation(); removeExtra(d.id,e.id); save(); renderPlan(); }; ecard.appendChild(erm);
+      col.appendChild(ecard);
+    });
+    const addMeal=el("button","addmeal","＋ Mahlzeit hinzufügen"); addMeal.onclick=()=>openPicker(d.id,null,{extra:true,slotType:"snack"}); col.appendChild(addMeal);
     col.appendChild(waterEl(d.id));
     grid.appendChild(col);
   });
@@ -1416,8 +1565,8 @@ function renderRecipes(){
     list.appendChild(row);
   });
 }
-function renderNutriPanel(container,day,slot){
-  if(day===state.cheatDay){ container.innerHTML="<div class='npanel'><div class='np-line ok'>🍕 Cheat-Day – heute darfst du essen, worauf du Lust hast! Keine Nährstoff-Vorgaben.</div></div>"; return; }
+function renderNutriPanel(container,day,slot,assign){
+  if(day===cheatDay()){ container.innerHTML="<div class='npanel'><div class='np-line ok'>⚡🍕 Cheat-Day – heute darfst du essen, worauf du Lust hast! Keine Nährstoff-Vorgaben.</div></div>"; return; }
   const n=dayNutrients(day,slot), t=targets();
   const rows=NUTR_KEYS.map(k=>{ const have=n[k]||0, need=t[k]||0;
     const pct=need? Math.min(100,Math.round(have/need*100)) : 100;
@@ -1447,7 +1596,7 @@ function renderNutriPanel(container,day,slot){
   $$(".np-recs",container).forEach(span=>{
     const recs=recipesRichIn(span.dataset.k,3,slotType); if(!recs.length){ span.innerHTML="<span class='np-recs-lbl'>Kein passendes Rezept – nutze die Lebensmittel unten.</span>"; return; }
     span.innerHTML="<span class='np-recs-lbl'>🍽️ Passende Rezepte:</span>";
-    recs.forEach(r=>{ const b=el("button","recchip",esc(r.name)); b.onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=r.id; save(); closeModal(); renderPlan(); }; span.appendChild(b); });
+    recs.forEach(r=>{ const b=el("button","recchip",esc(r.name)); b.onclick=()=> assign ? assign(r.id) : (function(){ clearDone(day,slot); PLAN()[day][slot]=r.id; save(); closeModal(); renderPlan(); })(); span.appendChild(b); });
   });
 }
 
@@ -1511,9 +1660,17 @@ function closeModal(){ modalBg.classList.remove("open"); modalEl.innerHTML=""; i
 modalBg.addEventListener("click",e=>{ if(e.target===modalBg) closeModal(); });
 
 /* pick a recipe for a slot */
-function openPicker(day,slot){
-  const dn=DAYS.find(d=>d.id===day).name, sn=SLOTS.find(s=>s.id===slot).name;
-  const slotType=SLOT_TYPE[slot]||"snack";
+function openPicker(day,slot,opts){
+  opts=opts||{};
+  const isExtra=!!(opts.extra||opts.extraId);
+  const dn=DAYS.find(d=>d.id===day).name, sn=isExtra?"Extra-Mahlzeit":SLOTS.find(s=>s.id===slot).name;
+  const slotType=opts.slotType||SLOT_TYPE[slot]||"snack";
+  const assign=(rid)=>{
+    if(opts.extra){ addExtraMeal(day,rid); }
+    else if(opts.extraId){ const e=dayExtras(day).find(x=>x.id===opts.extraId); if(e){ e.rid=rid; } else { addExtraMeal(day,rid); } }
+    else { clearDone(day,slot); PLAN()[day][slot]=rid; setLock(day,slot,true); rebalanceDay(day); }   // manual change → lock this slot, rebalance the rest
+    save(); closeModal(); renderPlan();
+  };
   openModal(
     "<div class='mhead'><h3>"+esc(dn)+" · "+esc(sn)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
@@ -1524,7 +1681,7 @@ function openPicker(day,slot){
     "<div id='pickList'></div>"+
     "<button class='btn block ghost' id='customDish' style='margin-top:6px'>＋ Eigenes Gericht eintragen</button></div>");
   $("#mX").onclick=closeModal;
-  renderNutriPanel($("#nutriPanel"),day,slot);
+  renderNutriPanel($("#nutriPanel"),day,isExtra?null:slot,assign);
   let pdiet="all";
   const render=()=>{
     const dc=$("#pickDiet"); dc.innerHTML="";
@@ -1540,7 +1697,7 @@ function openPicker(day,slot){
     matches.forEach(r=>{
         const kcal=Math.round(recipeNutrients(r).kcal);
         const b=el("button","pickitem","<span>"+esc(r.name)+"</span><small>"+(kcal?kcal+" kcal":r.ing.length+" Zut.")+"</small>");
-        b.onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=r.id; save(); closeModal(); renderPlan(); };
+        b.onclick=()=>assign(r.id);
         box.appendChild(b);
       });
   };
@@ -1550,7 +1707,7 @@ function openPicker(day,slot){
   $("#customDish").onclick=()=>{
     const nm=($("#pickSearch").value||"").trim();
     if(!nm){ $("#pickSearch").focus(); toast("Namen oben eingeben"); return; }
-    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; clearDone(day,slot); PLAN()[day][slot]=id; save(); closeModal(); renderPlan(); renderRecipes();
+    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; assign(id); renderRecipes();
     toast("Gericht angelegt");
   };
 }
@@ -1588,7 +1745,7 @@ function openSlotMenu(day,slot){
   $("#doneBtn").onclick=()=>{ toggleDone(day,slot); closeModal(); renderPlan(); };
   $("#changeDish").onclick=()=>{ closeModal(); openPicker(day,slot); };
   $("#editDish").onclick=()=>{ closeModal(); openRecipeEdit(rid); };
-  $("#clearDish").onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=null; save(); closeModal(); renderPlan(); };
+  $("#clearDish").onclick=()=>{ clearDone(day,slot); PLAN()[day][slot]=null; setLock(day,slot,false); save(); closeModal(); renderPlan(); };
 }
 
 /* recipe editor */
@@ -1601,6 +1758,7 @@ function openRecipeEdit(id){
     "<input class='nm' list='ingCatalog' placeholder='Zutat' value='"+esc(ing.n)+"'>"+
     "<button class='del' aria-label='entfernen'>✕</button></div>";
   const typeOpts=MEAL_TYPES.map(m=>"<option value='"+m.id+"'"+((r.mealType||"snack")===m.id?" selected":"")+">"+esc(m.label)+"</option>").join("");
+  const asgSlots=weekOrder().map(x=>x[0]); const mtSlot=MT_SLOT[r.mealType||"snack"]||"s1"; const asgDef=asgSlots.indexOf(mtSlot)>=0?mtSlot:asgSlots[0];
   openModal(
     "<div class='mhead'><h3>Rezept</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
@@ -1611,6 +1769,16 @@ function openRecipeEdit(id){
     "<datalist id='ingCatalog'>"+Object.keys(NUTRI).filter(foodEnabled).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>"+
     "<button class='btn sm ghost' id='addIng' style='margin-top:4px'>＋ Zutat</button>"+
     "<div class='nutrisum' id='rNutri' style='margin-top:14px'></div>"+
+    "<div class='planbox'>"+
+      "<div class='pb-h'>📅 In den Wochenplan (KW "+weekLabel(uiWeek).kw+")</div>"+
+      "<div class='pb-row'>"+
+        "<select class='input' id='asgDay'><option value='all'>Jeden Tag</option>"+DAYS.map(d=>"<option value='"+d.id+"'"+(d.id===uiDay?" selected":"")+">"+esc(d.name)+"</option>").join("")+"</select>"+
+        "<select class='input' id='asgSlot'>"+asgSlots.map(sl=>"<option value='"+sl+"'"+(sl===asgDef?" selected":"")+">"+esc(SLOT_LABEL2[sl])+"</option>").join("")+"</select>"+
+        "<button class='btn sm primary' id='asgBtn'>Eintragen</button>"+
+      "</div>"+
+      "<label class='pb-def'><input type='checkbox' id='asgDefault'> <span>⭐ Immer als Standard für diese Mahlzeit (jeder Tag beim Planen)</span></label>"+
+      "<div class='pb-note' id='asgNote'></div>"+
+    "</div>"+
     "<div class='field' style='margin-top:12px'><label>Zubereitung</label><textarea class='input' id='rSteps' rows='5' placeholder='Zubereitungsschritte (eine Zeile pro Schritt) …'>"+esc(r.steps||"")+"</textarea></div>"+
     "</div>"+
     "<div class='mfoot'><button class='btn ghost' id='delRecipe'>Löschen</button><div style='flex:1'></div><button class='btn primary' id='saveRecipe'>Speichern</button></div>");
@@ -1626,6 +1794,15 @@ function openRecipeEdit(id){
   $$(".ingrow",ingList).forEach(bind);
   updateNutri();
   $("#addIng").onclick=()=>{ const d=el("div"); d.innerHTML=ingRow({n:"",a:null,u:"g"}); const row=d.firstChild; ingList.appendChild(row); bind(row); row.querySelector(".nm").focus(); };
+  const refreshAsg=()=>{ const slot=$("#asgSlot").value; const isDef=state.defaults&&state.defaults[slot]===id; const cb=$("#asgDefault"); if(cb) cb.checked=!!isDef; const nt=$("#asgNote"); if(nt) nt.innerHTML=isDef?("⭐ Wird beim automatischen Planen immer als <b>"+esc(SLOT_LABEL2[slot])+"</b> verwendet."):""; };
+  $("#asgSlot").onchange=refreshAsg; refreshAsg();
+  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); };
+  $("#asgBtn").onclick=()=>{ const dayV=$("#asgDay").value, slot=$("#asgSlot").value; persistForm(); ensureWeek(uiWeek);
+    const applyDay=(dy)=>{ clearDone(dy,slot); PLAN()[dy][slot]=id; setLock(dy,slot,true); rebalanceDay(dy); };
+    if(dayV==="all"){ DAYS.forEach(d=>applyDay(d.id)); } else { applyDay(dayV); uiDay=dayV; }
+    save(); closeModal(); switchView("plan"); renderPlan(); toast(dayV==="all"?"An allen Tagen eingetragen":"Ins Wochenplan eingetragen");
+  };
+  $("#asgDefault").onchange=(e)=>{ const slot=$("#asgSlot").value; if(!state.defaults) state.defaults={}; if(e.target.checked) state.defaults[slot]=id; else if(state.defaults[slot]===id) state.defaults[slot]=null; save(); refreshAsg(); toast(e.target.checked?("⭐ Standard-"+SLOT_LABEL2[slot]+" gesetzt"):"Standard entfernt"); };
   $("#saveRecipe").onclick=()=>{
     const nm=$("#rName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
     r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows();
@@ -1634,7 +1811,9 @@ function openRecipeEdit(id){
   };
   $("#delRecipe").onclick=()=>{
     if(!confirm("Rezept löschen: "+r.name+"?\nEs wird auch aus dem Wochenplan entfernt.")) return;
-    Object.keys(state.weeks).forEach(w=>DAYS.forEach(d=>SLOTS.forEach(s=>{ if(state.weeks[w][d.id]&&state.weeks[w][d.id][s.id]===id) state.weeks[w][d.id][s.id]=null; })));
+    Object.keys(state.weeks).forEach(w=>DAYS.forEach(d=>SLOTS.forEach(s=>{ if(state.weeks[w][d.id]&&state.weeks[w][d.id][s.id]===id){ state.weeks[w][d.id][s.id]=null; if(state.weekLocks&&state.weekLocks[w]&&state.weekLocks[w][d.id]) delete state.weekLocks[w][d.id][s.id]; if(state.weekDone&&state.weekDone[w]) delete state.weekDone[w][d.id+"|"+s.id]; } })));
+    if(state.defaults) SLOTS.forEach(s=>{ if(state.defaults[s.id]===id) state.defaults[s.id]=null; });
+    if(state.weekExtra) Object.keys(state.weekExtra).forEach(w=>Object.keys(state.weekExtra[w]||{}).forEach(dy=>{ if(Array.isArray(state.weekExtra[w][dy])) state.weekExtra[w][dy].forEach(e=>{ if(e&&e.rid===id){ e.del=true; if(state.weekDone&&state.weekDone[w]) delete state.weekDone[w][dy+"|"+e.id]; } }); }));
     delete state.recipes[id]; save(); closeModal(); renderRecipes(); renderPlan();
     toast("Rezept gelöscht");
   };
@@ -1692,10 +1871,11 @@ function openMenu(){
 }
 $("#menuBtn").onclick=openMenu;
 $("#foodSelectBtn").onclick=openFoodSelect;
-$("#cheatDaySel").onchange=(e)=>{ state.cheatDay=e.target.value||null; save(); renderPlan(); };
+$("#cheatBtn").onclick=openCheatChooser;
 $("#recipeSearch").addEventListener("input",renderRecipes);
 function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",mealType:"snack",steps:"",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
 $("#newRecipeBtn").onclick=createRecipe;
+$("#recipeFoodBtn").onclick=openFoodSelect;
 
 function renderTargets(){
   const g=$("#targetsGrid"); if(!g) return;
@@ -1893,7 +2073,7 @@ function renderStats(){
   const host=$("#statsBody"); if(!host) return;
   const ck=currentMondayStr(), total=cookedTotal(), thisW=cookedInWeek(ck), thisM=cookedInMonth(ymStr());
   const streak=currentStreak(), owned=ownedCount(), gold=state.rewards.goldCount||0;
-  if(total===0 && state.weightLog.length===0){ host.innerHTML=knusperBubble("Noch keine Daten – koch dein erstes Gericht, dann füllt sich hier alles! 🍳")+"<button class='btn block' id='bandeBtn' style='margin-top:12px'>🍗 Nugget-Bande ansehen</button>"; const bb0=$("#bandeBtn"); if(bb0) bb0.onclick=openBande; return; }
+  if(total===0 && state.weightLog.length===0 && dropsCount()===0){ host.innerHTML=knusperBubble("Noch keine Daten – koch dein erstes Gericht oder trink dein Wasserziel, dann füllt sich hier alles! 🍳💧")+"<button class='btn block' id='bandeBtn' style='margin-top:12px'>🍗 Nugget-Bande ansehen</button>"; const bb0=$("#bandeBtn"); if(bb0) bb0.onclick=openBande; return; }
   const bubble = streak>=2 ? ("Wahnsinn – "+streak+" Kochwochen am Stück! Ich bin so stolz. 🔥") : ("Schon "+total+" Gerichte gekocht. Weiter so, Chef! 🍗");
   let html=knusperBubble(bubble);
   html+="<div class='stat-tiles'><div class='stile'><b>"+thisW+"</b><small>Diese Woche</small></div><div class='stile'><b>"+thisM+"</b><small>Diesen Monat</small></div><div class='stile'><b>"+total+"</b><small>Gesamt</small></div></div>";
@@ -1902,7 +2082,9 @@ function renderStats(){
   html+="<div class='stat-card'><div class='sc-head'>Monatsziel</div><div class='meter'><div class='meter-fill' style='width:"+pct+"%'></div></div><div class='sc-sub'>"+thisM+" / "+goal+" Gerichte"+(rem>0?" · Noch "+rem+" bis zum nächsten Freund! 🥚":" · geschafft! 🎉")+"</div></div>";
   html+="<div class='stat-card'><div class='sc-head'>Gekocht pro Woche</div><div id='weekBars'></div></div>";
   if(state.weightLog.length>=2){ html+="<div class='stat-card'><div class='sc-head'>Gewichtsverlauf</div>"+weightSparkline()+"<div class='sc-sub'>"+esc(weightTrendText())+"</div></div>"; }
-  html+="<button class='btn block' id='bandeBtn' style='margin-top:6px'>🍗 Deine Nugget-Bande ("+owned+"/"+ROSTER.length+(gold?" · 🥇"+gold:"")+")</button>";
+  const drops=dropsCount(), wstreak=waterStreak(), aqua=state.rewards.aquaCount||0;
+  html+="<div class='stat-card'><div class='sc-head'>💧 Wasser</div><div class='sc-sub'><b>"+drops+"</b> Tropfen gesammelt · Serie: <b>"+wstreak+"</b> "+(wstreak===1?"Tag":"Tage")+" 🔥"+(aqua?" · ✨💧 ×"+aqua:"")+"</div><div class='sc-sub'>"+(wstreak>=1?"Weiter so – bei 7 Tagen am Stück gibt's einen glänzenden Tropfen von Aqua!":"Erreiche dein Tagesziel bei den Wassergläsern, um Tropfen zu sammeln.")+"</div></div>";
+  html+="<button class='btn block' id='bandeBtn' style='margin-top:6px'>🍗 Deine Nugget-Bande ("+owned+"/"+ROSTER.length+(gold?" · 🥇"+gold:"")+(aqua?" · ✨💧"+aqua:"")+")</button>";
   host.innerHTML=html;
   renderWeekBars($("#weekBars"));
   const bb=$("#bandeBtn"); if(bb) bb.onclick=openBande;
@@ -1915,8 +2097,10 @@ function openBande(){
   const ownedMap={}; yms.forEach((ym,i)=>{ const cid=ROSTER[i%ROSTER.length].id; if(!ownedMap[cid]) ownedMap[cid]={ym, at:atByYm[ym]}; });
   const gold=state.rewards.goldCount||0, ownedN=Object.keys(ownedMap).length;
   let html="<div class='mhead'><h3>🍗 Nugget-Bande</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>";
-  html+=knusperBubble(ownedN===0?"Noch niemand hier außer mir. Koch ein paar Gerichte, dann wird's voll – versprochen.":("Du hast "+ownedN+" von "+ROSTER.length+" Freunden gesammelt!"+(gold?" Und "+gold+"× Goldi! 👑":"")));
+  const aqua=state.rewards.aquaCount||0, drops=dropsCount();
+  html+=knusperBubble(ownedN===0?"Noch niemand hier außer mir. Koch ein paar Gerichte, dann wird's voll – versprochen.":("Du hast "+ownedN+" von "+ROSTER.length+" Freunden gesammelt!"+(gold?" Und "+gold+"× Goldi! 👑":"")+(aqua?" Aqua winkt mit "+aqua+"× ✨💧":"")));
   if(gold>0){ const shown=Math.min(gold,12); html+="<div class='goldshelf'>"+Array.from({length:shown}).map(()=>"<span class='gold-nug rar-golden'>👑</span>").join("")+(gold>shown?"<span class='gold-more'>×"+gold+"</span>":"")+"</div>"; }
+  if(drops>0||aqua>0){ const shown=Math.min(aqua,12); html+="<div class='aquashelf'><span class='aqua-lbl'>💧 "+drops+" Tropfen"+(aqua?" · glänzend:":"")+"</span>"+Array.from({length:shown}).map(()=>"<span class='gold-nug aqua'>✨💧</span>").join("")+(aqua>shown?"<span class='gold-more'>×"+aqua+"</span>":"")+"</div>"; }
   html+="<div class='progbar'><div class='progfill' style='width:"+Math.round(ownedN/ROSTER.length*100)+"%'></div></div>";
   html+="<div class='bande-grid'>"+ROSTER.map(r=>{ const have=ownedMap[r.id];
     return have
@@ -1929,7 +2113,8 @@ function openBande(){
     "<p>2. Am <b>Monatsende</b> erscheint automatisch der <b>Monats-Check</b>: Tragt (freiwillig) euer Gewicht ein und schließt den Monat ab.</p>"+
     "<p>3. <b>Erst dann</b> zieht – wenn ihr euer Monatsziel erreicht habt (genug gekocht) – ein <b>neuer Freund</b> ein. 🎉</p>"+
     "<p>👑 Für <b>4 Kochwochen am Stück</b> gibt es obendrauf ein <b>goldenes Nugget</b> (Goldi).</p>"+
-    "<p class='hint' style='margin:6px 0 0'>Belohnt wird das Kochen und Dranbleiben – nie das Abnehmen. 💛</p>"+
+    "<p>💧 Und <b>Aqua</b>, der Wasser-Kumpel: Jeder Tag mit erreichtem <b>Wasserziel</b> bringt einen <b>Tropfen</b> – <b>7 Tage am Stück</b> einen <b>glänzenden Tropfen</b> ✨💧.</p>"+
+    "<p class='hint' style='margin:6px 0 0'>Belohnt wird das Kochen, Trinken und Dranbleiben – nie das Abnehmen. 💛</p>"+
     "</div></div>";
   openModal(html);
   $("#mX").onclick=closeModal;
@@ -1938,11 +2123,11 @@ function openBande(){
 
 /* ============================ BOOT ============================ */
 setActiveWeek(uiWeek);
-rewardSilent=true; checkStreak(); grantPendingAwards(); rewardSilent=false; persistLocal();   // goldens granted live; monthly Nuggets need the Monats-Check, but award completes once the goal is (later) met
+rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; persistLocal();   // goldens granted live; monthly Nuggets need the Monats-Check, but award completes once the goal is (later) met
 renderAll();
 setSync(cloudConfig()?"busy":"local");
 if(cloudConfig()){
-  cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); });
+  cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); });
   startPolling();
 } else { maybeWeighIn(); flushCelebs(); }
 </script>
