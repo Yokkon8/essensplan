@@ -249,6 +249,11 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .celeb{text-align:center}
 .celeb-emoji{font-size:60px;line-height:1;margin:6px auto 4px;width:96px;height:96px;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .celeb h4{font-size:18px;margin:8px 0 4px} .celeb .quip{font-style:italic;color:var(--muted);margin-top:6px}
+.celeb-count{font-weight:800;font-size:16px;margin-bottom:2px}
+.celeb-multi{max-height:60vh;overflow-y:auto}
+.celeb-item{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.celeb-item:first-of-type{border-top:0;padding-top:6px;margin-top:0}
+.celeb-multi .celeb-emoji{font-size:40px;width:60px;height:60px;margin:2px auto} .celeb-multi h4{font-size:15px}
 .goldshelf{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;background:linear-gradient(180deg,rgba(232,185,35,.15),transparent);border-radius:12px;padding:10px;margin-bottom:12px}
 .gold-nug{font-size:26px} .gold-more{font-weight:800;color:#c99700;align-self:center}
 .progbar{height:9px;background:var(--chip);border-radius:99px;overflow:hidden;margin-bottom:14px}
@@ -267,7 +272,8 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 @keyframes shine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
 .profwrap{margin-bottom:10px}
 .profwrap .profcard{margin-bottom:0}
-.raterow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600;margin:0 2px 6px}
+.raterow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600;margin:7px 4px 2px}
+.dayrow-lbl{font-size:12.5px;font-weight:700;color:var(--ink);margin:8px 2px 5px}
 .chip.mini{padding:4px 10px;font-size:12px}
 .chip.mini.active{background:var(--brand);color:#fff;border-color:var(--brand)}
 .recchip{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:5px 11px;margin:4px 5px 0 0;font-size:12.5px;font-weight:600;cursor:pointer}
@@ -298,7 +304,23 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .menubtn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:19px;box-shadow:var(--shadow);flex:none;display:grid;place-items:center}
 .menurow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
 .menulbl{font-weight:600}
-.weekbar{display:flex;gap:8px;margin-bottom:10px;align-items:center;justify-content:center}
+.weekbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;justify-content:center}
+.weekjump{flex-basis:100%;margin-top:2px;border:1px solid var(--brand);color:var(--brand);background:var(--card);border-radius:11px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.weekjump:active{transform:scale(.98)}
+.weekpill.open{box-shadow:inset 0 0 0 2px var(--brand),var(--shadow)}
+.weekpicker{flex-basis:100%;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:2px;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:5px}
+.wp-item{display:flex;gap:8px;align-items:baseline;width:100%;text-align:left;padding:9px 11px;border-radius:8px;font-size:13.5px;border:0;background:transparent;color:var(--ink)}
+.wp-item b{flex:none} .wp-item span{color:var(--muted);font-size:12px} .wp-item em{font-style:normal;margin-left:auto;font-size:12px;color:var(--muted)}
+.wp-item.active{background:var(--chip)} .wp-item.now{outline:1px solid var(--brand)}
+.wp-item .wp-now{color:var(--brand);font-weight:700}
+.waterrow{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
+.water-head{font-size:13px;font-weight:700} .water-head small{font-weight:500;color:var(--muted);margin-left:6px}
+.glasses{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.glass{font-size:20px;line-height:1;width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--chip);opacity:.38;filter:grayscale(.5)}
+.glass.on{opacity:1;filter:none;background:rgba(80,160,220,.22);border-color:rgba(80,160,220,.6)}
+.glass:active{transform:scale(.9)}
+.bande-info{margin-top:14px;background:var(--chip);border-radius:12px;padding:12px 14px;font-size:13.5px}
+.bande-info b{font-size:14px} .bande-info p{margin:7px 0 0;line-height:1.4}
 .weeknav{flex:none;width:42px;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:22px;line-height:1;box-shadow:var(--shadow)}
 .weeknav:active{transform:scale(.94)}
 .weekpill{flex:1;max-width:300px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:7px 10px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;line-height:1.18}
@@ -850,11 +872,11 @@ function scoreCandidate(cur,rn,usedCount,tg,goalBonus){
 /* weighted squared relative distance of a day's totals from the target (kcal & protein weighted most) */
 function dayDistance(n,tg){ let d=0; NUTR_KEYS.forEach(k=>{ if(!tg[k]) return; let rel=(n[k]-tg[k])/tg[k]; if((k==="protein"||k==="fiber")&&rel>0) rel=0; /* more protein/fibre than target is fine */ const w=k==="kcal"?3:k==="protein"?1.6:k==="fiber"?0.8:0.4; d+=w*rel*rel; }); return d; }
 /* fill one day with a randomized greedy pass (top-3 pick) so best-of-K can explore */
-function fillDay(order,tg,profId,used,byType,vegOnlyFn){
+function fillDay(order,tg,profId,used,byType,allowFn){
   const picks={}, usedDay={}; const cur=zeroNut();
   order.forEach(([slot,type])=>{
     let cands=byType(type);
-    if(vegOnlyFn && vegOnlyFn(slot)){ const v=cands.filter(isVeg); if(v.length) cands=v; }   // veg-only slot (falls back if none)
+    if(allowFn){ const pred=allowFn(slot); if(pred){ const f=cands.filter(pred); if(f.length) cands=f; } }   // per day/slot diet filter (falls back if none match)
     if(!cands.length) return;
     const scored=cands.map(r=>({r,s:scoreCandidate(cur,recipeNutrients(r),(used[r.id]||0)+(usedDay[r.id]||0)*2,tg,(r.goals&&r.goals.indexOf(profId)>=0)?0.6:0)+Math.random()*0.15})).sort((a,b)=>b.s-a.s);
     const top=scored.slice(0,3); const pick=top[Math.floor(Math.random()*top.length)].r;
@@ -867,10 +889,17 @@ function generateWeek(profileId){
   const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
   const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
-  const meatLimited = typeof state.meatPerWeek==="number" && state.meatPerWeek>=0;
-  const meatDays=new Set();
-  if(meatLimited){ const days=DAYS.filter(d=>d.id!==state.cheatDay).map(d=>d.id); for(let i=days.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=days[i]; days[i]=days[j]; days[j]=t; } days.slice(0,Math.max(0,Math.min(7,state.meatPerWeek))).forEach(x=>meatDays.add(x)); }
-  const vegOnlyFor=(dayId,slot)=>{ if(!meatLimited) return false; if((slot==="l"||slot==="d") && meatDays.has(dayId)) return false; return true; }; // meat only on the chosen days (main meals)
+  const shuffle=(a)=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i]; a[i]=a[j]; a[j]=t; } return a; };
+  const pickDays=(n)=>{ const days=shuffle(DAYS.filter(d=>d.id!==state.cheatDay).map(d=>d.id)); return new Set(days.slice(0,Math.max(0,Math.min(7,n)))); };
+  const meatLimited = typeof state.meatPerWeek==="number" && state.meatPerWeek>=0;   // -1 = egal (jeden Tag), 0 = nie, N = an N Tagen
+  const fishLimited = typeof state.fishPerWeek==="number" && state.fishPerWeek>=0;
+  const meatDays = meatLimited ? pickDays(state.meatPerWeek) : null;
+  const fishDays = fishLimited ? pickDays(state.fishPerWeek) : null;
+  const dietAllowedOn=(r,dayId,slot)=>{ const m=hasMeat(r), f=hasFish(r); if(!m && !f) return true;   // Fleisch & Fisch getrennt: nur in Hauptmahlzeiten (Mittag/Abend) an den gewählten Tagen
+    if(m && meatLimited){ if(slot!=="l" && slot!=="d") return false; if(!meatDays.has(dayId)) return false; }
+    if(f && fishLimited){ if(slot!=="l" && slot!=="d") return false; if(!fishDays.has(dayId)) return false; }
+    return true; };
+  const allowFor=(dayId)=>(slot)=>((r)=>dietAllowedOn(r,dayId,slot));
   const np={}; let placed=0;
   DAYS.forEach(d=>{
     np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
@@ -880,7 +909,7 @@ function generateWeek(profileId){
     }
     // best of many attempts: keep the day whose totals land closest to the goal's kcal/nutrients
     let best=null,bd=1e9;
-    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,(slot)=>vegOnlyFor(d.id,slot)); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
+    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,allowFor(d.id)); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
     if(best){ Object.keys(best.picks).forEach(slot=>{ np[d.id][slot]=best.picks[slot]; used[best.picks[slot]]=(used[best.picks[slot]]||0)+1; placed++; }); }
   });
   if(!placed){ toast("Keine passenden Rezepte – bitte Lebensmittel-Auswahl prüfen"); return; }
@@ -890,13 +919,13 @@ function generateWeek(profileId){
   else toast(prof.emoji+" Plan erstellt: "+prof.label);
 }
 function openWeekChooser(){
-  const MEAT=[{v:-1,l:"Egal"},{v:0,l:"🌱 Vegetarisch"},{v:1,l:"1 Tag"},{v:2,l:"2 Tage"},{v:3,l:"3 Tage"},{v:4,l:"4 Tage"},{v:5,l:"5 Tage"},{v:6,l:"6 Tage"},{v:7,l:"7 Tage"}];
+  const DAYSOPT=[{v:-1,l:"Egal"},{v:0,l:"🚫 Nie"},{v:1,l:"1 Tag"},{v:2,l:"2 Tage"},{v:3,l:"3 Tage"},{v:4,l:"4 Tage"},{v:5,l:"5 Tage"},{v:6,l:"6 Tage"},{v:7,l:"7 Tage"}];
   const RATES={abnehmen:{key:"loseKgPerWeek",label:"pro Woche abnehmen",opts:[0.25,0.5,0.75,1]},muskelaufbau:{key:"gainKgPerWeek",label:"pro Woche zunehmen",opts:[0.125,0.25,0.5]}};
   const numV=(v)=>(typeof v==="number"&&v>0)?fmtNum(v):"";
   const SEX=[{v:"w",l:"♀ Weiblich"},{v:"m",l:"♂ Männlich"},{v:"n",l:"Keine Angabe"}];
   const card=(p)=>{ const r=RATES[p.id];
     const raterow=r?"<div class='raterow'>"+esc(r.label)+": "+r.opts.map(v=>"<button class='chip mini rate' data-key='"+r.key+"' data-val='"+v+"'>"+fmtNum(v)+" kg</button>").join("")+"</div>":"";
-    return "<div class='profwrap'>"+raterow+"<button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal' id='pkcal-"+p.id+"'></span></button></div>"; };
+    return "<div class='profwrap'><button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal' id='pkcal-"+p.id+"'></span></button>"+raterow+"</div>"; };
   openModal("<div class='mhead'><h3>🎯 Wochenplan erstellen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div class='setupcard'>"+
@@ -918,8 +947,9 @@ function openWeekChooser(){
     "</div>"+
     "<div class='setupcard'>"+
       "<div class='setup-h'><span class='setup-num'>2</span>🍗 Fleisch &amp; Fisch</div>"+
-      "<div class='setup-sub'>An wie vielen Tagen pro Woche?</div>"+
-      "<div class='chips' id='meatChips'></div>"+
+      "<div class='setup-sub'>An wie vielen Tagen pro Woche – jeweils getrennt wählbar.</div>"+
+      "<div class='dayrow-lbl'>🍖 Fleisch</div><div class='chips' id='meatChips'></div>"+
+      "<div class='dayrow-lbl'>🐟 Fisch</div><div class='chips' id='fishChips'></div>"+
     "</div>"+
     "<div class='setupcard'>"+
       "<div class='setup-h'><span class='setup-num'>3</span>🚫 Lebensmittel</div>"+
@@ -940,8 +970,8 @@ function openWeekChooser(){
     if(bl){ if(bmi!=null){ bl.innerHTML="<b>BMI "+fmtNum(Math.round(bmi*10)/10)+"</b> · "+esc(bmiCategory(bmi)); bl.style.display=""; } else { bl.style.display="none"; } }
     const h=$("#chooserHint"); if(h) h.textContent= full? "kcal werden aus Grundumsatz (Größe, Alter, Geschlecht) × Aktivität berechnet. Der Wochenplan wird ersetzt." : wSet? "Grobe Schätzung aus dem Gewicht – für den genauen Bedarf bitte Größe & Alter ergänzen. Der Wochenplan wird ersetzt." : "Tipp: Gib deine Körperdaten ein – dann wird der kcal-Bedarf persönlich berechnet. Der Wochenplan wird ersetzt.";
   };
-  const renderMeat=()=>{ const mc=$("#meatChips"); mc.innerHTML=""; MEAT.forEach(m=>{ const c=el("button","chip"+(state.meatPerWeek===m.v?" active":""),esc(m.l)); c.onclick=()=>{ state.meatPerWeek=m.v; save(); renderMeat(); }; mc.appendChild(c); }); };
-  renderMeat();
+  const renderDays=(elId,key)=>{ const mc=$(elId); if(!mc) return; mc.innerHTML=""; DAYSOPT.forEach(m=>{ const c=el("button","chip"+(state[key]===m.v?" active":""),esc(m.l)); c.onclick=()=>{ state[key]=m.v; save(); renderDays(elId,key); }; mc.appendChild(c); }); };
+  renderDays("#meatChips","meatPerWeek"); renderDays("#fishChips","fishPerWeek");
   const numField=(id,key,max)=>{ const el2=$(id); if(el2) el2.oninput=(e)=>{ const v=parseNum(e.target.value); state[key]=(v&&v>0&&(!max||v<=max))?v:null; save(); updateComputed(); }; };
   numField("#wCur","currentWeight",500); numField("#wHt","height",260); numField("#wAge","age",120); numField("#wTgt","targetWeight",500);
   $("#sexSel").onchange=(e)=>{ state.sex=["m","w","n"].includes(e.target.value)?e.target.value:"n"; save(); updateComputed(); };
@@ -1061,10 +1091,10 @@ function seedState(){
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
   const ck=currentMondayStr();
-  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1,
+  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1, fishPerWeek:-1,
     currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
     height:null, age:null, sex:"n", activity:1.375,
-    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null},
+    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}},
     weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
     recipes, cart:[]};
 }
@@ -1075,8 +1105,9 @@ let state = load();
 let uiDay = "mo";
 let uiWeek = localStorage.getItem("foodies_week") || currentMondayStr();
 let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
+let weekPickerOpen = false, weekPickerScroll = 0, weekPickerFresh = false;
 /* continuous year-long weeks: keyed by ISO-Monday date string; materialize-on-read so past weeks stay and any visited week is a live, persisted object */
-function ensureWeek(k){ if(!state.weeks[k]){ state.weeks[k]=emptyPlan(); state.weekDone[k]={}; state.weekProfile[k]=null; } return k; }
+function ensureWeek(k){ if(!state.weeks[k]){ state.weeks[k]=emptyPlan(); state.weekDone[k]={}; state.weekProfile[k]=null; } if(!state.weekWater) state.weekWater={}; if(!state.weekWater[k]) state.weekWater[k]={}; return k; }
 function PLAN(){ return state.weeks[ensureWeek(uiWeek)]; }
 function DONE(){ return state.weekDone[ensureWeek(uiWeek)]; }
 function weekProfile(){ return state.weekProfile ? (state.weekProfile[uiWeek]||null) : null; }
@@ -1131,7 +1162,7 @@ function weekLabel(k){ const mo=weekMonday(k), su=new Date(mo.getTime()); su.set
 function dayDateStr(k,dayIdx){ const d=weekMonday(k); d.setDate(d.getDate()+dayIdx); return fmtDM(d); }
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
 function ymStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2); }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
 function pruneEmptyWeeks(){                                // drop only fully-empty scaffolding weeks; any used week is permanent (stats depend on it)
   const ck=currentMondayStr();
   Object.keys(state.weeks).forEach(k=>{
@@ -1139,7 +1170,8 @@ function pruneEmptyWeeks(){                                // drop only fully-em
     const emptyP=!state.weeks[k]||isEmptyPlan(state.weeks[k]);
     const emptyD=!state.weekDone[k]||Object.keys(state.weekDone[k]).length===0;
     const noPf=!state.weekProfile[k];
-    if(emptyP&&emptyD&&noPf){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; }
+    const emptyW=!state.weekWater||!state.weekWater[k]||Object.keys(state.weekWater[k]).length===0;
+    if(emptyP&&emptyD&&noPf&&emptyW){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; }
   });
 }
 function persistLocal(){ pruneEmptyWeeks(); try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
@@ -1163,7 +1195,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -1204,11 +1236,13 @@ async function cloudPullApply(force){
           ["weeks","weekDone","weekProfile"].forEach(m=>{ Object.keys(state[m]||{}).forEach(k=>{ if(!(k in t[m])) t[m][k]=state[m][k]; }); });   // keep local-only weeks the remote hasn't seen
           Object.keys(state.weekDone||{}).forEach(k=>{ if(t.weekDone[k] && state.weekDone[k] && t.weekDone[k]!==state.weekDone[k]){ Object.keys(state.weekDone[k]).forEach(dk=>{ if(state.weekDone[k][dk]) t.weekDone[k][dk]=true; }); } });   // union cook-marks per week so a second device's marks are never lost
           state.weeks=t.weeks; state.weekDone=t.weekDone; state.weekProfile=t.weekProfile; }
+        if(d.weekWater && typeof d.weekWater==="object" && !Array.isArray(d.weekWater)){ if(!state.weekWater) state.weekWater={}; Object.keys(d.weekWater).forEach(k=>{ if(!WK_RE.test(k)) return; const rw=d.weekWater[k]||{}; if(!state.weekWater[k]) state.weekWater[k]={}; Object.keys(rw).forEach(dk=>{ state.weekWater[k][dk]=Math.max(state.weekWater[k][dk]||0, (+rw[dk]||0)); }); }); }   // union water glasses by max per day
         if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
         if(d.disabledFoods && typeof d.disabledFoods==="object" && !Array.isArray(d.disabledFoods)) state.disabledFoods=d.disabledFoods;
         if(typeof d.meatPerWeek==="number") state.meatPerWeek=d.meatPerWeek;
+        if(typeof d.fishPerWeek==="number") state.fishPerWeek=d.fishPerWeek;
         if(typeof d.currentWeight==="number"||d.currentWeight===null) state.currentWeight=d.currentWeight;
         if(typeof d.targetWeight==="number"||d.targetWeight===null) state.targetWeight=d.targetWeight;
         if(typeof d.loseKgPerWeek==="number"&&d.loseKgPerWeek>0) state.loseKgPerWeek=d.loseKgPerWeek;
@@ -1283,6 +1317,26 @@ function dayNutriEl(dayId){
   return wrap;
 }
 
+/* ---- water tracking: one glass = 500 ml; goal glasses from body weight (~35 ml/kg), tap to fill ---- */
+function waterGoalGlasses(){ const w=state.currentWeight; const ml=(typeof w==="number"&&w>0)?w*35:2000; return Math.max(4, Math.min(14, Math.round(ml/500))); }
+function waterCount(dayId){ const wk=state.weekWater&&state.weekWater[uiWeek]; return Math.max(0,(wk&&+wk[dayId])||0); }
+function setWaterCount(dayId,n){ ensureWeek(uiWeek); const g=waterGoalGlasses(); n=Math.max(0,Math.min(g,n)); if(n<=0) delete state.weekWater[uiWeek][dayId]; else state.weekWater[uiWeek][dayId]=n; save(); renderPlan(); }
+function fmtL(g){ return String(Math.round(g*0.5*10)/10).replace(".",",")+" L"; }
+function waterEl(dayId){
+  const g=waterGoalGlasses(), c=Math.min(waterCount(dayId),g);
+  const wrap=el("div","waterrow");
+  wrap.appendChild(el("div","water-head","💧 Wasser <small>"+esc(fmtL(c)+" / "+fmtL(g)+" · "+c+"/"+g+" Gläser à 500 ml")+"</small>"));
+  const glasses=el("div","glasses");
+  for(let i=0;i<g;i++){ const on=i<c; const b=el("button","glass"+(on?" on":""),"🥛"); b.title=((i+1)*500)+" ml"; b.setAttribute("aria-label",(i+1)+". Glas"); b.onclick=()=>setWaterCount(dayId, (i+1===c)? i : i+1); glasses.appendChild(b); }
+  wrap.appendChild(glasses);
+  return wrap;
+}
+/* ---- week picker dropdown (tap the KW pill) ---- */
+function weekPickerKeys(){ const ck=currentMondayStr(); const set={}; for(let i=-12;i<=26;i++) set[shiftKey(ck,i)]=1;
+  Object.keys(state.weeks||{}).forEach(k=>{ if(!WK_RE.test(k)) return; const used=(state.weeks[k]&&!isEmptyPlan(state.weeks[k]))||state.weekProfile[k]||(state.weekDone[k]&&Object.keys(state.weekDone[k]).length)||(state.weekWater&&state.weekWater[k]&&Object.keys(state.weekWater[k]).length); if(used) set[k]=1; });
+  return Object.keys(set).filter(k=>WK_RE.test(k)).sort();
+}
+
 function renderPlan(){
   const grid=$("#weekGrid"); grid.innerHTML="";
   const wb=$("#weekBar"); if(wb){ wb.innerHTML="";
@@ -1291,11 +1345,24 @@ function renderPlan(){
     const relTxt = rel==="past" ? " · vergangen" : (rel==="now" ? " · diese Woche" : " · geplant");
     const prev=el("button","weeknav","‹"), next=el("button","weeknav","›");
     const pill=el("button","weekpill "+rel,"<b>KW "+wl.kw+(p?" "+p.emoji:"")+"</b><small>"+esc(wl.range+" "+wl.year+relTxt)+"</small>");
-    prev.title="Woche zurück"; next.title="Woche vor"; pill.title="Zur aktuellen Woche springen";
-    prev.onclick=()=>{ setActiveWeek(shiftKey(uiWeek,-1)); renderAll(); };
-    next.onclick=()=>{ setActiveWeek(shiftKey(uiWeek,1)); renderAll(); };
-    pill.onclick=()=>{ setActiveWeek(ck); renderAll(); };
+    prev.title="Woche zurück"; next.title="Woche vor"; pill.title="Woche auswählen"; pill.classList.toggle("open",weekPickerOpen);
+    prev.onclick=()=>{ weekPickerOpen=false; setActiveWeek(shiftKey(uiWeek,-1)); renderAll(); };
+    next.onclick=()=>{ weekPickerOpen=false; setActiveWeek(shiftKey(uiWeek,1)); renderAll(); };
+    pill.onclick=()=>{ weekPickerOpen=!weekPickerOpen; if(weekPickerOpen) weekPickerFresh=true; renderPlan(); };
     wb.append(prev,pill,next);
+    if(uiWeek!==ck){ const jump=el("button","weekjump","📍 Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"); jump.onclick=()=>{ weekPickerOpen=false; setActiveWeek(ck); renderAll(); }; wb.appendChild(jump); }
+    if(weekPickerOpen){ const panel=el("div","weekpicker"); let activeEl=null;
+      weekPickerKeys().forEach(k=>{ const wlk=weekLabel(k), isCur=k===ck, pk=state.weekProfile[k], pp=PROFILES.find(x=>x.id===pk);
+        const used=(state.weeks[k]&&!isEmptyPlan(state.weeks[k]))||pk;
+        const it=el("button","wp-item"+(k===uiWeek?" active":"")+(isCur?" now":""),"<b>KW "+wlk.kw+"</b><span>"+esc(wlk.range+" "+wlk.year)+"</span>"+(pp?"<em>"+pp.emoji+"</em>":"")+(used?"<em>•</em>":"")+(isCur?"<em class='wp-now'>heute</em>":""));
+        it.onclick=()=>{ weekPickerOpen=false; setActiveWeek(k); renderAll(); };
+        if(k===uiWeek) activeEl=it;
+        panel.appendChild(it); });
+      panel.onscroll=()=>{ weekPickerScroll=panel.scrollTop; };
+      wb.appendChild(panel);
+      if(weekPickerFresh && activeEl){ weekPickerScroll=Math.max(0, activeEl.offsetTop-90); weekPickerFresh=false; }   // fresh open: center the active week
+      panel.scrollTop=weekPickerScroll;
+    }
   }
   const abnehmenWeek = weekProfile()==="abnehmen";
   const bar=$("#dayBar"); bar.innerHTML="";
@@ -1319,6 +1386,7 @@ function renderPlan(){
       if(r){ const chk=el("button","slotcheck"+(done?" on":""),done?"✓":""); chk.title=done?"Als nicht gegessen markieren":"Als gegessen markieren"; chk.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; card.appendChild(chk); }
       col.appendChild(card);
     });
+    col.appendChild(waterEl(d.id));
     grid.appendChild(col);
   });
 }
@@ -1613,7 +1681,6 @@ function openMenu(){
     "<div class='divider'></div>"+
     "<button class='btn block' id='mStats'>📊 Statistik</button>"+
     "<button class='btn block' id='mBande' style='margin-top:8px'>🍗 Nugget-Bande <span class='tag'>"+ownedCount()+"/"+ROSTER.length+(state.rewards.goldCount?" · 🥇"+state.rewards.goldCount:"")+"</span></button>"+
-    "<button class='btn block' id='mCheck' style='margin-top:8px'>🌙 Monats-Check</button>"+
     "</div>");
   $("#mX").onclick=closeModal;
   $("#pMinus").onclick=()=>setPersons(state.persons-1);
@@ -1622,7 +1689,6 @@ function openMenu(){
   $("#mCart").onclick=()=>{ closeModal(); fillCartFromWeek(); };
   $("#mStats").onclick=()=>{ closeModal(); switchView("stats"); };
   $("#mBande").onclick=()=>{ closeModal(); openBande(); };
-  $("#mCheck").onclick=()=>{ closeModal(); openWeighIn(ymStr()); };
 }
 $("#menuBtn").onclick=openMenu;
 $("#foodSelectBtn").onclick=openFoodSelect;
@@ -1711,8 +1777,10 @@ function ownedCount(){ return ownedChars().size; }
 let rewardSilent=false; const celebQueue=[];
 function enqueueCeleb(html){ celebQueue.push(html); if(!rewardSilent) setTimeout(flushCelebs,40); }
 function flushCelebs(){ if(rewardSilent||modalOpen()||!celebQueue.length) return;
-  const html=celebQueue.shift();
-  openModal("<div class='mhead'><h3>🎉 Belohnung</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody celeb'>"+html+"<button class='btn block primary' id='celebOk' style='margin-top:16px'>Juhu! 🍗</button></div>");
+  const items=celebQueue.splice(0,celebQueue.length);   // coalesce everything queued into ONE modal (no click-through storm)
+  const multi=items.length>1;
+  const body = multi ? ("<p class='celeb-count'>"+items.length+" neue Belohnungen! 🎉</p>"+items.map(h=>"<div class='celeb-item'>"+h+"</div>").join("")) : items[0];
+  openModal("<div class='mhead'><h3>🎉 Belohnung"+(multi?"en":"")+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody celeb"+(multi?" celeb-multi":"")+"'>"+body+"<button class='btn block primary' id='celebOk' style='margin-top:16px'>Juhu! 🍗</button></div>");
   const done=()=>{ closeModal(); setTimeout(flushCelebs,40); };
   $("#mX").onclick=done; $("#celebOk").onclick=done;
 }
@@ -1747,7 +1815,7 @@ function recordWeight(kg){ if(!(typeof kg==="number"&&kg>0)) return; const d=tod
 /* ---- monthly close + goal (a COOKING goal; credits consistency; never a weight goal) ---- */
 function monthGoalTarget(){ return (typeof state.monthGoal==="number"&&state.monthGoal>0)?state.monthGoal:40; }
 function kochwochenInMonth(ym){ return Object.keys(state.weekDone).filter(k=>ymOf(weekMonday(k))===ym && cookedInWeek(k)>=5).length; }
-function closeMonth(ym){ if(state.monthLog[ym]&&state.monthLog[ym].nugget) return;
+function closeMonth(ym){ if(state.monthLog[ym]&&state.monthLog[ym].nugget) return;   // already awarded → nothing to do (re-callable while unmet)
   const cooked=cookedInMonth(ym), goal=monthGoalTarget();
   const goalMet = cooked>=goal || kochwochenInMonth(ym)>=3;
   const rec=state.monthLog[ym]||{}; rec.checkedAt=rec.checkedAt||todayStr(); rec.cooked=cooked; rec.goalMet=goalMet; rec.endKg=(typeof state.currentWeight==="number")?state.currentWeight:null;
@@ -1755,10 +1823,18 @@ function closeMonth(ym){ if(state.monthLog[ym]&&state.monthLog[ym].nugget) retur
   if(goalMet && !rec.nugget) grantMonthlyNugget(ym);
   checkStreak();
 }
+/* re-evaluate months the user already checked but that weren't goal-met yet: award the Nugget once the goal is reached later
+   (more cooking on the final days, or a second device's cook-marks syncing in). The check still gates it (checkedAt must exist). */
+function grantPendingAwards(){ Object.keys(state.monthLog).forEach(ym=>{ const rec=state.monthLog[ym]; if(rec && rec.checkedAt && !rec.nugget) closeMonth(ym); }); }
 function firstActivityYM(){ const ks=Object.keys(state.weekDone).filter(k=>cookedInWeek(k)>0).sort(); return ks.length?ymOf(weekMonday(ks[0])):null; }
-function closePendingMonths(){ const first=firstActivityYM(); if(!first) return; const cur=ymStr(), due=endingMonthDue();
+function endedUncheckedMonths(){ const first=firstActivityYM(); const cur=ymStr(); const out=[]; if(!first) return out;
   let y=parseInt(first.slice(0,4),10), m=parseInt(first.slice(5,7),10);
-  for(let i=0;i<240;i++){ const ym=y+"-"+("0"+m).slice(-2); if(ym>=cur) break; if(ym!==due && !(state.monthLog[ym]&&state.monthLog[ym].nugget)) closeMonth(ym); m++; if(m>12){m=1;y++;} }
+  for(let i=0;i<240;i++){ const ym=y+"-"+("0"+m).slice(-2); if(ym>=cur) break; if(!(state.monthLog[ym]&&state.monthLog[ym].checkedAt)) out.push(ym); m++; if(m>12){m=1;y++;} }
+  return out;
+}
+function dueCheckYM(){ const ended=endedUncheckedMonths(); if(ended.length) return ended[0];   // oldest un-checked ended month first
+  const cur=ymStr(); if(endingMonthDue()===cur && !(state.monthLog[cur]&&state.monthLog[cur].checkedAt)) return cur;   // current month in its final days
+  return null;
 }
 
 /* ---- end-of-month weigh-in popup (gentle, skippable, weight optional) ---- */
@@ -1768,8 +1844,7 @@ function endingMonthDue(){ const now=new Date(), dim=new Date(now.getFullYear(),
   return null;
 }
 function shiftDays(dstr,n){ const dt=new Date(dstr+"T00:00:00"); dt.setDate(dt.getDate()+n); return dt.getFullYear()+"-"+("0"+(dt.getMonth()+1)).slice(-2)+"-"+("0"+dt.getDate()).slice(-2); }
-function maybeWeighIn(){ if(modalOpen()) return; const ym=endingMonthDue(); if(!ym) return;
-  if(state.monthLog[ym]&&state.monthLog[ym].checkedAt) return;
+function maybeWeighIn(){ if(modalOpen()) return; const ym=dueCheckYM(); if(!ym) return;
   if(state.checkinSnooze && state.checkinSnooze>=todayStr()) return;
   openWeighIn(ym);
 }
@@ -1784,7 +1859,9 @@ function openWeighIn(ym){
     "<button class='btn block' id='weighNo' style='margin-top:8px'>Ohne Gewicht abschließen</button>"+
     "<button class='btn block ghost' id='weighLater' style='margin-top:8px'>Später erinnern</button>"+
     "</div>");
-  const finish=(withKg)=>{ if(withKg){ const kg=parseNum($("#weighKg").value); if(kg&&kg>0) recordWeight(kg); } closeMonth(ym); save(); closeModal(); renderAll(); flushCelebs(); };
+  const finish=(withKg)=>{ if(withKg){ const kg=parseNum($("#weighKg").value); if(kg&&kg>0) recordWeight(kg); }
+    const backlog=endedUncheckedMonths(); closeMonth(ym); backlog.forEach(m=>{ if(m!==ym) closeMonth(m); });   // award the shown month + any missed months at once
+    save(); closeModal(); renderAll(); flushCelebs(); };
   $("#mX").onclick=()=>finish(false);
   $("#weighSave").onclick=()=>finish(true);
   $("#weighNo").onclick=()=>finish(false);
@@ -1845,7 +1922,15 @@ function openBande(){
     return have
       ? "<button class='nug-card own' data-q='"+esc(r.quip)+"' data-n='"+esc(r.name)+"'><span class='nug-e rar-"+r.rar+"'>"+r.e+"</span><b>"+esc(r.name)+"</b><small>"+esc(RAR_LABEL[r.rar])+"</small><small class='nug-at'>seit "+esc(fmtAt(have.at))+"</small></button>"
       : "<div class='nug-card locked'><span class='nug-e'>❓</span><b>???</b><small>Noch nicht kennengelernt</small></div>";
-  }).join("")+"</div></div>";
+  }).join("")+"</div>";
+  html+="<div class='bande-info'>"+
+    "<b>🌙 So kommen neue Freunde in die Bande</b>"+
+    "<p>1. <b>Kocht Gerichte</b> und hakt sie im Wochenplan ab. 🍳</p>"+
+    "<p>2. Am <b>Monatsende</b> erscheint automatisch der <b>Monats-Check</b>: Tragt (freiwillig) euer Gewicht ein und schließt den Monat ab.</p>"+
+    "<p>3. <b>Erst dann</b> zieht – wenn ihr euer Monatsziel erreicht habt (genug gekocht) – ein <b>neuer Freund</b> ein. 🎉</p>"+
+    "<p>👑 Für <b>4 Kochwochen am Stück</b> gibt es obendrauf ein <b>goldenes Nugget</b> (Goldi).</p>"+
+    "<p class='hint' style='margin:6px 0 0'>Belohnt wird das Kochen und Dranbleiben – nie das Abnehmen. 💛</p>"+
+    "</div></div>";
   openModal(html);
   $("#mX").onclick=closeModal;
   $$(".nug-card.own").forEach(b=>b.onclick=()=>toast(b.dataset.n+": »"+b.dataset.q+"«"));
@@ -1853,11 +1938,11 @@ function openBande(){
 
 /* ============================ BOOT ============================ */
 setActiveWeek(uiWeek);
-rewardSilent=true; checkStreak(); closePendingMonths(); rewardSilent=false; persistLocal();
+rewardSilent=true; checkStreak(); grantPendingAwards(); rewardSilent=false; persistLocal();   // goldens granted live; monthly Nuggets need the Monats-Check, but award completes once the goal is (later) met
 renderAll();
 setSync(cloudConfig()?"busy":"local");
 if(cloudConfig()){
-  cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); closePendingMonths(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); });
+  cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); });
   startPolling();
 } else { maybeWeighIn(); flushCelebs(); }
 </script>
