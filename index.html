@@ -140,6 +140,13 @@ main{padding-top:8px}
 .ingrow .amt{width:66px} .ingrow .unit{width:74px} .ingrow .nm{flex:1;min-width:0}
 .ingrow select.unit,.ingrow input{padding:9px 8px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink)}
 .ingrow .del{color:var(--muted);border:0;background:none;font-size:18px;padding:2px 4px}
+.ingrow .scanbadge{flex:none;font-size:14px;opacity:.85}
+.ingrow.scanned .nm{border-color:var(--accent)}
+.scanwrap{position:relative;width:100%;aspect-ratio:4/3;min-height:180px;max-height:300px;background:#000;border-radius:12px;overflow:hidden;margin-bottom:8px}
+.scanwrap video{width:100%;height:100%;object-fit:cover;display:block}
+.scanline{position:absolute;left:8%;right:8%;top:calc(50% - 1px);height:2px;background:rgba(232,98,58,.9);box-shadow:0 0 8px rgba(232,98,58,.85);animation:scanmove 2s ease-in-out infinite}
+@keyframes scanmove{0%,100%{transform:translateY(-42px)}50%{transform:translateY(42px)}}
+.scancard{background:var(--chip);border-radius:12px;padding:12px;margin-top:10px} .scancard b{font-size:15px}
 .ing-check{display:flex;align-items:center;gap:11px;padding:10px 4px;border-bottom:1px solid var(--line)}
 .ing-check:last-child{border-bottom:0}
 .ing-check .cb{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);flex:none;display:grid;place-items:center;color:#fff;font-size:15px}
@@ -841,11 +848,12 @@ function ingGrams(ing){
   }
   return ing.a*g;
 }
-function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !has(NUTRI,resolveFood(ing.n))) out.push(ing.n); }); return out; }
+function recipeUnknownIngredients(r){ const out=[]; if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing.a!=null && ing.n && !ing.nutri && !has(NUTRI,resolveFood(ing.n))) out.push(ing.n); }); return out; }
 function sanitizeTargets(t){ const o={...DEFAULT_TARGETS}; if(t&&typeof t==="object"&&!Array.isArray(t)) NUTR_KEYS.forEach(k=>{ if(typeof t[k]==="number"&&isFinite(t[k])&&t[k]>0) o[k]=t[k]; }); return o; }
 function ingNutrients(ing){
-  const bk=ingFoodKey(ing); const base=has(NUTRI,bk)?NUTRI[bk]:null; if(!base) return null;
   const f=ingGrams(ing)/100;
+  if(ing && ing.nutri && typeof ing.nutri==="object"){ const b=ing.nutri; return {kcal:(+b.kcal||0)*f,protein:(+b.protein||0)*f,carbs:(+b.carbs||0)*f,fat:(+b.fat||0)*f,fiber:(+b.fiber||0)*f}; }   // scanned product: per-100g values stored on the ingredient
+  const bk=ingFoodKey(ing); const base=has(NUTRI,bk)?NUTRI[bk]:null; if(!base) return null;
   return {kcal:base.kcal*f,protein:base.protein*f,carbs:base.carbs*f,fat:base.fat*f,fiber:base.fiber*f};
 }
 function zeroNut(){ return {kcal:0,protein:0,carbs:0,fat:0,fiber:0}; }
@@ -1654,9 +1662,11 @@ function fillCartFromWeek(){
 
 /* ============================ MODALS ============================ */
 const modalBg=$("#modalBg"), modalEl=$("#modal");
+let modalCleanup=null;   // runs on ANY modal close/replace (e.g. stop the scanner camera no matter how the modal is dismissed)
+function runModalCleanup(){ if(modalCleanup){ const f=modalCleanup; modalCleanup=null; try{ f(); }catch(e){} } }
 function modalOpen(){ return modalBg.classList.contains("open"); }
-function openModal(html){ modalEl.innerHTML=html; modalBg.classList.add("open"); }
-function closeModal(){ modalBg.classList.remove("open"); modalEl.innerHTML=""; if(typeof celebQueue!=="undefined" && celebQueue.length && !rewardSilent) setTimeout(flushCelebs,40); }
+function openModal(html){ runModalCleanup(); modalEl.innerHTML=html; modalBg.classList.add("open"); }
+function closeModal(){ runModalCleanup(); modalBg.classList.remove("open"); modalEl.innerHTML=""; if(typeof celebQueue!=="undefined" && celebQueue.length && !rewardSilent) setTimeout(flushCelebs,40); }
 modalBg.addEventListener("click",e=>{ if(e.target===modalBg) closeModal(); });
 
 /* pick a recipe for a slot */
@@ -1749,13 +1759,68 @@ function openSlotMenu(day,slot){
 }
 
 /* recipe editor */
+/* ---- barcode scanner: native BarcodeDetector (Android/Chrome) + manual entry; nutrition from Open Food Facts (free, no key) ---- */
+async function offLookup(code){
+  const url="https://world.openfoodfacts.org/api/v2/product/"+encodeURIComponent(code)+".json?fields=product_name,product_name_de,generic_name_de,brands,nutriments";
+  const r=await fetch(url,{headers:{"Accept":"application/json"}});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const j=await r.json();
+  if(j.status!==1 || !j.product) return null;
+  const p=j.product, nu=p.nutriments||{};
+  const num=v=>{ const n=parseFloat(v); return isFinite(n)?n:0; };
+  const r1=x=>Math.round(x*10)/10;
+  let kcal=nu["energy-kcal_100g"];
+  if(kcal==null && nu["energy_100g"]!=null) kcal=num(nu["energy_100g"])/4.184;   // kJ → kcal fallback
+  const per100={ kcal:Math.round(num(kcal)), protein:r1(num(nu.proteins_100g)), carbs:r1(num(nu.carbohydrates_100g)), fat:r1(num(nu.fat_100g)), fiber:r1(num(nu.fiber_100g)) };
+  let name=(p.product_name_de||p.product_name||p.generic_name_de||"").trim();
+  if(!name) name="Produkt "+code;
+  if(p.brands){ const b=p.brands.split(",")[0].trim(); if(b && name.toLowerCase().indexOf(b.toLowerCase())<0) name+=" ("+b+")"; }
+  return { name:name.slice(0,60), per100, code };
+}
+function openScanner(onResult,onCancel){
+  const canCam = ("BarcodeDetector" in window) && navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+  openModal("<div class='mhead'><h3>📷 Lebensmittel scannen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'>"+
+    (canCam? "<div class='scanwrap'><video id='scanVid' playsinline muted></video><div class='scanline'></div></div><p class='hint' id='scanHint'>Halte den Barcode (EAN) waagerecht in den Rahmen.</p>"
+           : "<p class='hint'>📷 Der Live-Scan wird auf diesem Gerät nicht unterstützt (z. B. iPhone/Safari). Tippe den Barcode einfach von Hand ein:</p>")+
+    "<div class='field'><label>Barcode (EAN) eingeben</label><div class='btnrow'><input class='input' id='scanCode' inputmode='numeric' placeholder='z. B. 4008400202631'><button class='btn primary sm' id='scanGo'>Suchen</button></div></div>"+
+    "<div id='scanResult'></div>"+
+    "</div>");
+  let detector=null, stream=null, scanning=true;
+  const stopCam=()=>{ scanning=false; if(stream){ try{ stream.getTracks().forEach(t=>t.stop()); }catch(e){} stream=null; } };
+  modalCleanup=stopCam;   // guarantees the camera stops on ANY dismissal (✕, tap-outside, replaced by another modal)
+  const close=(cb)=>{ closeModal(); if(cb) cb(); };
+  $("#mX").onclick=()=>close(onCancel);
+  const showProduct=(prod)=>{ const box=$("#scanResult"); if(!box) return;
+    if(!prod){ box.innerHTML="<p class='hint'>❌ Kein Produkt zu diesem Barcode gefunden. Prüfe die Nummer oder trage die Zutat von Hand ein.</p>"; return; }
+    box.innerHTML="<div class='scancard'><b>"+esc(prod.name)+"</b><div class='nutriline'>"+
+      NUTR_KEYS.map(k=>"<span><b>"+prod.per100[k]+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+
+      "</div><div class='hint' style='margin:4px 0 0'>Werte pro 100 g · Quelle: Open Food Facts</div>"+
+      "<button class='btn block primary' id='scanTake' style='margin-top:10px'>✓ Als Zutat übernehmen</button></div>";
+    $("#scanTake").onclick=()=>close(()=>onResult(prod));
+  };
+  const lookup=async(code)=>{ code=(code||"").replace(/\D/g,""); if(!code){ toast("Bitte Barcode eingeben"); return; } const box=$("#scanResult"); if(box) box.innerHTML="<p class='hint'>🔎 Suche in der Datenbank …</p>"; try{ const prod=await offLookup(code); showProduct(prod); }catch(e){ if($("#scanResult")) $("#scanResult").innerHTML="<p class='hint'>⚠︎ Keine Verbindung zur Lebensmittel-Datenbank. Bitte Internet prüfen und erneut versuchen.</p>"; } };
+  $("#scanGo").onclick=()=>lookup($("#scanCode").value);
+  $("#scanCode").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); lookup($("#scanCode").value); } });
+  if(canCam){
+    try{ detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128"]}); }catch(e){ detector=null; }
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(s=>{ if(!scanning){ try{ s.getTracks().forEach(t=>t.stop()); }catch(e){} return; } stream=s; const v=$("#scanVid"); if(!v){ stopCam(); return; } v.srcObject=s; v.play().catch(()=>{});
+      const tick=async()=>{ if(!scanning || !document.contains(v)){ stopCam(); return; }   // captured video element; stops this scanner's loop+camera the moment its modal is gone
+        if(!detector||!v.videoWidth){ requestAnimationFrame(tick); return; }
+        try{ const codes=await detector.detect(v); if(codes&&codes.length&&codes[0].rawValue){ const code=codes[0].rawValue; const inp=$("#scanCode"); if(inp) inp.value=code; stopCam(); lookup(code); return; } }catch(e){}
+        requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    }).catch(()=>{ const h=$("#scanHint"); if(h) h.textContent="Kamerazugriff nicht möglich – bitte den Barcode von Hand eingeben."; });
+  }
+}
 function openRecipeEdit(id){
   const r=recipe(id); if(!r) return;
   const unitOpts=(sel)=>UNITS.map(u=>"<option"+(u===sel?" selected":"")+">"+u+"</option>").join("");
-  const ingRow=(ing)=>"<div class='ingrow'>"+
+  const ingRow=(ing)=>"<div class='ingrow"+(ing.nutri?" scanned":"")+"'"+(ing.nutri?" data-nutri='"+esc(JSON.stringify(ing.nutri))+"'":"")+">"+
     "<input class='amt' inputmode='decimal' placeholder='Menge' value='"+esc(fmtNum(ing.a))+"'>"+
     "<select class='unit'>"+unitOpts(ing.u)+"</select>"+
     "<input class='nm' list='ingCatalog' placeholder='Zutat' value='"+esc(ing.n)+"'>"+
+    (ing.nutri?"<span class='scanbadge' title='Gescannt · "+esc(String(ing.nutri.kcal))+" kcal/100 g'>📷</span>":"")+
     "<button class='del' aria-label='entfernen'>✕</button></div>";
   const typeOpts=MEAL_TYPES.map(m=>"<option value='"+m.id+"'"+((r.mealType||"snack")===m.id?" selected":"")+">"+esc(m.label)+"</option>").join("");
   const asgSlots=weekOrder().map(x=>x[0]); const mtSlot=MT_SLOT[r.mealType||"snack"]||"s1"; const asgDef=asgSlots.indexOf(mtSlot)>=0?mtSlot:asgSlots[0];
@@ -1767,7 +1832,7 @@ function openRecipeEdit(id){
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
     "<div id='ingList' style='margin-top:6px'>"+r.ing.map(ingRow).join("")+"</div>"+
     "<datalist id='ingCatalog'>"+Object.keys(NUTRI).filter(foodEnabled).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>"+
-    "<button class='btn sm ghost' id='addIng' style='margin-top:4px'>＋ Zutat</button>"+
+    "<div class='btnrow' style='margin-top:4px'><button class='btn sm ghost' id='addIng'>＋ Zutat</button><button class='btn sm' id='scanIng'>📷 Barcode scannen</button></div>"+
     "<div class='nutrisum' id='rNutri' style='margin-top:14px'></div>"+
     "<div class='planbox'>"+
       "<div class='pb-h'>📅 In den Wochenplan (KW "+weekLabel(uiWeek).kw+")</div>"+
@@ -1784,9 +1849,9 @@ function openRecipeEdit(id){
     "<div class='mfoot'><button class='btn ghost' id='delRecipe'>Löschen</button><div style='flex:1'></div><button class='btn primary' id='saveRecipe'>Speichern</button></div>");
   $("#mX").onclick=closeModal;
   const ingList=$("#ingList");
-  const readRows=()=>$$(".ingrow",ingList).map(row=>{ const n=row.querySelector(".nm").value.trim(); if(!n) return null; return {n,a:parseNum(row.querySelector(".amt").value),u:row.querySelector(".unit").value}; }).filter(Boolean);
+  const readRows=()=>$$(".ingrow",ingList).map(row=>{ const n=row.querySelector(".nm").value.trim(); if(!n) return null; const o={n,a:parseNum(row.querySelector(".amt").value),u:row.querySelector(".unit").value}; if(row.dataset.nutri){ try{ o.nutri=JSON.parse(row.dataset.nutri); }catch(e){} } return o; }).filter(Boolean);
   const updateNutri=()=>{ const rows=readRows(); const rn=recipeNutrients({ing:rows});
-    const unk=rows.filter(x=>x.a!=null && x.n && !NUTRI[x.n.trim().toLowerCase()]).map(x=>x.n);
+    const unk=rows.filter(x=>x.a!=null && x.n && !x.nutri && !NUTRI[x.n.trim().toLowerCase()]).map(x=>x.n);
     $("#rNutri").innerHTML="<span class='ns-lab'>Nährwerte pro Person (berechnet)"+(unk.length?" – unvollständig":"")+"</span><div class='nutriline'>"+
       NUTR_KEYS.map(k=>"<span><b>"+Math.round(rn[k])+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+"</div>"+
       (unk.length?"<div class='np-ex' style='margin-top:5px'>⚠︎ Ohne Nährwertdaten (nicht mitgezählt): "+esc(unk.join(", "))+"</div>":""); };
@@ -1794,6 +1859,7 @@ function openRecipeEdit(id){
   $$(".ingrow",ingList).forEach(bind);
   updateNutri();
   $("#addIng").onclick=()=>{ const d=el("div"); d.innerHTML=ingRow({n:"",a:null,u:"g"}); const row=d.firstChild; ingList.appendChild(row); bind(row); row.querySelector(".nm").focus(); };
+  $("#scanIng").onclick=()=>{ persistForm(); save(); openScanner(prod=>{ r.ing.push({n:prod.name,a:100,u:"g",nutri:prod.per100}); save(); openRecipeEdit(id); toast("Zutat übernommen: "+prod.per100.kcal+" kcal / 100 g"); }, ()=>openRecipeEdit(id)); };
   const refreshAsg=()=>{ const slot=$("#asgSlot").value; const isDef=state.defaults&&state.defaults[slot]===id; const cb=$("#asgDefault"); if(cb) cb.checked=!!isDef; const nt=$("#asgNote"); if(nt) nt.innerHTML=isDef?("⭐ Wird beim automatischen Planen immer als <b>"+esc(SLOT_LABEL2[slot])+"</b> verwendet."):""; };
   $("#asgSlot").onchange=refreshAsg; refreshAsg();
   const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); };
