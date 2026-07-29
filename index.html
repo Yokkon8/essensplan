@@ -77,7 +77,7 @@ main{padding-top:8px}
 .weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
 .daycol{display:flex;flex-direction:column;gap:8px}
 .daycol > .dayname{font-weight:700;font-size:13px;text-align:center;color:var(--muted);padding:2px 0}
-.slotcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-height:70px}
+.slotcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-height:74px}
 .slotcard .slotlabel{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);padding:7px 9px 0}
 .slotcard button.slotbtn{flex:1;background:none;border:0;text-align:left;padding:3px 9px 9px;color:var(--ink);font-size:13px;line-height:1.25;width:100%}
 .slotcard button.slotbtn.empty{color:var(--muted);font-style:italic}
@@ -196,8 +196,8 @@ a{color:var(--brand)}
 .slotacts .slotrm{width:27px;height:27px;margin:0;flex:none}
 .slotcard.done{border-left-color:var(--accent)}
 .slotcard.done .slotbtn{color:var(--muted)}
-.water-info{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
-.daycartbtn{width:100%;margin-top:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.water-info{font-size:12px;color:var(--muted);font-weight:500;padding:0 12px}
+.daycartbtn{width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:11px 12px;font-weight:600;font-size:13px;line-height:1.15;box-shadow:var(--shadow)}
 .daycartbtn.week{margin-top:6px;border-color:var(--brand);color:var(--brand);font-weight:700}
 .togglerow{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:10px}
 .togglerow input{width:18px;height:18px;flex:none}
@@ -330,8 +330,8 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .wp-item b{flex:none} .wp-item span{color:var(--muted);font-size:12px} .wp-item em{font-style:normal;margin-left:auto;font-size:12px;color:var(--muted)}
 .wp-item.active{background:var(--chip)} .wp-item.now{outline:1px solid var(--brand)}
 .wp-item .wp-now{color:var(--brand);font-weight:700}
-.waterrow{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
-.water-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:none;color:var(--ink);font-size:13px;font-weight:700;text-align:left;padding:0}
+.waterrow{background:var(--card);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);overflow:hidden}
+.water-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:none;color:var(--ink);font-size:13px;font-weight:600;text-align:left;padding:11px 12px}
 .water-head small{font-weight:500;color:var(--muted);margin-left:6px} .water-head .dn-chev{color:var(--muted);font-size:13px}
 .personsrow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--chip);border-radius:10px;padding:5px 6px 5px 11px;margin-bottom:8px}
 .personsrow.custom{outline:1px solid var(--brand)}
@@ -339,7 +339,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .pr-step{display:flex;align-items:center;gap:8px}
 .pr-step .pbtn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:17px;line-height:1;color:var(--ink)}
 .pr-val{min-width:20px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
-.glasses{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.glasses{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:8px 12px 11px}
 .glass{font-size:20px;line-height:1;width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--chip);opacity:.38;filter:grayscale(.5)}
 .glass.on{opacity:1;filter:none;background:rgba(80,160,220,.22);border-color:rgba(80,160,220,.6)}
 .glass.extra.on{background:rgba(232,185,35,.28);border-color:rgba(232,185,35,.65)}
@@ -348,7 +348,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .cheatbtn.on{background:#e8b923;color:#3a2f00;border-color:#e8b923}
 .cheatchip.active{background:#e8b923;border-color:#e8b923;color:#3a2f00}
 .infonote{background:var(--chip);border-radius:10px;padding:8px 11px;margin:2px 2px 10px}
-.slotcard.extra{border-left:3px solid var(--accent)}
+.slotcard.extra{border-left:3px solid var(--accent);min-height:100px}   /* Platz für die 3 Aktions-Buttons (Kochmütze, Wagen, Entfernen) */
 .slotrm{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13px;flex:none;margin-left:4px}
 .addmeal{width:100%;margin-top:8px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:10px;padding:9px;font-weight:600;font-size:13px}
 .addmeal:active{transform:scale(.99)}
@@ -372,7 +372,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .reste-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);color:var(--ink);display:flex;flex-direction:column;gap:3px}
 .reste-card b{font-size:13px} .reste-card small{color:var(--muted);font-size:11px}
 .reste-card.exp{border-color:rgba(232,150,35,.6)}
-.trainbtn{width:100%;margin:2px 0 4px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.trainbtn{width:100%;text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:11px;padding:11px 12px;font-weight:600;font-size:13px;line-height:1.15;box-shadow:var(--shadow)}
 .trainbtn.on{border-color:var(--accent);color:var(--accent)}
 .trlist{background:var(--chip);border-radius:10px;padding:8px 10px}
 .tritem{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13.5px} .tritem span{flex:1;min-width:0} .tritem b{font-variant-numeric:tabular-nums}
@@ -408,7 +408,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
   .daycol{display:none}
   .daycol.showday{display:flex}
   .daycol > .dayname{display:none}
-  .slotcard{min-height:0}
+  .slotcard{min-height:74px}
   .brandbar h1{font-size:17px}
 }
 </style>
@@ -463,7 +463,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
       <button class="btn sm" id="shareCartBtn">📤 Teilen</button>
       <button class="btn sm" id="copyCartBtn">📋 Kopieren</button>
       <button class="btn sm" id="clearCheckedBtn">✓ Abgehakte weg</button>
-      <button class="btn sm ghost" id="clearCartBtn">Alles leeren</button>
+      <button class="btn sm" id="clearCartBtn">🗑️ Alles leeren</button>
     </div>
     <div id="cartBody"></div>
   </section>
@@ -2107,6 +2107,7 @@ function openPantry(){
       "<div class='mbody'>"+
       "<div class='pantry-add'>"+
         "<input class='input' id='paName' list='pantryCatalog' placeholder='Lebensmittel (z. B. Skyr)' autocomplete='off'>"+foodDatalist+
+        "<button class='btn block' id='paScan' style='margin:2px 0 2px'>📷 Barcode scannen</button>"+
         "<div class='pa-row'><input class='input' id='paAmt' inputmode='decimal' placeholder='Menge'><select class='input' id='paUnit'>"+PUNITS.map(u=>"<option>"+u+"</option>").join("")+"</select></div>"+
         "<div class='pa-row'><label class='pa-mhd'>MHD <input class='input' id='paMhd' type='date'></label><button class='btn sm primary' id='paAdd'>＋ Hinzufügen</button></div>"+
       "</div>"+
@@ -2116,6 +2117,7 @@ function openPantry(){
       "</div>");
     $("#mX").onclick=closeModal;
     $("#paAdd").onclick=()=>{ const name=$("#paName").value.trim(); if(!name){ $("#paName").focus(); return; } addPantryItem(name, parseNum($("#paAmt").value), $("#paUnit").value, $("#paMhd").value||null); save(); draw(); toast("🧊 „"+name+"“ zum Vorrat hinzugefügt"); };
+    $("#paScan").onclick=()=>{ openScanner(prod=>{ draw(); const n=$("#paName"); if(n) n.value=prod.name; const a=$("#paAmt"); if(a){ a.focus(); } toast("🏷️ „"+prod.name+"“ erkannt – Menge & MHD ergänzen, dann »Hinzufügen«"); }, ()=>draw(), "✓ Ins Vorratsformular"); };
     $("#paName").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#paAdd").click(); } });
     $$(".pitem .slotrm").forEach(b=>b.onclick=()=>{ removePantryItem(b.dataset.id); save(); draw(); });
     $$(".reste-card").forEach(b=>b.onclick=()=>openRecipeEdit(b.dataset.r));
