@@ -166,6 +166,9 @@ a{color:var(--brand)}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch}
 .chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;font-weight:600;font-size:13px}
 .chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.kindtabs{display:flex;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:4px;margin:0 0 12px}
+.kindtab{flex:1;border:0;background:transparent;color:var(--muted);border-radius:9px;padding:9px 8px;font-weight:700;font-size:13.5px}
+.kindtab.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 .rmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
 .kcaltag{font-size:11px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
 .daynutri{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;box-shadow:var(--shadow)}
@@ -185,11 +188,17 @@ a{color:var(--brand)}
 .dn-free-kcal b{color:var(--accent)}
 .dn-planned{font-size:10.5px;color:var(--muted);margin-top:5px}
 .slotcard{position:relative}
-.slotcard .slotlabel{padding-right:30px}
-.slotcheck{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);background:var(--bg);color:#fff;font-size:14px;line-height:1;display:grid;place-items:center;padding:0}
-.slotcheck.on{background:var(--accent);border-color:var(--accent)}
+.slotcard .slotlabel{padding-right:36px}
+.slotacts{position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:4px;align-items:center}
+.slotcook,.slotcart{width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:14px;line-height:1;display:grid;place-items:center;padding:0;filter:grayscale(1);opacity:.5;transition:opacity .12s,filter .12s}
+.slotcook.on{background:var(--accent);border-color:var(--accent);filter:none;opacity:1}
+.slotcart.on{background:var(--brand);border-color:var(--brand);filter:none;opacity:1}
+.slotacts .slotrm{width:27px;height:27px;margin:0;flex:none}
 .slotcard.done{border-left-color:var(--accent)}
 .slotcard.done .slotbtn{color:var(--muted)}
+.water-info{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
+.daycartbtn{width:100%;margin-top:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.daycartbtn.week{margin-top:6px;border-color:var(--brand);color:var(--brand);font-weight:700}
 .togglerow{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:10px}
 .togglerow input{width:18px;height:18px;flex:none}
 .npanel{background:var(--chip);border-radius:12px;padding:11px 13px;margin-bottom:12px;font-size:13px}
@@ -277,9 +286,10 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .rar-episch{box-shadow:0 0 0 2px #9b59b6}
 .rar-golden{box-shadow:0 0 0 2px #e8b923;animation:shine 2.4s ease-in-out infinite}
 @keyframes shine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
-.profwrap{margin-bottom:10px}
-.profwrap .profcard{margin-bottom:0}
-.raterow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600;margin:7px 4px 2px}
+.profwrap{margin-bottom:12px;background:var(--chip);border:1px solid var(--line);border-radius:14px;padding:8px 12px 10px;box-shadow:var(--shadow)}
+.profwrap .profcard{margin-bottom:0;background:transparent;border:0;box-shadow:none;padding:6px 2px}
+.profwrap .profcard:active{transform:scale(.99)}
+.raterow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600;margin:4px 2px 2px;border-top:1px solid var(--line);padding-top:8px}
 .dayrow-lbl{font-size:12.5px;font-weight:700;color:var(--ink);margin:8px 2px 5px}
 .chip.mini{padding:4px 10px;font-size:12px}
 .chip.mini.active{background:var(--brand);color:#fff;border-color:var(--brand)}
@@ -312,7 +322,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .menurow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
 .menulbl{font-weight:600}
 .weekbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;justify-content:center}
-.weekjump{flex-basis:100%;margin-top:2px;border:1px solid var(--brand);color:var(--brand);background:var(--card);border-radius:11px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
+.weekjump{align-self:center;flex:none;width:38px;height:38px;border:1px solid var(--brand);color:var(--brand);background:var(--card);border-radius:11px;padding:0;font-size:17px;line-height:1;display:grid;place-items:center;box-shadow:var(--shadow)}
 .weekjump:active{transform:scale(.98)}
 .weekpill.open{box-shadow:inset 0 0 0 2px var(--brand),var(--shadow)}
 .weekpicker{flex-basis:100%;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:2px;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:5px}
@@ -321,7 +331,14 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .wp-item.active{background:var(--chip)} .wp-item.now{outline:1px solid var(--brand)}
 .wp-item .wp-now{color:var(--brand);font-weight:700}
 .waterrow{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
-.water-head{font-size:13px;font-weight:700} .water-head small{font-weight:500;color:var(--muted);margin-left:6px}
+.water-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:none;color:var(--ink);font-size:13px;font-weight:700;text-align:left;padding:0}
+.water-head small{font-weight:500;color:var(--muted);margin-left:6px} .water-head .dn-chev{color:var(--muted);font-size:13px}
+.personsrow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--chip);border-radius:10px;padding:5px 6px 5px 11px;margin-bottom:8px}
+.personsrow.custom{outline:1px solid var(--brand)}
+.pr-lbl{font-size:12.5px;font-weight:600;color:var(--muted)} .pr-lbl small{color:var(--brand);font-weight:700}
+.pr-step{display:flex;align-items:center;gap:8px}
+.pr-step .pbtn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:17px;line-height:1;color:var(--ink)}
+.pr-val{min-width:20px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
 .glasses{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .glass{font-size:20px;line-height:1;width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--chip);opacity:.38;filter:grayscale(.5)}
 .glass.on{opacity:1;filter:none;background:rgba(80,160,220,.22);border-color:rgba(80,160,220,.6)}
@@ -343,6 +360,18 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .pb-def{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px}
 .pb-def input{width:18px;height:18px;flex:none}
 .pb-note{font-size:12.5px;color:var(--muted);margin-top:6px}
+.pantry-add{background:var(--chip);border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:8px}
+.pa-row{display:flex;gap:8px;align-items:center} .pa-row .input{flex:1;min-width:0}
+.pa-mhd{flex:1;display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600} .pa-mhd .input{flex:1}
+.pa-row .btn{flex:none;white-space:nowrap}
+.pitem{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:1px solid var(--line)}
+.pi-name{flex:1;min-width:0;font-weight:600;font-size:13.5px} .pi-amt{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+.mhd{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.mhd.soon{background:rgba(232,150,35,.2);color:#b06d00} .mhd.expired{background:rgba(220,60,60,.18);color:#c0392b}
+.reste-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reste-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);color:var(--ink);display:flex;flex-direction:column;gap:3px}
+.reste-card b{font-size:13px} .reste-card small{color:var(--muted);font-size:11px}
+.reste-card.exp{border-color:rgba(232,150,35,.6)}
 .trainbtn{width:100%;margin:2px 0 4px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px;font-weight:600;font-size:13px;box-shadow:var(--shadow)}
 .trainbtn.on{border-color:var(--accent);color:var(--accent)}
 .trlist{background:var(--chip);border-radius:10px;padding:8px 10px}
@@ -415,11 +444,13 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <div class="viewhead"><h2>Rezepte</h2><div class="spacer"></div>
       <button class="btn sm primary" id="newRecipeBtn">＋ Neu</button>
     </div>
+    <div class="kindtabs" id="recipeKindTabs"></div>
     <p class="hint infonote">ℹ️ Alle Mengenangaben gelten für <b>1 Person</b>. Im Einkaufswagen werden sie automatisch mit der Personenzahl multipliziert.</p>
     <input class="searchbox" id="recipeSearch" placeholder="Rezept suchen …" autocomplete="off">
     <div class="chips" id="recipeDietFilter"></div>
     <div class="chips" id="recipeFilter"></div>
     <button class="btn sm ghost" id="recipeFoodBtn" style="align-self:flex-start;margin:0 2px 8px">🚫 Lebensmittel abwählen / Ersatz wählen</button>
+    <div id="recipeFoodBar"></div>
     <div class="list" id="recipeList"></div>
   </section>
 
@@ -711,6 +742,8 @@ const NEW_RECIPES = [
 {name:"Putenpfanne mit Vollkornreis und Paprika",mealType:"mittag",goals:["ausgewogen"],steps:"Vollkornreis nach Packungsanweisung garen. Putenbrust würfeln und in Olivenöl scharf anbraten, danach herausnehmen. Zwiebel, Paprika und Zucchini im selben Topf andünsten, Tomatenmark kurz mitrösten und mit Gemüsebrühe ablöschen. Pute zurückgeben, kurz köcheln lassen und mit dem Reis servieren.",ing:[i("Putenbrust",150,"g"),i("Vollkornreis",60,"g"),i("Paprika",120,"g"),i("Zucchini",100,"g"),i("Zwiebel",50,"g"),i("Olivenöl",1,"EL"),i("Tomatenmark",1,"EL"),i("Gemüsebrühe",100,"ml")]},
 {name:"Kabeljau mit Kartoffeln und grünen Bohnen",mealType:"abend",goals:["ausgewogen"],steps:"Kartoffeln schälen, würfeln und in Salzwasser weich kochen. Grüne Bohnen in wenig Wasser bissfest garen und mit gepresstem Knoblauch in etwas Olivenöl schwenken. Kabeljau würzen und in einer Pfanne mit Olivenöl vorsichtig von beiden Seiten braten. Alles gemeinsam auf dem Teller anrichten.",ing:[i("Kabeljau",160,"g"),i("Kartoffeln",200,"g"),i("Grüne Bohnen",150,"g"),i("Olivenöl",1,"EL"),i("Knoblauch",1,"Stk")]},
 {name:"Vollkornnudeln mit Tomaten-Linsen-Sauce",mealType:"abend",goals:["ausgewogen"],steps:"Vollkornnudeln in Salzwasser bissfest kochen. Zwiebel und Knoblauch in Olivenöl andünsten, Tomatenmark kurz mitrösten. Gewürfelte Tomaten und rote Linsen zugeben, mit etwas Wasser aufgießen und ca. 15 Minuten köcheln, bis die Linsen weich sind. Mit den Nudeln vermengen und mit geriebenem Parmesan bestreuen.",ing:[i("Vollkornnudeln",70,"g"),i("Rote Linsen",40,"g"),i("Tomate",200,"g"),i("Zwiebel",50,"g"),i("Knoblauch",1,"Stk"),i("Tomatenmark",1,"EL"),i("Olivenöl",1,"EL"),i("Parmesan",15,"g")]},
+/* ---- imported family recipes (deduped, per 1 person, seasoning sentence added) ---- */
+{"name":"Skyr-Bowl mit Haferflocken und Beeren","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Skyr in eine Schale geben, Haferflocken und Beeren darauf verteilen. Walnüsse hacken und darüberstreuen, nach Belieben mit Honig süßen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Skyr","a":250,"u":"g"},{"n":"Haferflocken","a":50,"u":"g"},{"n":"Beeren","a":100,"u":"g"},{"n":"Walnüsse","a":15,"u":"g"},{"n":"Honig","a":1,"u":"TL"}]},{"name":"Protein-Porridge mit Beeren","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Haferflocken mit Milch aufkochen und cremig köcheln. Vom Herd nehmen, Skyr unterrühren, mit Beeren, Walnüssen und Zimt toppen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Haferflocken","a":50,"u":"g"},{"n":"Milch","a":200,"u":"ml"},{"n":"Skyr","a":125,"u":"g"},{"n":"Beeren","a":100,"u":"g"},{"n":"Walnüsse","a":15,"u":"g"},{"n":"Zimt","a":null,"u":"Prise"}]},{"name":"Overnight Oats mit Apfel","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Haferflocken mit Milch und Skyr verrühren, geraspelten Apfel und Zimt untermischen. Über Nacht kalt ziehen lassen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Haferflocken","a":50,"u":"g"},{"n":"Milch","a":150,"u":"ml"},{"n":"Skyr","a":150,"u":"g"},{"n":"Apfel","a":1,"u":"Stk"},{"n":"Zimt","a":null,"u":"Prise"}]},{"name":"Joghurt-Müsli-Bowl","mealType":"fruehstueck","goals":["ausgewogen","abnehmen"],"steps":"Naturjoghurt in eine Schale geben, Müsli und Obst darüber verteilen, mit Nüssen toppen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Naturjoghurt","a":250,"u":"g"},{"n":"Müsli","a":50,"u":"g"},{"n":"Beeren","a":100,"u":"g"},{"n":"Nüsse (gemischt)","a":15,"u":"g"}]},{"name":"Magerquark mit Obst und Haferflocken","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Magerquark cremig rühren, kleingeschnittenen Apfel, Haferflocken und Mandeln untermischen, mit Zimt abrunden. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Magerquark","a":250,"u":"g"},{"n":"Apfel","a":1,"u":"Stk"},{"n":"Haferflocken","a":30,"u":"g"},{"n":"Mandeln","a":10,"u":"g"},{"n":"Zimt","a":null,"u":"Prise"}]},{"name":"Protein-Pancakes","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Banane, Eier und Haferflocken zu einem Teig pürieren. In einer Pfanne kleine Pancakes goldbraun ausbacken, mit Zimt bestreuen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Banane","a":1,"u":"Stk"},{"n":"Ei (ganzes Hühnerei)","a":2,"u":"Stk"},{"n":"Haferflocken","a":50,"u":"g"},{"n":"Zimt","a":null,"u":"Prise"}]},{"name":"Rührei mit Vollkornbrot","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Eier verquirlen und in etwas Butter stocken lassen. Vollkornbrot dazu reichen, mit Tomatenscheiben servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Ei (ganzes Hühnerei)","a":3,"u":"Stk"},{"n":"Vollkornbrot","a":2,"u":"Scheibe"},{"n":"Tomate","a":1,"u":"Stk"},{"n":"Butter","a":1,"u":"TL"}]},{"name":"Gemüseomelett","mealType":"fruehstueck","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Gemüse klein schneiden und anbraten, verquirlte Eier darübergeben und stocken lassen. Mit frischem Salat servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Ei (ganzes Hühnerei)","a":3,"u":"Stk"},{"n":"Paprika","a":0.5,"u":"Stk"},{"n":"Tomate","a":1,"u":"Stk"},{"n":"Champignons","a":50,"u":"g"},{"n":"Salat","a":50,"u":"g"}]},{"name":"Hähnchen-Gemüse-Pfanne mit Reis","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Vollkornreis garen. Hähnchenbrust in Streifen anbraten, Gemüse zugeben und bissfest braten, mit dem Reis servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Hähnchenbrust","a":175,"u":"g"},{"n":"Vollkornreis","a":70,"u":"g"},{"n":"Brokkoli","a":100,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Zucchini","a":50,"u":"g"},{"n":"Olivenöl","a":1,"u":"TL"}]},{"name":"Hähnchen-Curry mit Reis","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Vollkornreis garen. Hähnchen anbraten, Gemüse zugeben, mit Kokosmilch und Curry ablöschen und 10 Minuten köcheln. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Hähnchenbrust","a":175,"u":"g"},{"n":"Vollkornreis","a":80,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Zucchini","a":75,"u":"g"},{"n":"Karotte","a":75,"u":"g"},{"n":"Kokosmilch","a":100,"u":"ml"},{"n":"Currypulver","a":null,"u":"Prise"}]},{"name":"Gemüse-Curry mit Reis","mealType":"mittag","goals":["ausgewogen","abnehmen"],"steps":"Vollkornreis kochen. Gemüse anbraten, mit Kokosmilch und Currypulver aufgießen und 15 Minuten köcheln. Mit dem Reis servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkornreis","a":90,"u":"g"},{"n":"Zucchini","a":100,"u":"g"},{"n":"Karotte","a":100,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Kokosmilch","a":200,"u":"ml"},{"n":"Currypulver","a":null,"u":"Prise"}]},{"name":"Süßkartoffel-Spinat-Feta-Auflauf","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Süßkartoffeln in Scheiben vorgaren, Spinat zusammenfallen lassen. Alles schichten, mit Kochsahne begießen, Feta darüber bröseln und bei 180°C 30 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Süßkartoffel","a":300,"u":"g"},{"n":"Spinat","a":150,"u":"g"},{"n":"Feta","a":100,"u":"g"},{"n":"Kochsahne","a":75,"u":"ml","nutri":{"kcal":160,"protein":3,"carbs":4,"fat":15,"fiber":0}},{"n":"Muskat","a":null,"u":"Prise"}]},{"name":"Süßkartoffel-Hähnchen-Bowl","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Süßkartoffelwürfel im Ofen rösten, Hähnchenbrust braten, Brokkoli dämpfen. Alles in einer Bowl anrichten und mit einem Klecks Naturjoghurt servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Süßkartoffel","a":250,"u":"g"},{"n":"Hähnchenbrust","a":175,"u":"g"},{"n":"Brokkoli","a":150,"u":"g"},{"n":"Naturjoghurt","a":100,"u":"g"}]},{"name":"Linsen-Bolognese","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Zwiebel und Knoblauch anbraten, rote Linsen und passierte Tomaten zugeben und 20 Minuten köcheln. Mit gekochten Vollkornnudeln servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Rote Linsen","a":100,"u":"g"},{"n":"Vollkornnudeln","a":90,"u":"g"},{"n":"passierte Tomaten","a":200,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Zwiebel","a":0.5,"u":"Stk"},{"n":"Knoblauch","a":0.5,"u":"Zehe"}]},{"name":"Vollkornnudeln mit Rinderhack-Gemüse-Soße","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Zwiebel und Rinderhack anbraten, geraspelte Karotte und Zucchini zugeben, mit passierten Tomaten auffüllen und köcheln. Mit gekochten Vollkornnudeln servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Mageres Rinderhackfleisch","a":150,"u":"g"},{"n":"Vollkornnudeln","a":90,"u":"g"},{"n":"passierte Tomaten","a":250,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Karotte","a":50,"u":"g"},{"n":"Zucchini","a":75,"u":"g"},{"n":"Zwiebel","a":0.5,"u":"Stk"}]},{"name":"Gemüse-Lasagne mit Hackfleisch","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Rinderhack mit Gemüse anbraten, mit passierten Tomaten zur Soße köcheln. Abwechselnd mit Lasagneplatten schichten, Käse darüber und bei 180°C ca. 40 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Mageres Rinderhackfleisch","a":125,"u":"g"},{"n":"Lasagneplatten","a":4,"u":"Stk"},{"n":"Zucchini","a":100,"u":"g"},{"n":"Karotte","a":75,"u":"g"},{"n":"passierte Tomaten","a":250,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Käse","a":75,"u":"g"}]},{"name":"Spinat-Ricotta-Lasagne","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Spinat dünsten und mit Ricotta vermengen. Mit Lasagneplatten und passierten Tomaten schichten, Käse darüber und bei 180°C 40 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Lasagneplatten","a":4,"u":"Stk"},{"n":"Spinat","a":200,"u":"g"},{"n":"Ricotta","a":125,"u":"g"},{"n":"passierte Tomaten","a":250,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Käse","a":100,"u":"g"}]},{"name":"Gemüse-Lasagne","mealType":"mittag","goals":["ausgewogen","abnehmen"],"steps":"Zucchini und Karotten mit passierten Tomaten zu einer Soße köcheln. Mit Lasagneplatten schichten, Mozzarella darüber und bei 180°C ca. 40 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Lasagneplatten","a":4,"u":"Stk"},{"n":"Zucchini","a":150,"u":"g"},{"n":"Karotte","a":100,"u":"g"},{"n":"passierte Tomaten","a":250,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Mozzarella","a":75,"u":"g"}]},{"name":"Putenstreifen mit Ofenkartoffeln","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Kartoffelspalten bei 200°C ca. 35 Minuten backen. Putenstreifen würzen und anbraten. Mit Zaziki servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Putenbrust","a":175,"u":"g"},{"n":"Kartoffeln","a":350,"u":"g"},{"n":"Zaziki","a":125,"u":"g","nutri":{"kcal":90,"protein":4,"carbs":4,"fat":6,"fiber":0.5}}]},{"name":"Kartoffel-Gemüse-Pfanne mit Ei","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Kartoffeln vorkochen und in der Pfanne anbraten, Paprika und Karotte zugeben. Spiegeleier darauf braten. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Kartoffeln","a":350,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Karotte","a":100,"u":"g"},{"n":"Ei (ganzes Hühnerei)","a":2,"u":"Stk"}]},{"name":"Zucchini-Nudel-Pfanne mit Hackfleisch","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Zwiebel und Rinderhack anbraten, spiralisierte Zucchini zugeben, mit passierten Tomaten ablöschen und kurz köcheln. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Mageres Rinderhackfleisch","a":150,"u":"g"},{"n":"Zucchini","a":300,"u":"g"},{"n":"passierte Tomaten","a":200,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Zwiebel","a":0.5,"u":"Stk"}]},{"name":"Süßkartoffel-Feta-Pfanne","mealType":"mittag","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Süßkartoffelwürfel in Olivenöl anbraten, Gemüse zugeben und garen. Zum Schluss Feta zerbröseln und untermischen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Süßkartoffel","a":300,"u":"g"},{"n":"Gemüse (nach Wahl)","a":200,"u":"g"},{"n":"Feta","a":75,"u":"g"},{"n":"Olivenöl","a":1,"u":"TL"}]},{"name":"Mediterrane Gemüsepfanne mit Kartoffeln","mealType":"mittag","goals":["ausgewogen","abnehmen"],"steps":"Kartoffeln vorkochen, mit Zucchini, Paprika und Tomaten in der Pfanne garen. Mit einem Klecks Kräuterquark servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Kartoffeln","a":350,"u":"g"},{"n":"Zucchini","a":100,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Tomate","a":100,"u":"g"},{"n":"Kräuterquark","a":125,"u":"g"}]},{"name":"Vollkornbrot mit Kräuterquark","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Vollkornbrot mit Kräuterquark bestreichen und mit Tomatenscheiben belegen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkornbrot","a":2,"u":"Scheibe"},{"n":"Kräuterquark","a":125,"u":"g"},{"n":"Tomate","a":1,"u":"Stk"}]},{"name":"Vollkornnudeln mit Tomaten-Ricotta-Soße","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Zwiebel und Knoblauch anbraten, passierte Tomaten zugeben und 10 Minuten köcheln, Ricotta unterrühren. Mit gekochten Vollkornnudeln servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkornnudeln","a":90,"u":"g"},{"n":"Ricotta","a":125,"u":"g"},{"n":"passierte Tomaten","a":250,"u":"ml","nutri":{"kcal":35,"protein":1.5,"carbs":6,"fat":0.3,"fiber":1.5}},{"n":"Zwiebel","a":0.5,"u":"Stk"},{"n":"Knoblauch","a":0.5,"u":"Zehe"}]},{"name":"Ofengemüse mit Halloumi","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Gemüse würfeln, mit Olivenöl mischen und bei 200°C 30 Minuten rösten. Halloumi in den letzten 10 Minuten mitbacken. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Zucchini","a":100,"u":"g"},{"n":"Paprika","a":100,"u":"g"},{"n":"Karotte","a":100,"u":"g"},{"n":"Halloumi","a":125,"u":"g","nutri":{"kcal":330,"protein":22,"carbs":2,"fat":26,"fiber":0}},{"n":"Olivenöl","a":1,"u":"EL"}]},{"name":"Vollkorn-Wrap mit Ei und Hähnchen","mealType":"abend","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Hähnchen und Ei braten. Wrap mit Salat, Tomaten, Hähnchen und Ei füllen und aufrollen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkorn-Wrap","a":1,"u":"Stk","nutri":{"kcal":300,"protein":9,"carbs":48,"fat":7,"fiber":6}},{"n":"Hähnchenbrust","a":125,"u":"g"},{"n":"Ei (ganzes Hühnerei)","a":2,"u":"Stk"},{"n":"Salat","a":40,"u":"g"},{"n":"Tomate","a":1,"u":"Stk"}]},{"name":"Dinkelpizza","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Pizzateig ausrollen, mit Tomatensoße bestreichen, mit Gemüse und Mozzarella belegen. Bei 220°C 15-20 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Dinkelpizzateig","a":200,"u":"g","nutri":{"kcal":260,"protein":8,"carbs":50,"fat":3,"fiber":3}},{"n":"Tomatensoße","a":100,"u":"ml","nutri":{"kcal":40,"protein":1.5,"carbs":7,"fat":0.5,"fiber":1.5}},{"n":"Mozzarella","a":100,"u":"g"},{"n":"Paprika","a":75,"u":"g"},{"n":"Champignons","a":50,"u":"g"}]},{"name":"Bunter Salat mit Ei","mealType":"abend","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Salat, Tomaten und Gurke schneiden, mit einem Dressing aus Olivenöl, Essig und Senf mischen. Gekochte Eier vierteln und darauf verteilen, Vollkornbrot dazu. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Salat","a":80,"u":"g"},{"n":"Tomate","a":1,"u":"Stk"},{"n":"Gurke","a":0.5,"u":"Stk"},{"n":"Ei (ganzes Hühnerei)","a":2,"u":"Stk"},{"n":"Vollkornbrot","a":2,"u":"Scheibe"},{"n":"Olivenöl","a":1,"u":"EL"}]},{"name":"Tomaten-Mozzarella-Salat","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Tomaten und Mozzarella in Scheiben schichten, mit Basilikum bestreuen und mit Olivenöl beträufeln. Vollkornbrot dazu reichen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Mozzarella","a":125,"u":"g"},{"n":"Tomate","a":250,"u":"g"},{"n":"Vollkornbrot","a":2,"u":"Scheibe"},{"n":"Basilikum","a":null,"u":"Prise"}]},{"name":"Ofenkartoffeln mit Kräuterquark","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Kartoffeln bei 200°C ca. 35 Minuten backen, bis sie weich sind. Mit Kräuterquark und frischer Gurke servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Kartoffeln","a":400,"u":"g"},{"n":"Kräuterquark","a":200,"u":"g"},{"n":"Gurke","a":0.5,"u":"Stk"}]},{"name":"Gemüsecremesuppe","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Gemüse würfeln, in Gemüsebrühe weich kochen und teilweise pürieren. Mit einem Schuss Milch verfeinern, Vollkornbrot dazu reichen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Karotte","a":100,"u":"g"},{"n":"Kartoffeln","a":100,"u":"g"},{"n":"Lauch","a":100,"u":"g"},{"n":"Gemüsebrühe","a":400,"u":"ml"},{"n":"Milch","a":50,"u":"ml"},{"n":"Vollkornbrot","a":1,"u":"Scheibe"}]},{"name":"Vollkornbrot mit Hüttenkäse","mealType":"abend","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Vollkornbrot mit Hüttenkäse bestreichen, mit Gurke und Tomate belegen und mit Kräutern bestreuen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkornbrot","a":2,"u":"Scheibe"},{"n":"Hüttenkäse","a":150,"u":"g"},{"n":"Gurke","a":0.5,"u":"Stk"},{"n":"Tomate","a":1,"u":"Stk"}]},{"name":"Gemüse-Frittata","mealType":"abend","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Gemüse in einer ofenfesten Pfanne anbraten, verquirlte Eier darübergeben, mit Käse bestreuen und im Ofen stocken lassen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Ei (ganzes Hühnerei)","a":3,"u":"Stk"},{"n":"Zucchini","a":100,"u":"g"},{"n":"Paprika","a":75,"u":"g"},{"n":"Tomate","a":1,"u":"Stk"},{"n":"Käse","a":25,"u":"g"}]},{"name":"Puten-Gemüse-Wrap","mealType":"abend","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Putenstreifen anbraten. Wrap mit Salat, Tomaten, Gurke und Pute füllen, mit Joghurtsoße beträufeln und aufrollen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkorn-Wrap","a":1,"u":"Stk","nutri":{"kcal":300,"protein":9,"carbs":48,"fat":7,"fiber":6}},{"n":"Putenbrust","a":150,"u":"g"},{"n":"Salat","a":40,"u":"g"},{"n":"Tomate","a":1,"u":"Stk"},{"n":"Gurke","a":0.5,"u":"Stk"},{"n":"Naturjoghurt","a":30,"u":"g"}]},{"name":"Gemüse-Vollkornpizza","mealType":"abend","goals":["ausgewogen","abnehmen"],"steps":"Vollkornpizzateig ausrollen, mit Tomatensoße bestreichen, reichlich Gemüse und Mozzarella darauf verteilen. Bei 220°C 15-20 Minuten backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Vollkornpizzateig","a":120,"u":"g","nutri":{"kcal":250,"protein":9,"carbs":46,"fat":3,"fiber":6}},{"n":"Tomatensoße","a":100,"u":"ml","nutri":{"kcal":40,"protein":1.5,"carbs":7,"fat":0.5,"fiber":1.5}},{"n":"Mozzarella","a":80,"u":"g"},{"n":"Gemüse (nach Wahl)","a":150,"u":"g"}]},{"name":"Hüttenkäse mit Gurke","mealType":"snack","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Gurke in Scheiben schneiden und mit Hüttenkäse anrichten, mit Schnittlauch bestreuen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Hüttenkäse","a":150,"u":"g"},{"n":"Gurke","a":0.5,"u":"Stk"},{"n":"Schnittlauch","a":null,"u":"Prise"}]},{"name":"Skyr mit Beeren und Nüssen","mealType":"snack","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Skyr in eine Schale geben, mit Beeren und Nüssen toppen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Skyr","a":250,"u":"g"},{"n":"Beeren","a":100,"u":"g"},{"n":"Nüsse (gemischt)","a":15,"u":"g"}]},{"name":"Magerquark mit Beeren","mealType":"snack","goals":["ausgewogen","abnehmen","muskelaufbau"],"steps":"Magerquark cremig rühren und mit frischen Beeren toppen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Magerquark","a":250,"u":"g"},{"n":"Beeren","a":100,"u":"g"}]},{"name":"Banane mit Mandeln","mealType":"snack","goals":["ausgewogen","abnehmen"],"steps":"Banane in Scheiben schneiden und mit Mandeln als schnellen Snack genießen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Banane","a":1,"u":"Stk"},{"n":"Mandeln","a":20,"u":"g"}]},
 ];
 
 const NUTRI={}, UNIT_G={}, CATALOG={}, FOOD_LABELS={}, FOOD_HEALTHY={}, FOOD_PG={}, ALIAS={};
@@ -863,7 +896,7 @@ function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); const abn=weekProfil
 /* "gegessen/gekocht" tracking: sum only the marked meals so the day shows what's already eaten and what's still free */
 function doneKey(day,slot){ return day+"|"+slot; }
 function isDone(day,slot){ const d=DONE(); return !!(d && d[doneKey(day,slot)]); }
-function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); if(d[k]) delete d[k]; else d[k]=true; checkStreak(); save(); }
+function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); const nowDone=!d[k]; if(nowDone) d[k]=true; else delete d[k]; const ded=pantryAdjustForSlot(day,slot,nowDone?1:-1); checkStreak(); save(); if(ded) toast(nowDone?("🧊 "+ded+" Zutat(en) vom Vorrat abgezogen"):"🧊 Vorrat zurückgebucht"); }
 function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
 function dayEaten(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,recipeNutrients(r)); }); dayExtras(dayId).forEach(e=>{ if(isDone(dayId,e.id)){ const r=state.recipes[e.rid]; if(r) addNut(t,recipeNutrients(r)); } }); return t; }
 function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]) || dayExtras(dayId).some(e=>isDone(dayId,e.id)); }
@@ -885,7 +918,7 @@ function lockSet(dayId){ const s=new Set(); const w=state.weekLocks&&state.weekL
 function setLock(dayId,slot,on){ if(!state.weekLocks) state.weekLocks={}; if(!state.weekLocks[uiWeek]) state.weekLocks[uiWeek]={}; if(!state.weekLocks[uiWeek][dayId]) state.weekLocks[uiWeek][dayId]={}; if(on) state.weekLocks[uiWeek][dayId][slot]=true; else delete state.weekLocks[uiWeek][dayId][slot]; }
 /* ---- rebalance a day's non-locked base slots to hit the targets again, keeping manual dishes + extras fixed ---- */
 const BASE_ORDER=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
-function recipesByType(t){ return Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r)); }
+function recipesByType(t){ return Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r)); }   // Lebensmittel nie automatisch (auch nicht via rebalanceDay)
 function weekOrder(){ return weekProfile()==="abnehmen" ? BASE_ORDER.filter(x=>x[0]!=="s2") : BASE_ORDER; }
 function rebalanceDay(dayId){
   if(cheatDay()===dayId) return;                                  // cheat day has no targets
@@ -910,7 +943,7 @@ function dayTrainings(dayId){ const w=state.weekTrain&&state.weekTrain[uiWeek]; 
 function addTraining(dayId,label,kcal){ ensureWeek(uiWeek); if(!state.weekTrain) state.weekTrain={}; if(!state.weekTrain[uiWeek]) state.weekTrain[uiWeek]={}; if(!Array.isArray(state.weekTrain[uiWeek][dayId])) state.weekTrain[uiWeek][dayId]=[]; state.weekTrain[uiWeek][dayId].push({id:"t"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36),label,kcal:Math.max(0,Math.round(kcal))}); }
 function removeTraining(dayId,tId){ const l=state.weekTrain&&state.weekTrain[uiWeek]&&state.weekTrain[uiWeek][dayId]; if(Array.isArray(l)){ const e=l.find(x=>x&&x.id===tId); if(e) e.del=true; } }
 function dayBurn(dayId){ return dayTrainings(dayId).reduce((s,e)=>s+(+e.kcal||0),0); }
-function trainingEl(dayId){ const burn=dayBurn(dayId); const b=el("button","trainbtn"+(burn?" on":""), burn?("🏋️ Training · "+burn+" kcal verbrannt"):"🏋️ Training erfassen"); b.onclick=()=>openTrainChooser(dayId); return b; }
+function trainingEl(dayId){ const burn=dayBurn(dayId); const b=el("button","trainbtn"+(burn?" on":""), burn?("🏋️ Training · "+burn+" kcal verbrannt"):"🏋️ Training"); b.onclick=()=>openTrainChooser(dayId); return b; }
 function openTrainChooser(dayId){
   let selType=TRAININGS[0], selDur=30;
   const dn=DAYS.find(d=>d.id===dayId).name;
@@ -970,7 +1003,7 @@ function foodsRichIn(nutrient,n,healthyOnly){
     .sort((a,b)=>NUTRI[b][nutrient]-NUTRI[a][nutrient]).slice(0,n).map(k=>foodLabel(k));
 }
 function recipesRichIn(nutrient,n,mealType){
-  return Object.values(state.recipes).filter(r=>r.ing.length && recipeAvailable(r) && (!mealType||r.mealType===mealType))
+  return Object.values(state.recipes).filter(r=>r.kind!=="food" && r.ing.length && recipeAvailable(r) && (!mealType||r.mealType===mealType))
     .map(r=>({r,v:recipeNutrients(r)[nutrient]})).filter(x=>x.v>0)
     .sort((a,b)=>b.v-a.v).slice(0,n).map(x=>x.r);
 }
@@ -991,7 +1024,7 @@ function scoreCandidate(cur,rn,usedCount,tg,goalBonus){
   return s;
 }
 /* weighted squared relative distance of a day's totals from the target (kcal & protein weighted most) */
-function dayDistance(n,tg){ let d=0; NUTR_KEYS.forEach(k=>{ if(!tg[k]) return; let rel=(n[k]-tg[k])/tg[k]; if((k==="protein"||k==="fiber")&&rel>0) rel=0; /* more protein/fibre than target is fine */ const w=k==="kcal"?3:k==="protein"?1.6:k==="fiber"?0.8:0.4; d+=w*rel*rel; }); return d; }
+function dayDistance(n,tg){ let d=0; NUTR_KEYS.forEach(k=>{ if(!tg[k]) return; let rel=(n[k]-tg[k])/tg[k]; if((k==="protein"||k==="fiber")&&rel>0) rel=0; /* more protein/fibre than target is fine */ const w=k==="kcal"?3:k==="protein"?2.8:k==="fiber"?0.8:0.4; d+=w*rel*rel; }); return d; }
 /* fill one day with a randomized greedy pass (top-3 pick) so best-of-K can explore */
 function fillDay(order,tg,profId,used,byType,opts){
   opts=opts||{}; const allowFn=opts.allowFn, blockIds=opts.blockIds, fixed=opts.fixed, baseNut=opts.baseNut;
@@ -1011,9 +1044,10 @@ function fillDay(order,tg,profId,used,byType,opts){
   return {picks,nut:cur};
 }
 function generateWeek(profileId){
-  const prof=profile(profileId); const tg=computeTargets(prof.id); const used={}; let prevIds=new Set();
+  const prof=profile(profileId); const tg=computeTargets(prof.id); const used={}; let recent=[];
+  const blockSet=()=>{ const s=new Set(); recent.forEach(st=>st.forEach(id=>s.add(id))); return s; };   // block dishes from the last 2 days → no repeat within any 3-day window
   const cd=cheatDay();
-  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.ing && r.ing.length && recipeAvailable(r));
+  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r));   // Lebensmittel (kind:food) werden nie automatisch eingeplant
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
   const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
   const defs={}; SLOTS.forEach(s=>{ const rid=state.defaults&&state.defaults[s.id]; if(rid && state.recipes[rid] && recipeAvailable(state.recipes[rid])) defs[s.id]=rid; }); // standard meals (always the same)
@@ -1029,18 +1063,33 @@ function generateWeek(profileId){
     return true; };
   const allowFor=(dayId)=>(slot)=>((r)=>dietAllowedOn(r,dayId,slot));
   const np={}; let placed=0;
+  const proteinRepair=(dayId,bs)=>{ const tgP=tg.protein; if(!tgP) return;   // ensure the day covers the protein target: swap in higher-protein dishes where possible
+    const dayProtein=()=>{ let p=extrasNut(dayId).protein; Object.values(np[dayId]).forEach(rid=>{ const r=rid&&state.recipes[rid]; if(r) p+=recipeNutrients(r).protein; }); return p; };
+    let guard=0;
+    while(dayProtein()<tgP*0.9 && guard++<4){
+      let bestSwap=null;
+      order.forEach(([slot,type])=>{ if(defs[slot]) return;   // don't override a standard meal
+        const curR=np[dayId][slot]?state.recipes[np[dayId][slot]]:null, curPr=curR?recipeNutrients(curR).protein:0;
+        byType(type).forEach(r=>{ if(!dietAllowedOn(r,dayId,slot)||bs.has(r.id)||Object.values(np[dayId]).indexOf(r.id)>=0) return; const gain=recipeNutrients(r).protein-curPr; if(gain>0 && (!bestSwap||gain>bestSwap.gain)) bestSwap={slot,rid:r.id,gain}; });
+      });
+      if(!bestSwap) break; np[dayId][bestSwap.slot]=bestSwap.rid;
+    }
+  };
   DAYS.forEach(d=>{
     np[d.id]={b:null,s1:null,l:null,s2:null,d:null};
+    const bs=blockSet();
     if(d.id===cd){                                       // cheat day: anything goes, pick randomly, ignore targets
-      fullOrder.forEach(([slot,type])=>{ let c=byType(type); if(!c.length) return; const f=c.filter(r=>!prevIds.has(r.id)); if(f.length) c=f; np[d.id][slot]=c[Math.floor(Math.random()*c.length)].id; placed++; });
-      prevIds=new Set(Object.values(np[d.id]).filter(Boolean));
+      fullOrder.forEach(([slot,type])=>{ let c=byType(type); if(!c.length) return; const f=c.filter(r=>!bs.has(r.id)); if(f.length) c=f; np[d.id][slot]=c[Math.floor(Math.random()*c.length)].id; placed++; });
+      recent.unshift(new Set(Object.values(np[d.id]).filter(Boolean))); recent=recent.slice(0,2);
       return;
     }
-    // best of many attempts: keep the day whose totals land closest to the goal's kcal/nutrients (no dish repeated from the day before)
+    // best of many attempts: keep the day whose totals land closest to the goal, then guarantee protein; no dish from the last 2 days
     let best=null,bd=1e9;
-    for(let k=0;k<60;k++){ const day=fillDay(order,tg,prof.id,used,byType,{allowFn:allowFor(d.id),blockIds:prevIds,fixed:defs,baseNut:extrasNut(d.id)}); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
-    if(best){ Object.keys(best.picks).forEach(slot=>{ np[d.id][slot]=best.picks[slot]; used[best.picks[slot]]=(used[best.picks[slot]]||0)+1; placed++; }); }
-    prevIds=new Set(Object.values(np[d.id]).filter(Boolean));
+    for(let k=0;k<80;k++){ const day=fillDay(order,tg,prof.id,used,byType,{allowFn:allowFor(d.id),blockIds:bs,fixed:defs,baseNut:extrasNut(d.id)}); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
+    if(best){ Object.keys(best.picks).forEach(slot=>{ np[d.id][slot]=best.picks[slot]; }); }
+    proteinRepair(d.id,bs);
+    Object.values(np[d.id]).forEach(rid=>{ if(rid){ used[rid]=(used[rid]||0)+1; placed++; } });
+    recent.unshift(new Set(Object.values(np[d.id]).filter(Boolean))); recent=recent.slice(0,2);
   });
   if(!placed){ toast("Keine passenden Rezepte – bitte Lebensmittel-Auswahl prüfen"); return; }
   const emptyTypes=[...new Set(order.map(x=>x[1]))].filter(t=>byType(t).length===0);   // meal types with no candidates
@@ -1060,8 +1109,11 @@ function openWeekChooser(){
     return "<div class='profwrap'><button class='profcard' data-p='"+p.id+"'><span class='pemoji'>"+p.emoji+"</span><span class='grow'><b>"+esc(p.label)+"</b><small>"+esc(p.desc)+"</small></span><span class='pkcal' id='pkcal-"+p.id+"'></span></button>"+raterow+"</div>"; };
   openModal("<div class='mhead'><h3>🎯 Wochenplan erstellen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
+    "<div class='setup-h' style='margin:2px 2px 4px'><span class='setup-num'>1</span>🎯 Plan wählen</div>"+
+    "<p class='hint' id='chooserHint' style='margin:2px 2px 12px'></p>"+
+    PROFILES.map(card).join("")+
     "<div class='setupcard'>"+
-      "<div class='setup-h'><span class='setup-num'>1</span>⚖️ Deine Körperdaten</div>"+
+      "<div class='setup-h'><span class='setup-num'>2</span>⚖️ Deine Körperdaten</div>"+
       "<div class='setup-sub'>Für den persönlichen kcal-Bedarf.</div>"+
       "<div class='wrow'>"+
         "<label class='wfield'><span>Aktuelles Gewicht</span><span class='winput'><input class='input' id='wCur' inputmode='decimal' placeholder='z. B. 75' value='"+esc(numV(state.currentWeight))+"'><small>kg</small></span></label>"+
@@ -1078,19 +1130,16 @@ function openWeekChooser(){
       "<div class='bmiline' id='bmiLine'></div>"+
     "</div>"+
     "<div class='setupcard'>"+
-      "<div class='setup-h'><span class='setup-num'>2</span>🍗 Fleisch &amp; Fisch</div>"+
+      "<div class='setup-h'><span class='setup-num'>3</span>🍗 Fleisch &amp; Fisch</div>"+
       "<div class='setup-sub'>An wie vielen Tagen pro Woche – jeweils getrennt wählbar.</div>"+
       "<div class='dayrow-lbl'>🍖 Fleisch</div><div class='chips' id='meatChips'></div>"+
       "<div class='dayrow-lbl'>🐟 Fisch</div><div class='chips' id='fishChips'></div>"+
     "</div>"+
     "<div class='setupcard'>"+
-      "<div class='setup-h'><span class='setup-num'>3</span>🚫 Lebensmittel</div>"+
+      "<div class='setup-h'><span class='setup-num'>4</span>🚫 Lebensmittel</div>"+
       "<div class='setup-sub'>Wähle ab, was du nicht magst – optional mit Ersatz.</div>"+
       "<button class='btn block ghost' id='foodPrefBtn'>Lebensmittel abwählen / Ersatz wählen</button>"+
     "</div>"+
-    "<div class='setup-h' style='margin:2px 2px 4px'><span class='setup-num'>4</span>🎯 Plan wählen</div>"+
-    "<p class='hint' id='chooserHint' style='margin:4px 2px 12px'></p>"+
-    PROFILES.map(card).join("")+
     "</div>");
   $("#mX").onclick=closeModal;
   const updateComputed=()=>{
@@ -1169,6 +1218,8 @@ function ensureNewRecipes(recipes){
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   return recipes;
 }
+const BUILTIN_BASE=24;   // recipes n1..n24 shipped earlier; only n25+ are topped up for existing users (so their older deletions stick)
+function topUpBuiltins(recipes,deleted){ if(!recipes||typeof recipes!=="object") return; for(let ix=BUILTIN_BASE; ix<NEW_RECIPES.length; ix++){ const id="n"+(ix+1); if(recipes[id]) continue; if(deleted && deleted[id]) continue; const r=NEW_RECIPES[ix]; recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; } }
 
 /* ---- Seed recipes (amounts per 1 person). i(name,amount,unit) ---- */
 function i(n,a,u){ return {n:n, a:(a===undefined?null:a), u:(u||"")}; }
@@ -1223,10 +1274,10 @@ function seedState(){
   NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x}))}; });
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
   const ck=currentMondayStr();
-  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, meatPerWeek:-1, fishPerWeek:-1,
+  return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, deletedBuiltins:{}, pantry:[], meatPerWeek:-1, fishPerWeek:-1,
     currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
     height:null, age:null, sex:"n", activity:1.375,
-    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekLocks:{}, defaults:{},
+    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekPersons:{}, weekLocks:{}, weekCart:{}, defaults:{},
     weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
     recipes, cart:[]};
 }
@@ -1237,6 +1288,7 @@ let state = load();
 let uiDay = "mo";
 let uiWeek = localStorage.getItem("foodies_week") || currentMondayStr();
 let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
+let waterOpen = (localStorage.getItem("foodies_water_open")!=="0");
 let weekPickerOpen = false, weekPickerScroll = 0, weekPickerFresh = false;
 /* continuous year-long weeks: keyed by ISO-Monday date string; materialize-on-read so past weeks stay and any visited week is a live, persisted object */
 function ensureWeek(k){ if(!state.weeks[k]){ state.weeks[k]=emptyPlan(); state.weekDone[k]={}; state.weekProfile[k]=null; } if(!state.weekWater) state.weekWater={}; if(!state.weekWater[k]) state.weekWater[k]={}; return k; }
@@ -1294,7 +1346,7 @@ function weekLabel(k){ const mo=weekMonday(k), su=new Date(mo.getTime()); su.set
 function dayDateStr(k,dayIdx){ const d=weekMonday(k); d.setDate(d.getDate()+dayIdx); return fmtDM(d); }
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
 function ymStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2); }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; ensureNewRecipes(s.recipes); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; if(!s.deletedBuiltins||typeof s.deletedBuiltins!=="object"||Array.isArray(s.deletedBuiltins)) s.deletedBuiltins={}; if(!Array.isArray(s.pantry)) s.pantry=[]; ensureNewRecipes(s.recipes); topUpBuiltins(s.recipes,s.deletedBuiltins); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekPersons||typeof s.weekPersons!=="object"||Array.isArray(s.weekPersons)) s.weekPersons={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
 function pruneEmptyWeeks(){                                // drop only fully-empty scaffolding weeks; any used week is permanent (stats depend on it)
   const ck=currentMondayStr();
   Object.keys(state.weeks).forEach(k=>{
@@ -1306,7 +1358,7 @@ function pruneEmptyWeeks(){                                // drop only fully-em
     const noCheat=!(state.weekCheat && state.weekCheat[k]);
     const noExtra=!(state.weekExtra && state.weekExtra[k] && Object.keys(state.weekExtra[k]).some(dy=>Array.isArray(state.weekExtra[k][dy]) && state.weekExtra[k][dy].length));   // keep the week while any entry (incl. a del-tombstone) exists, so the removal can sync
     const noTrain=!(state.weekTrain && state.weekTrain[k] && Object.keys(state.weekTrain[k]).some(dy=>Array.isArray(state.weekTrain[k][dy]) && state.weekTrain[k][dy].length));
-    if(emptyP&&emptyD&&noPf&&emptyW&&noCheat&&noExtra&&noTrain){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; if(state.weekCheat) delete state.weekCheat[k]; if(state.weekCheatAt) delete state.weekCheatAt[k]; if(state.weekExtra) delete state.weekExtra[k]; if(state.weekTrain) delete state.weekTrain[k]; if(state.weekLocks) delete state.weekLocks[k]; }
+    if(emptyP&&emptyD&&noPf&&emptyW&&noCheat&&noExtra&&noTrain){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; if(state.weekCheat) delete state.weekCheat[k]; if(state.weekCheatAt) delete state.weekCheatAt[k]; if(state.weekExtra) delete state.weekExtra[k]; if(state.weekTrain) delete state.weekTrain[k]; if(state.weekPersons) delete state.weekPersons[k]; if(state.weekLocks) delete state.weekLocks[k]; if(state.weekCart) delete state.weekCart[k]; }
   });
 }
 function persistLocal(){ pruneEmptyWeeks(); try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
@@ -1330,7 +1382,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -1377,9 +1429,12 @@ async function cloudPullApply(force){
         if(d.weekCheat && typeof d.weekCheat==="object" && !Array.isArray(d.weekCheat)){ if(!state.weekCheat) state.weekCheat={}; if(!state.weekCheatAt) state.weekCheatAt={}; const rAt=(d.weekCheatAt&&typeof d.weekCheatAt==="object"&&!Array.isArray(d.weekCheatAt))?d.weekCheatAt:{}; Object.keys(d.weekCheat).forEach(k=>{ if(!WK_RE.test(k)) return; const lt=state.weekCheatAt[k]||"", rt=rAt[k]||""; if(!(k in state.weekCheat) || rt>lt){ state.weekCheat[k]=d.weekCheat[k]; state.weekCheatAt[k]=rt||lt; } }); }   // last-write-wins by per-key timestamp → converges across devices
         if(d.weekExtra && typeof d.weekExtra==="object" && !Array.isArray(d.weekExtra)){ if(!state.weekExtra) state.weekExtra={}; Object.keys(d.weekExtra).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekExtra[k]||{}; if(!state.weekExtra[k]) state.weekExtra[k]={}; Object.keys(rd).forEach(dy=>{ const rlist=Array.isArray(rd[dy])?rd[dy]:[]; const llist=Array.isArray(state.weekExtra[k][dy])?state.weekExtra[k][dy]:[]; const by={}; llist.concat(rlist).forEach(e=>{ if(e&&e.id){ const p=by[e.id]; by[e.id]=p?{id:e.id,rid:p.rid||e.rid,del:!!(p.del||e.del)}:{id:e.id,rid:e.rid,del:!!e.del}; } }); state.weekExtra[k][dy]=Object.values(by); }); }); }   // union extra meals by id; a soft-delete (del) on either side wins so removals converge
         if(d.weekTrain && typeof d.weekTrain==="object" && !Array.isArray(d.weekTrain)){ if(!state.weekTrain) state.weekTrain={}; Object.keys(d.weekTrain).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekTrain[k]||{}; if(!state.weekTrain[k]) state.weekTrain[k]={}; Object.keys(rd).forEach(dy=>{ const rlist=Array.isArray(rd[dy])?rd[dy]:[]; const llist=Array.isArray(state.weekTrain[k][dy])?state.weekTrain[k][dy]:[]; const by={}; llist.concat(rlist).forEach(e=>{ if(e&&e.id){ const p=by[e.id]; by[e.id]=p?{id:e.id,label:p.label||e.label,kcal:p.kcal||e.kcal,del:!!(p.del||e.del)}:{id:e.id,label:e.label,kcal:e.kcal,del:!!e.del}; } }); state.weekTrain[k][dy]=Object.values(by); }); }); }   // union trainings by id; del wins
+        if(d.weekPersons && typeof d.weekPersons==="object" && !Array.isArray(d.weekPersons)){ if(!state.weekPersons) state.weekPersons={}; Object.keys(d.weekPersons).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekPersons[k]||{}; state.weekPersons[k]={...rd, ...(state.weekPersons[k]||{})}; }); }   // per-day person overrides; local wins on shared days
         // weekLocks are intentionally NOT synced — they are a per-device hint for rebalance/regenerate; syncing a monotonic union would resurrect cleared locks
         if(d.defaults && typeof d.defaults==="object" && !Array.isArray(d.defaults)) state.defaults={...d.defaults, ...state.defaults};   // per-slot merge keeps each device's independent standard-meal picks
-        if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); normalizeRecipes(state.recipes); }
+        if(d.deletedBuiltins && typeof d.deletedBuiltins==="object" && !Array.isArray(d.deletedBuiltins)){ if(!state.deletedBuiltins) state.deletedBuiltins={}; Object.keys(d.deletedBuiltins).forEach(id=>{ if(d.deletedBuiltins[id]) state.deletedBuiltins[id]=true; }); }
+        if(Array.isArray(d.pantry)){ if(!Array.isArray(state.pantry)) state.pantry=[]; const by={}; state.pantry.concat(d.pantry).forEach(p=>{ if(p&&p.id){ const ex=by[p.id]; if(!ex || (p.at||"")>(ex.at||"")) by[p.id]=p; } }); state.pantry=Object.values(by); }   // pantry: last-write-wins per item id
+        if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); topUpBuiltins(state.recipes,state.deletedBuiltins); normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
         if(d.disabledFoods && typeof d.disabledFoods==="object" && !Array.isArray(d.disabledFoods)) state.disabledFoods=d.disabledFoods;
@@ -1469,12 +1524,30 @@ function setWaterCount(dayId,n){ ensureWeek(uiWeek); n=Math.max(0,Math.min(40,n)
 function fmtL(glasses){ return String(Math.round(glasses*ML_PER_GLASS/100)/10).replace(".",",")+" L"; }
 function waterEl(dayId){
   const g=waterGoalGlasses(), c=waterCount(dayId), shown=Math.max(g,c);
-  const wrap=el("div","waterrow");
-  wrap.appendChild(el("div","water-head","💧 Wasser <small>"+esc(fmtL(c)+" / "+fmtL(g)+" · "+c+"/"+g+" Gläser à 250 ml")+"</small>"));
-  const glasses=el("div","glasses");
-  for(let i=0;i<shown;i++){ const on=i<c, extra=i>=g; const b=el("button","glass"+(on?" on":"")+(extra&&on?" extra":""),"🥛"); b.title=((i+1)*ML_PER_GLASS)+" ml"; b.setAttribute("aria-label",(i+1)+". Glas"); b.onclick=()=>setWaterCount(dayId,(i+1===c)?i:i+1); glasses.appendChild(b); }
-  const plus=el("button","glass plus","＋"); plus.title="Weiteres Glas (+250 ml)"; plus.setAttribute("aria-label","Weiteres Glas hinzufügen"); plus.onclick=()=>setWaterCount(dayId,c+1); glasses.appendChild(plus);
-  wrap.appendChild(glasses);
+  const wrap=el("div","waterrow"+(waterOpen?"":" collapsed"));
+  const head=el("button","water-head","<span>💧 Wasser</span><span class='dn-chev'>"+(waterOpen?"▾":"▸")+"</span>");
+  head.type="button"; head.onclick=()=>{ waterOpen=!waterOpen; localStorage.setItem("foodies_water_open",waterOpen?"1":"0"); renderPlan(); };
+  wrap.appendChild(head);
+  if(waterOpen){
+    wrap.appendChild(el("div","water-info",esc(fmtL(c)+" / "+fmtL(g)+" · "+c+"/"+g+" Gläser à 250 ml")));
+    const glasses=el("div","glasses");
+    for(let i=0;i<shown;i++){ const on=i<c, extra=i>=g; const b=el("button","glass"+(on?" on":"")+(extra&&on?" extra":""),"🥛"); b.title=((i+1)*ML_PER_GLASS)+" ml"; b.setAttribute("aria-label",(i+1)+". Glas"); b.onclick=()=>setWaterCount(dayId,(i+1===c)?i:i+1); glasses.appendChild(b); }
+    const plus=el("button","glass plus","＋"); plus.title="Weiteres Glas (+250 ml)"; plus.setAttribute("aria-label","Weiteres Glas hinzufügen"); plus.onclick=()=>setWaterCount(dayId,c+1); glasses.appendChild(plus);
+    wrap.appendChild(glasses);
+  }
+  return wrap;
+}
+/* ---- per-day person count: global default (state.persons) + optional per-day override state.weekPersons[weekKey][dayId] ---- */
+function personsFor(dayId){ const w=state.weekPersons&&state.weekPersons[uiWeek]; const v=w&&+w[dayId]; return (v&&v>0)?v:(state.persons||1); }
+function setDayPersons(dayId,n){ ensureWeek(uiWeek); if(!state.weekPersons) state.weekPersons={}; if(!state.weekPersons[uiWeek]) state.weekPersons[uiWeek]={}; n=Math.max(1,Math.min(30,n)); if(n===(state.persons||1)) delete state.weekPersons[uiWeek][dayId]; else state.weekPersons[uiWeek][dayId]=n; save(); renderPlan(); }
+function personsEl(dayId){ const n=personsFor(dayId), custom=!!(state.weekPersons&&state.weekPersons[uiWeek]&&state.weekPersons[uiWeek][dayId]);
+  const wrap=el("div","personsrow"+(custom?" custom":""));
+  wrap.appendChild(el("span","pr-lbl","👥 Personen"+(custom?" <small>(Tag)</small>":"")));
+  const box=el("div","pr-step");
+  const minus=el("button","pbtn","–"); minus.title="weniger"; minus.onclick=()=>setDayPersons(dayId,n-1);
+  const plus=el("button","pbtn","+"); plus.title="mehr"; plus.onclick=()=>setDayPersons(dayId,n+1);
+  box.appendChild(minus); box.appendChild(el("span","pr-val",String(n))); box.appendChild(plus);
+  wrap.appendChild(box);
   return wrap;
 }
 /* ---- week picker dropdown (tap the KW pill) ---- */
@@ -1496,7 +1569,7 @@ function renderPlan(){
     next.onclick=()=>{ weekPickerOpen=false; setActiveWeek(shiftKey(uiWeek,1)); renderAll(); };
     pill.onclick=()=>{ weekPickerOpen=!weekPickerOpen; if(weekPickerOpen) weekPickerFresh=true; renderPlan(); };
     wb.append(prev,pill,next);
-    if(uiWeek!==ck){ const jump=el("button","weekjump","📍 Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"); jump.onclick=()=>{ weekPickerOpen=false; setActiveWeek(ck); renderAll(); }; wb.appendChild(jump); }
+    if(uiWeek!==ck){ const jump=el("button","weekjump","📍"); jump.title="Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"; jump.setAttribute("aria-label","Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"); jump.onclick=()=>{ weekPickerOpen=false; setActiveWeek(ck); renderAll(); }; wb.appendChild(jump); }
     if(weekPickerOpen){ const panel=el("div","weekpicker"); let activeEl=null;
       weekPickerKeys().forEach(k=>{ const wlk=weekLabel(k), isCur=k===ck, pk=state.weekProfile[k], pp=PROFILES.find(x=>x.id===pk);
         const used=(state.weeks[k]&&!isEmptyPlan(state.weeks[k]))||pk;
@@ -1520,8 +1593,8 @@ function renderPlan(){
     bar.appendChild(b);
     const col=el("div","daycol"+(d.id===uiDay?" showday":""));
     col.appendChild(el("div","dayname",esc(d.name)+(cheat?" ⚡🍕":"")));
+    col.appendChild(personsEl(d.id));
     col.appendChild(dayNutriEl(d.id));
-    col.appendChild(trainingEl(d.id));
     SLOTS.forEach(s=>{
       if(s.id==="s2" && abnehmenWeek) return;            // Abnehmen-Woche: kein zweiter Snack
       const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
@@ -1531,37 +1604,74 @@ function renderPlan(){
       const btn=el("button","slotbtn"+(r?"":" empty"),r?esc(r.name):"+ Gericht");
       btn.onclick=()=> r? openSlotMenu(d.id,s.id) : openPicker(d.id,s.id);
       card.appendChild(btn);
-      if(r){ const chk=el("button","slotcheck"+(done?" on":""),done?"✓":""); chk.title=done?"Als nicht gegessen markieren":"Als gegessen markieren"; chk.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; card.appendChild(chk); }
+      if(r){ const acts=el("div","slotacts");
+        const cook=el("button","slotcook"+(done?" on":""),"👨‍🍳"); cook.title=done?"Als nicht gekocht markieren":"Als gekocht markieren"; cook.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; acts.appendChild(cook);
+        const inC=slotInCart(d.id,s.id); const cb=el("button","slotcart"+(inC?" on":""),"🛒"); cb.title=inC?"Zutaten aus dem Wagen entfernen":"Zutaten in den Einkaufswagen"; cb.onclick=(e)=>{ e.stopPropagation(); toggleSlotCart(d.id,s.id); }; acts.appendChild(cb);
+        card.appendChild(acts); }
       col.appendChild(card);
     });
     dayExtras(d.id).forEach(e=>{ const er=recipe(e.rid), edone=isDone(d.id,e.id);
       const ecard=el("div","slotcard extra"+(er?" filled":"")+(edone?" done":""));
       ecard.appendChild(el("div","slotlabel","➕ Extra"));
       const ebtn=el("button","slotbtn"+(er?"":" empty"),er?esc(er.name):"+ Gericht"); ebtn.onclick=()=>openPicker(d.id,null,{extraId:e.id,slotType:(er&&er.mealType)||"snack"}); ecard.appendChild(ebtn);
-      if(er){ const echk=el("button","slotcheck"+(edone?" on":""),edone?"✓":""); echk.title=edone?"Als nicht gegessen markieren":"Als gegessen markieren"; echk.onclick=(ev)=>{ ev.stopPropagation(); toggleDone(d.id,e.id); renderPlan(); }; ecard.appendChild(echk); }
-      const erm=el("button","slotrm","✕"); erm.title="Extra entfernen"; erm.onclick=(ev)=>{ ev.stopPropagation(); removeExtra(d.id,e.id); save(); renderPlan(); }; ecard.appendChild(erm);
+      const eacts=el("div","slotacts");
+      if(er){ const cook=el("button","slotcook"+(edone?" on":""),"👨‍🍳"); cook.title=edone?"Als nicht gekocht markieren":"Als gekocht markieren"; cook.onclick=(ev)=>{ ev.stopPropagation(); toggleDone(d.id,e.id); renderPlan(); }; eacts.appendChild(cook);
+        const inC=slotInCart(d.id,e.id); const cb=el("button","slotcart"+(inC?" on":""),"🛒"); cb.title=inC?"Zutaten aus dem Wagen entfernen":"Zutaten in den Einkaufswagen"; cb.onclick=(ev)=>{ ev.stopPropagation(); toggleSlotCart(d.id,e.id); }; eacts.appendChild(cb); }
+      const erm=el("button","slotrm","✕"); erm.title="Extra entfernen"; erm.onclick=(ev)=>{ ev.stopPropagation(); removeExtra(d.id,e.id); save(); renderPlan(); }; eacts.appendChild(erm);
+      ecard.appendChild(eacts);
       col.appendChild(ecard);
     });
     const addMeal=el("button","addmeal","＋ Mahlzeit hinzufügen"); addMeal.onclick=()=>openPicker(d.id,null,{extra:true,slotType:"snack"}); col.appendChild(addMeal);
     col.appendChild(waterEl(d.id));
+    col.appendChild(trainingEl(d.id));
+    const dayCart=el("button","daycartbtn","🛒 Tag in den Wagen"); dayCart.onclick=()=>fillCartFromDay(d.id); col.appendChild(dayCart);
+    if(d.id==="so"){ const wkCart=el("button","daycartbtn week","🛒 Ganze Woche in den Wagen"); wkCart.onclick=()=>fillCartFromWeek(); col.appendChild(wkCart); }
     grid.appendChild(col);
   });
 }
 
-let recipeFilter="all", recipeDiet="all";
+let recipeFilter="all", recipeDiet="all", recipeKind="dish";
+function scanFoodToLibrary(){ openScanner(prod=>{ const id=makeFoodFromProduct(prod); save(); renderRecipes(); toast("🏷️ „"+prod.name+"“ zur Bibliothek hinzugefügt"); openRecipeEdit(id); }, null, "✓ In Bibliothek speichern"); }
 function renderRecipes(){
+  const foodMode = recipeKind==="food";
   const q=($("#recipeSearch").value||"").toLowerCase().trim();
+  // Gerichte / Lebensmittel Umschalter
+  const kt=$("#recipeKindTabs");
+  if(kt){ kt.innerHTML=""; [{id:"dish",label:"🍽️ Gerichte"},{id:"food",label:"🏷️ Lebensmittel"}].forEach(m=>{ const b=el("button","kindtab"+(recipeKind===m.id?" active":""),esc(m.label)); b.onclick=()=>{ recipeKind=m.id; renderRecipes(); }; kt.appendChild(b); }); }
+  const nb=$("#newRecipeBtn"); if(nb) nb.textContent = foodMode? "＋ Neu" : "＋ Neu";
+  const sb=$("#recipeSearch"); if(sb) sb.placeholder = foodMode? "Lebensmittel suchen …" : "Rezept suchen …";
+  // Diät-Filter nur bei Gerichten; Mahlzeit-Filter nur bei Gerichten; Abwählen-Button nur bei Gerichten
   const df=$("#recipeDietFilter");
-  if(df){ df.innerHTML=""; DIET_OPTS.forEach(m=>{ const c=el("button","chip diet"+(recipeDiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeDiet=m.id; renderRecipes(); }; df.appendChild(c); }); }
+  if(df){ df.style.display=foodMode?"none":""; df.innerHTML=""; if(!foodMode) DIET_OPTS.forEach(m=>{ const c=el("button","chip diet"+(recipeDiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeDiet=m.id; renderRecipes(); }; df.appendChild(c); }); }
   const fc=$("#recipeFilter");
-  if(fc){ fc.innerHTML=""; [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{ const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); }; fc.appendChild(c); }); }
+  if(fc){ fc.style.display=foodMode?"none":""; fc.innerHTML=""; if(!foodMode) [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{ const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); }; fc.appendChild(c); }); }
+  const fb=$("#recipeFoodBtn"); if(fb) fb.style.display=foodMode?"none":"";
+  // Scan-Leiste nur bei Lebensmitteln
+  const bar=$("#recipeFoodBar"); if(bar){ bar.innerHTML=""; if(foodMode){ const scan=el("button","btn block primary","📷 Lebensmittel scannen"); scan.style.margin="0 0 10px"; scan.onclick=scanFoodToLibrary; bar.appendChild(scan); } }
   const list=$("#recipeList"); list.innerHTML="";
-  let rs=Object.values(state.recipes).filter(r=>!q||r.name.toLowerCase().includes(q));
-  if(recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
-  if(recipeDiet!=="all") rs=rs.filter(r=>dietMatch(r,recipeDiet));
+  let rs=Object.values(state.recipes).filter(r=> (foodMode?isFood(r):!isFood(r)) && (!q||r.name.toLowerCase().includes(q)));
+  if(!foodMode && recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
+  if(!foodMode && recipeDiet!=="all") rs=rs.filter(r=>dietMatch(r,recipeDiet));
   rs.sort((a,b)=>a.name.localeCompare(b.name,"de"));
-  if(!rs.length){ list.appendChild(el("div","empty-state","<div class='big'>📖</div>Keine Rezepte gefunden.")); return; }
+  if(!rs.length){ let msg;
+    if(foodMode){ const anyFood=Object.values(state.recipes).some(isFood); msg="<div class='big'>🏷️</div>"+(anyFood?"Keine Lebensmittel gefunden.":"Noch keine Lebensmittel. Tippe auf »📷 Lebensmittel scannen«, um ein Produkt aufzunehmen."); }
+    else msg="<div class='big'>📖</div>Keine Rezepte gefunden.";
+    list.appendChild(el("div","empty-state",msg)); return; }
   rs.forEach(r=>{
+    if(foodMode){
+      const kcal=Math.round(recipeNutrients(r).kcal);
+      // Portion muss zur kcal-Angabe passen: eine Selbst-Zutat → deren Menge; sonst (z. B. umgewandeltes Gericht) die Gesamt-Gramm
+      let portion;
+      if(r.ing && r.ing.length===1 && r.ing[0].a!=null) portion=fmtNum(r.ing[0].a)+" "+(r.ing[0].u||"g");
+      else if(r.ing && r.ing.length){ const tot=r.ing.reduce((s,x)=>s+(ingGrams(x)||0),0); portion=(tot?Math.round(tot)+" g":"Portion"); }
+      else portion="100 g";
+      const row=el("div","rowcard");
+      row.innerHTML="<div class='grow'><div class='title'>🏷️ "+esc(r.name)+"</div><div class='meta'>"+esc(portion+" · Lebensmittel"+(r.barcode?" · EAN "+r.barcode:""))+"</div></div>"+
+        "<div class='rmeta'>"+(kcal?"<span class='kcaltag'>"+kcal+" kcal</span>":"")+"</div>";
+      row.onclick=()=>openRecipeEdit(r.id);
+      list.appendChild(row);
+      return;
+    }
     const avail=recipeAvailable(r), veg=isVeg(r);
     const dietMark = veg?" 🌱" : hasFish(r)?(hasMeat(r)?" 🍗🐟":" 🐟") : hasMeat(r)?" 🍗" : "";
     const row=el("div","rowcard"+(avail?"":" unavail"));
@@ -1634,29 +1744,59 @@ function renderCart(){
 }
 
 /* ============================ CART LOGIC ============================ */
-function addIngredientsToCart(ings,mult){
-  mult = mult||1;
-  ings.forEach(ing=>{
-    const o=resolveFood(ing.n), ek=effFood(o);
-    const name=(ek!==o && FOOD_LABELS[ek])?FOOD_LABELS[ek]:ing.n;
-    let unit=ing.u||"", amount=(ing.a==null?null:ing.a*mult);
-    if(ek!==o && unit!=="g" && unit!=="ml" && UNIT_G[ek+"|"+unit]==null){ amount=(ing.a==null?null:ingGrams(ing)*mult); unit="g"; } // substitute uses a different measure -> grams
-    const c=CATALOG[ek]||cat(ing.n);
-    const key=name.toLowerCase()+"|"+unit;
-    let ex=state.cart.find(x=>(x.name.toLowerCase()+"|"+(x.unit||""))===key);
-    if(ex){ if(ex.amount==null) ex.amount=amount; else if(amount!=null) ex.amount+=amount; ex.checked=false; }
-    else state.cart.push({name,amount,unit,category:c,checked:false});
+/* resolve one ingredient (with substitutions) into its cart line {name,unit,amount,category,key} */
+function resolveCartLine(ing,mult){ mult=mult||1;
+  const o=resolveFood(ing.n), ek=effFood(o);
+  const name=(ek!==o && FOOD_LABELS[ek])?FOOD_LABELS[ek]:ing.n;
+  let unit=ing.u||"", amount=(ing.a==null?null:ing.a*mult);
+  if(ek!==o && unit!=="g" && unit!=="ml" && UNIT_G[ek+"|"+unit]==null){ amount=(ing.a==null?null:ingGrams(ing)*mult); unit="g"; } // substitute uses a different measure -> grams
+  const c=CATALOG[ek]||cat(ing.n);
+  return {name,unit,amount,category:c,key:name.toLowerCase()+"|"+unit};
+}
+/* add ingredients to the cart; returns the list of {key,amount} contributions so a per-dish toggle can undo EXACTLY what it added.
+   Each cart line carries a `refs` count of how many contributions reference it, so a shared line is only removed once every contributor is gone. */
+function addCartContributions(ings,mult){ const contribs=[];
+  ings.forEach(ing=>{ const L=resolveCartLine(ing,mult);
+    const ex=state.cart.find(x=>(x.name.toLowerCase()+"|"+(x.unit||""))===L.key);
+    if(ex){ if(ex.amount==null) ex.amount=L.amount; else if(L.amount!=null) ex.amount+=L.amount; ex.checked=false; ex.refs=(ex.refs||1)+1; }
+    else state.cart.push({name:L.name,amount:L.amount,unit:L.unit,category:L.category,checked:false,refs:1});
+    contribs.push({key:L.key,amount:L.amount});
+  });
+  save(); return contribs;
+}
+function addIngredientsToCart(ings,mult){ addCartContributions(ings,mult); }
+/* undo the stored contributions of one dish: decrement refs, subtract the amount it added, drop the line only when no contributor remains */
+function removeCartContributions(contribs){ if(!Array.isArray(contribs)) return;
+  contribs.forEach(cn=>{ const ix=state.cart.findIndex(x=>(x.name.toLowerCase()+"|"+(x.unit||""))===cn.key); if(ix<0) return;
+    const ex=state.cart[ix]; ex.refs=(ex.refs||1)-1;
+    if(cn.amount!=null && ex.amount!=null) ex.amount-=cn.amount;
+    if(ex.refs<=0) state.cart.splice(ix,1);
+    else if(ex.amount!=null && ex.amount<=0.0001) ex.amount=null;   // still needed by another dish, but exact grams no longer known
   });
   save();
 }
+/* per-dish cart toggle: state.weekCart[weekKey][day][slot] = the stored contributions (array). Per-device, not synced. */
+function slotInCart(day,slot){ const w=state.weekCart&&state.weekCart[uiWeek]; return !!(w&&w[day]&&w[day][slot]); }
+function toggleSlotCart(day,slot){ const r=recipeForSlot(day,slot); if(!r||!r.ing||!r.ing.length){ toast("Keine Zutaten hinterlegt"); return; }
+  if(!state.weekCart) state.weekCart={}; if(!state.weekCart[uiWeek]) state.weekCart[uiWeek]={}; if(!state.weekCart[uiWeek][day]) state.weekCart[uiWeek][day]={};
+  const cur=state.weekCart[uiWeek][day][slot], pn=personsFor(day);
+  if(cur){ if(Array.isArray(cur)) removeCartContributions(cur); delete state.weekCart[uiWeek][day][slot]; toast("🛒 aus dem Wagen entfernt"); }
+  else { state.weekCart[uiWeek][day][slot]=addCartContributions(r.ing,pn); toast("🛒 in den Wagen"); }
+  save(); renderPlan(); renderCart();
+}
+function fillCartFromDay(dayId){ let count=0; const pn=personsFor(dayId);
+  SLOTS.forEach(s=>{ const rid=PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r&&r.ing.length){ addIngredientsToCart(r.ing,pn); count+=r.ing.length; } });
+  dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r&&r.ing&&r.ing.length){ addIngredientsToCart(r.ing,pn); count+=r.ing.length; } });
+  renderCart(); toast(count?("🛒 "+DAYS.find(d=>d.id===dayId).name+" in den Wagen"):"Keine Zutaten"); if(count) switchView("cart");
+}
 function fillCartFromWeek(){
   let count=0;
-  DAYS.forEach(d=>SLOTS.forEach(s=>{
-    const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
-    if(r&&r.ing.length){ addIngredientsToCart(r.ing,state.persons); count+=r.ing.length; }
-  }));
+  DAYS.forEach(d=>{ const pn=personsFor(d.id);
+    SLOTS.forEach(s=>{ const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null; if(r&&r.ing.length){ addIngredientsToCart(r.ing,pn); count+=r.ing.length; } });
+    dayExtras(d.id).forEach(e=>{ const r=state.recipes[e.rid]; if(r&&r.ing&&r.ing.length){ addIngredientsToCart(r.ing,pn); count+=r.ing.length; } });
+  });
   renderCart();
-  toast(count?("Woche hinzugefügt ("+state.persons+" Pers.)"):"Keine Zutaten im Plan");
+  toast(count?"Woche zum Wagen hinzugefügt":"Keine Zutaten im Plan");
   if(count) switchView("cart");
 }
 
@@ -1689,8 +1829,10 @@ function openPicker(day,slot,opts){
     "<label class='togglerow'><input type='checkbox' id='showAll'> Alle Mahlzeiten zeigen (nicht nur "+esc(mealLabel(slotType))+")</label>"+
     "<div class='chips' id='pickDiet'></div>"+
     "<div id='pickList'></div>"+
+    "<button class='btn block' id='scanDishBtn' style='margin-top:6px'>📷 Lebensmittel scannen &amp; eintragen</button>"+
     "<button class='btn block ghost' id='customDish' style='margin-top:6px'>＋ Eigenes Gericht eintragen</button></div>");
   $("#mX").onclick=closeModal;
+  $("#scanDishBtn").onclick=()=>{ openScanner(prod=>{ const fid=makeFoodFromProduct(prod); save(); renderRecipes(); assign(fid); toast("🏷️ „"+prod.name+"“ eingetragen"); }, ()=>openPicker(day,slot,opts), "✓ In den Plan übernehmen"); };
   renderNutriPanel($("#nutriPanel"),day,isExtra?null:slot,assign);
   let pdiet="all";
   const render=()=>{
@@ -1741,7 +1883,7 @@ function openSlotMenu(day,slot){
     rows+
     nutriSum+
     stepsBlock+
-    "<div class='btnrow' style='margin-top:14px'><button class='btn sm "+(isDone(day,slot)?"primary":"")+"' id='doneBtn'>"+(isDone(day,slot)?"✓ Gegessen":"Als gegessen markieren")+"</button><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='editDish'>Rezept bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
+    "<div class='btnrow' style='margin-top:14px'><button class='btn sm "+(isDone(day,slot)?"primary":"")+"' id='doneBtn'>"+(isDone(day,slot)?"👨‍🍳 Gekocht":"Als gekocht markieren")+"</button><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='editDish'>Rezept bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
     (r.ing.length?"<div class='mfoot'><button class='btn primary block' id='toCart'>🛒 Ausgewählte in den Einkaufswagen</button></div>":"")
   );
   $("#mX").onclick=closeModal;
@@ -1777,7 +1919,7 @@ async function offLookup(code){
   if(p.brands){ const b=p.brands.split(",")[0].trim(); if(b && name.toLowerCase().indexOf(b.toLowerCase())<0) name+=" ("+b+")"; }
   return { name:name.slice(0,60), per100, code };
 }
-function openScanner(onResult,onCancel){
+function openScanner(onResult,onCancel,takeLabel){
   const canCam = ("BarcodeDetector" in window) && navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
   openModal("<div class='mhead'><h3>📷 Lebensmittel scannen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
@@ -1796,7 +1938,7 @@ function openScanner(onResult,onCancel){
     box.innerHTML="<div class='scancard'><b>"+esc(prod.name)+"</b><div class='nutriline'>"+
       NUTR_KEYS.map(k=>"<span><b>"+prod.per100[k]+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+
       "</div><div class='hint' style='margin:4px 0 0'>Werte pro 100 g · Quelle: Open Food Facts</div>"+
-      "<button class='btn block primary' id='scanTake' style='margin-top:10px'>✓ Als Zutat übernehmen</button></div>";
+      "<button class='btn block primary' id='scanTake' style='margin-top:10px'>"+esc(takeLabel||"✓ Übernehmen")+"</button></div>";
     $("#scanTake").onclick=()=>close(()=>onResult(prod));
   };
   const lookup=async(code)=>{ code=(code||"").replace(/\D/g,""); if(!code){ toast("Bitte Barcode eingeben"); return; } const box=$("#scanResult"); if(box) box.innerHTML="<p class='hint'>🔎 Suche in der Datenbank …</p>"; try{ const prod=await offLookup(code); showProduct(prod); }catch(e){ if($("#scanResult")) $("#scanResult").innerHTML="<p class='hint'>⚠︎ Keine Verbindung zur Lebensmittel-Datenbank. Bitte Internet prüfen und erneut versuchen.</p>"; } };
@@ -1828,6 +1970,7 @@ function openRecipeEdit(id){
     "<div class='mhead'><h3>Rezept</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div class='field'><label>Name</label><input class='input' id='rName' value='"+esc(r.name)+"'></div>"+
+    "<div class='field'><label>Art</label><select class='input' id='rKind'><option value='dish'"+(isFood(r)?"":" selected")+">🍽️ Gericht</option><option value='food'"+(isFood(r)?" selected":"")+">🏷️ Lebensmittel</option></select></div>"+
     "<div class='field'><label>Kategorie (Mahlzeit)</label><select class='input' id='rType'>"+typeOpts+"</select></div>"+
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
     "<div id='ingList' style='margin-top:6px'>"+r.ing.map(ingRow).join("")+"</div>"+
@@ -1859,10 +2002,10 @@ function openRecipeEdit(id){
   $$(".ingrow",ingList).forEach(bind);
   updateNutri();
   $("#addIng").onclick=()=>{ const d=el("div"); d.innerHTML=ingRow({n:"",a:null,u:"g"}); const row=d.firstChild; ingList.appendChild(row); bind(row); row.querySelector(".nm").focus(); };
-  $("#scanIng").onclick=()=>{ persistForm(); save(); openScanner(prod=>{ r.ing.push({n:prod.name,a:100,u:"g",nutri:prod.per100}); save(); openRecipeEdit(id); toast("Zutat übernommen: "+prod.per100.kcal+" kcal / 100 g"); }, ()=>openRecipeEdit(id)); };
+  $("#scanIng").onclick=()=>{ persistForm(); save(); openScanner(prod=>{ r.ing.push({n:prod.name,a:100,u:"g",nutri:prod.per100}); save(); openRecipeEdit(id); toast("Zutat übernommen: "+prod.per100.kcal+" kcal / 100 g"); }, ()=>openRecipeEdit(id), "✓ Als Zutat übernehmen"); };
   const refreshAsg=()=>{ const slot=$("#asgSlot").value; const isDef=state.defaults&&state.defaults[slot]===id; const cb=$("#asgDefault"); if(cb) cb.checked=!!isDef; const nt=$("#asgNote"); if(nt) nt.innerHTML=isDef?("⭐ Wird beim automatischen Planen immer als <b>"+esc(SLOT_LABEL2[slot])+"</b> verwendet."):""; };
   $("#asgSlot").onchange=refreshAsg; refreshAsg();
-  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); };
+  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food") r.kind="food"; else delete r.kind; } };
   $("#asgBtn").onclick=()=>{ const dayV=$("#asgDay").value, slot=$("#asgSlot").value; persistForm(); ensureWeek(uiWeek);
     const applyDay=(dy)=>{ clearDone(dy,slot); PLAN()[dy][slot]=id; setLock(dy,slot,true); rebalanceDay(dy); };
     if(dayV==="all"){ DAYS.forEach(d=>applyDay(d.id)); } else { applyDay(dayV); uiDay=dayV; }
@@ -1871,15 +2014,16 @@ function openRecipeEdit(id){
   $("#asgDefault").onchange=(e)=>{ const slot=$("#asgSlot").value; if(!state.defaults) state.defaults={}; if(e.target.checked) state.defaults[slot]=id; else if(state.defaults[slot]===id) state.defaults[slot]=null; save(); refreshAsg(); toast(e.target.checked?("⭐ Standard-"+SLOT_LABEL2[slot]+" gesetzt"):"Standard entfernt"); };
   $("#saveRecipe").onclick=()=>{
     const nm=$("#rName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
-    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows();
+    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food") r.kind="food"; else delete r.kind; }
     save(); closeModal(); renderRecipes(); renderPlan();
-    toast("Rezept gespeichert");
+    toast(isFood(r)?"Lebensmittel gespeichert":"Rezept gespeichert");
   };
   $("#delRecipe").onclick=()=>{
     if(!confirm("Rezept löschen: "+r.name+"?\nEs wird auch aus dem Wochenplan entfernt.")) return;
     Object.keys(state.weeks).forEach(w=>DAYS.forEach(d=>SLOTS.forEach(s=>{ if(state.weeks[w][d.id]&&state.weeks[w][d.id][s.id]===id){ state.weeks[w][d.id][s.id]=null; if(state.weekLocks&&state.weekLocks[w]&&state.weekLocks[w][d.id]) delete state.weekLocks[w][d.id][s.id]; if(state.weekDone&&state.weekDone[w]) delete state.weekDone[w][d.id+"|"+s.id]; } })));
     if(state.defaults) SLOTS.forEach(s=>{ if(state.defaults[s.id]===id) state.defaults[s.id]=null; });
     if(state.weekExtra) Object.keys(state.weekExtra).forEach(w=>Object.keys(state.weekExtra[w]||{}).forEach(dy=>{ if(Array.isArray(state.weekExtra[w][dy])) state.weekExtra[w][dy].forEach(e=>{ if(e&&e.rid===id){ e.del=true; if(state.weekDone&&state.weekDone[w]) delete state.weekDone[w][dy+"|"+e.id]; } }); }));
+    if(/^n\d+$/.test(id)){ if(!state.deletedBuiltins) state.deletedBuiltins={}; state.deletedBuiltins[id]=true; }   // remember deleted built-ins so top-up doesn't re-add them
     delete state.recipes[id]; save(); closeModal(); renderRecipes(); renderPlan();
     toast("Rezept gelöscht");
   };
@@ -1917,21 +2061,82 @@ function switchView(name){
 $$("nav.tabs button").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
 
 function setPersons(v){ state.persons=Math.max(1,Math.min(30,v)); const pv=$("#pVal"); if(pv) pv.textContent=state.persons; save(); }
+/* ============================ KÜHLSCHRANK / SPEIS (Vorräte) ============================ */
+function fmtDMY(iso){ if(!iso) return ""; const p=String(iso).split("-"); return p.length===3?(p[2]+"."+p[1]+"."+p[0]):iso; }
+function pantryList(){ return (state.pantry||[]).filter(p=>p&&!p.del); }
+function newPid(){ return "p"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36); }
+function fmtStock(g){ g=Math.round(g); return g>=1000 ? (Math.round(g/100)/10).toString().replace(".",",")+" kg" : g+" g"; }
+function addPantryItem(name,a,u,mhd){ if(!state.pantry) state.pantry=[]; name=(name||"").trim(); if(!name) return; const key=resolveFood(name); const grams=Math.max(0,Math.round(ingGrams({n:name,a:a,u:u||"g"}))); state.pantry.push({id:newPid(), key, name, grams, mhd:mhd||null, at:new Date().toISOString()}); }
+function removePantryItem(id){ const p=(state.pantry||[]).find(x=>x.id===id); if(p){ p.del=true; p.grams=0; p.at=new Date().toISOString(); } }
+function pantryHas(key){ return pantryList().some(p=>p.key===key && (+p.grams>0)); }
+function mhdStatus(mhd){ if(!mhd) return ""; const t=todayStr(); if(mhd<t) return "expired"; if(mhd<=shiftDays(t,3)) return "soon"; return "ok"; }
+function pantryUsesExpiring(key){ return pantryList().some(p=>p.key===key && p.grams>0 && (mhdStatus(p.mhd)==="expired"||mhdStatus(p.mhd)==="soon")); }
+/* deduct (sign>0) / restore (sign<0) a slot's recipe ingredients when it is cooked/uncooked; FEFO (earliest MHD first) */
+function recipeForSlot(day,slot){ if(SLOTS.some(s=>s.id===slot)){ const rid=PLAN()[day]&&PLAN()[day][slot]; return rid?state.recipes[rid]:null; } const e=dayExtras(day).find(x=>x.id===slot); return e?state.recipes[e.rid]:null; }
+function pantryAdjustForSlot(day,slot,sign){ if(!state.pantry||!state.pantry.length) return 0; const r=recipeForSlot(day,slot); if(!r||!Array.isArray(r.ing)) return 0; const persons=personsFor(day); let changed=0; const now=new Date().toISOString();
+  r.ing.forEach(ing=>{ if(ing.a==null) return; const grams=ingGrams(ing)*persons; if(!(grams>0)) return; const key=resolveFood(ing.n);
+    if(sign>0){ let need=grams; pantryList().filter(p=>p.key===key && p.grams>0).sort((a,b)=>((a.mhd||"9999-99")<(b.mhd||"9999-99")?-1:1)).forEach(p=>{ if(need<=0) return; const take=Math.min(p.grams,need); if(take>0){ p.grams-=take; p.at=now; need-=take; changed++; if(p.grams<=0){ p.del=true; } } }); }
+    else { const p=pantryList().find(x=>x.key===key); if(p){ p.grams=(+p.grams||0)+grams; p.del=false; p.at=now; changed++; } }
+  });
+  return changed;
+}
+/* ---- „Reste verwerten": recipes you can (mostly) cook from the pantry ---- */
+function recipeCoverage(r){ if(!r||!Array.isArray(r.ing)) return null;
+  const real=r.ing.filter(ing=>{ if(ing.a==null) return false; const k=resolveFood(ing.n); if(has(GENERIC,k)) return false; const cat=CATALOG[k]; return cat!=="Fette" && cat!=="Sonstiges"; });
+  if(!real.length) return null; let have=0, exp=false;
+  real.forEach(ing=>{ const k=resolveFood(ing.n); if(pantryHas(k)){ have++; if(pantryUsesExpiring(k)) exp=true; } });
+  return { have, total:real.length, ratio:have/real.length, usesExpiring:exp };
+}
+function pantrySuggestions(n){ const out=[];
+  Object.values(state.recipes).forEach(r=>{ if(isFood(r)||!r.ing||!r.ing.length||!recipeAvailable(r)) return; const c=recipeCoverage(r); if(!c||c.have===0) return; out.push({r,c}); });   // Lebensmittel sind keine Gerichte zum Kochen
+  out.sort((a,b)=> (b.c.usesExpiring-a.c.usesExpiring) || (b.c.ratio-a.c.ratio) || (b.c.have-a.c.have));
+  return out.slice(0,n||12);
+}
+function openPantry(){
+  const foodDatalist="<datalist id='pantryCatalog'>"+Object.keys(NUTRI).filter(foodEnabled).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>";
+  const PUNITS=["g","Stk","ml","Scheibe","Portion","Handvoll","Dose","Zehe","Kugel"];
+  const draw=()=>{
+    const items=pantryList().slice().sort((a,b)=>{ const rank=s=>s==="expired"?0:s==="soon"?1:2; return rank(mhdStatus(a.mhd))-rank(mhdStatus(b.mhd)) || ((a.mhd||"9999")<(b.mhd||"9999")?-1:1) || a.name.localeCompare(b.name,"de"); });
+    const rows=items.length? items.map(p=>{ const st=mhdStatus(p.mhd); const badge=p.mhd?("<span class='mhd "+(st==="ok"?"":st)+"'>"+(st==="expired"?"abgelaufen ":st==="soon"?"bald ":"MHD ")+esc(fmtDMY(p.mhd))+"</span>"):"";
+        return "<div class='pitem'><span class='pi-name'>"+esc(p.name)+"</span><span class='pi-amt'>"+esc(fmtStock(p.grams))+"</span>"+badge+"<button class='slotrm' data-id='"+esc(p.id)+"'>✕</button></div>"; }).join("")
+      : "<p class='hint'>Noch keine Vorräte erfasst. Trag oben ein, was du gekauft hast.</p>";
+    const sugg=pantrySuggestions(10);
+    const reste=sugg.length? "<div class='reste-grid'>"+sugg.map(s=>"<button class='reste-card"+(s.c.usesExpiring?" exp":"")+"' data-r='"+esc(s.r.id)+"'><b>"+esc(s.r.name)+"</b><small>"+s.c.have+"/"+s.c.total+" Zutaten da"+(s.c.usesExpiring?" · nutzt MHD-Ware ⏰":"")+"</small></button>").join("")+"</div>"
+      : "<p class='hint'>Erfasse ein paar Vorräte – dann schlage ich hier Gerichte vor, die du daraus kochen kannst. 🍳</p>";
+    openModal("<div class='mhead'><h3>🧊 Kühlschrank / Speis</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+      "<div class='mbody'>"+
+      "<div class='pantry-add'>"+
+        "<input class='input' id='paName' list='pantryCatalog' placeholder='Lebensmittel (z. B. Skyr)' autocomplete='off'>"+foodDatalist+
+        "<div class='pa-row'><input class='input' id='paAmt' inputmode='decimal' placeholder='Menge'><select class='input' id='paUnit'>"+PUNITS.map(u=>"<option>"+u+"</option>").join("")+"</select></div>"+
+        "<div class='pa-row'><label class='pa-mhd'>MHD <input class='input' id='paMhd' type='date'></label><button class='btn sm primary' id='paAdd'>＋ Hinzufügen</button></div>"+
+      "</div>"+
+      "<div class='setup-h' style='margin:14px 2px 6px'>📦 Dein Vorrat</div>"+rows+
+      "<div class='setup-h' style='margin:16px 2px 6px'>🍳 Reste verwerten</div>"+
+      "<p class='hint' style='margin:0 2px 8px'>Gerichte, die du (fast) komplett aus dem Vorrat kochen kannst – bald ablaufende Sachen zuerst.</p>"+reste+
+      "</div>");
+    $("#mX").onclick=closeModal;
+    $("#paAdd").onclick=()=>{ const name=$("#paName").value.trim(); if(!name){ $("#paName").focus(); return; } addPantryItem(name, parseNum($("#paAmt").value), $("#paUnit").value, $("#paMhd").value||null); save(); draw(); toast("🧊 „"+name+"“ zum Vorrat hinzugefügt"); };
+    $("#paName").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#paAdd").click(); } });
+    $$(".pitem .slotrm").forEach(b=>b.onclick=()=>{ removePantryItem(b.dataset.id); save(); draw(); });
+    $$(".reste-card").forEach(b=>b.onclick=()=>openRecipeEdit(b.dataset.r));
+  };
+  draw();
+}
 function openMenu(){
   openModal("<div class='mhead'><h3>☰ Menü</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div class='menurow'><span class='menulbl'>👥 Personen</span><span class='persons'><button class='pbtn' id='pMinus' aria-label='weniger'>–</button><span class='pval' id='pVal'>"+state.persons+"</span><button class='pbtn' id='pPlus' aria-label='mehr'>+</button></span></div>"+
     "<button class='btn block primary' id='mGen' style='margin-top:14px'>🎯 Plan erstellen</button>"+
-    "<button class='btn block' id='mCart' style='margin-top:8px'>🛒 Woche → Wagen</button>"+
     "<div class='divider'></div>"+
-    "<button class='btn block' id='mStats'>📊 Statistik</button>"+
+    "<button class='btn block' id='mPantry'>🧊 Kühlschrank / Speis</button>"+
+    "<button class='btn block' id='mStats' style='margin-top:8px'>📊 Statistik</button>"+
     "<button class='btn block' id='mBande' style='margin-top:8px'>🍗 Nugget-Bande <span class='tag'>"+ownedCount()+"/"+ROSTER.length+(state.rewards.goldCount?" · 🥇"+state.rewards.goldCount:"")+"</span></button>"+
     "</div>");
   $("#mX").onclick=closeModal;
   $("#pMinus").onclick=()=>setPersons(state.persons-1);
   $("#pPlus").onclick=()=>setPersons(state.persons+1);
   $("#mGen").onclick=()=>{ closeModal(); openWeekChooser(); };
-  $("#mCart").onclick=()=>{ closeModal(); fillCartFromWeek(); };
+  $("#mPantry").onclick=()=>{ closeModal(); openPantry(); };
   $("#mStats").onclick=()=>{ closeModal(); switchView("stats"); };
   $("#mBande").onclick=()=>{ closeModal(); openBande(); };
 }
@@ -1940,7 +2145,16 @@ $("#foodSelectBtn").onclick=openFoodSelect;
 $("#cheatBtn").onclick=openCheatChooser;
 $("#recipeSearch").addEventListener("input",renderRecipes);
 function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",mealType:"snack",steps:"",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
-$("#newRecipeBtn").onclick=createRecipe;
+/* ---- Lebensmittel (kind:"food"): ein einzelnes Produkt, gespeichert als Rezept mit einer Selbst-Zutat (per-100g nutri) ---- */
+function isFood(r){ return !!(r && r.kind==="food"); }
+function createFood(){ const id=newId(); state.recipes[id]={id,name:"Neues Lebensmittel",kind:"food",mealType:"snack",steps:"",goals:[],ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
+function makeFoodFromProduct(prod){   // dedup by barcode; returns the recipe id (does NOT save — caller saves)
+  const ex=Object.values(state.recipes).find(r=>r&&r.kind==="food"&&prod.code&&r.barcode===prod.code);
+  if(ex){ if(!ex.ing||!ex.ing.length){ ex.name=prod.name; ex.ing=[{n:prod.name,a:100,u:"g",nutri:prod.per100}]; } return ex.id; }   // schon vorhanden → wiederverwenden, eigene Änderungen (Name/Nährwerte/Menge) NICHT überschreiben
+  const id=newId(); state.recipes[id]={id,name:prod.name,kind:"food",mealType:"snack",barcode:prod.code||null,steps:"",goals:[],ing:[{n:prod.name,a:100,u:"g",nutri:prod.per100}]};
+  return id;
+}
+$("#newRecipeBtn").onclick=()=>{ if(recipeKind==="food") createFood(); else createRecipe(); };
 $("#recipeFoodBtn").onclick=openFoodSelect;
 
 function renderTargets(){
