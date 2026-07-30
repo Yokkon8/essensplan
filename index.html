@@ -2202,12 +2202,14 @@ function dayNutriEl(dayId){
   if(!nutriOpen){
     wrap.innerHTML="<button class='dn-head' type='button'><span class='dn-lbl'>📊 Nährwerte"+((hasIntake||burn)?" · "+(overK?"<span class='dn-red'>"+(-freeK)+" kcal über Ziel</span>":"frei "+Math.max(0,freeK)+" kcal"):"")+(burn?" 🏋️":"")+"</span><span class='dn-chev'>▸</span></button>";
   } else {
+    const GOOD_OVER={protein:1,fiber:1};   // bei Eiweiß & Ballaststoffen ist ein Überschuss positiv → grün lassen, nicht rot
     const bars=["protein","carbs","fat","fiber"].map(k=>{
-      const over=!!(t[k] && consumed[k]>t[k]);
+      const exceed=!!(t[k] && consumed[k]>t[k]);
+      const over=exceed && !GOOD_OVER[k];   // rot nur bei Kohlenhydraten/Fett
       const pct=t[k]?Math.min(100,Math.round(consumed[k]/t[k]*100)):0;
-      const ok=t[k] && !over && consumed[k]>=t[k]*0.9;
+      const ok=t[k] && !over && consumed[k]>=t[k]*0.9;   // grün ab 90 % (inkl. Überschuss bei Eiweiß/Ballaststoffen)
       const free=Math.round((t[k]||0)-consumed[k]);
-      return "<div class='dn-b'><span class='dn-lab"+(over?" over":"")+"'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+(over?" over":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free"+(over?" over":"")+"'>"+(over?"+"+(-free)+" g über":free+" g frei")+"</span></div>";
+      return "<div class='dn-b'><span class='dn-lab"+(over?" over":"")+"'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+(over?" over":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free"+(over?" over":"")+"'>"+(exceed?"+"+(-free)+" g über":free+" g frei")+"</span></div>";
     }).join("");
     wrap.innerHTML=
       "<button class='dn-head' type='button'><span class='dn-kcal"+(overK?" over":"")+"'>Aufgenommen ≈ "+Math.round(consumed.kcal)+" <small>/ "+Math.round(t.kcal)+" kcal</small></span><span class='dn-chev'>▾</span></button>"+
