@@ -1367,7 +1367,8 @@ function openFoodSelect(){
 }
 
 /* built-in coffees added earlier as kind:"food" → re-tag to Drinks/Kaffee on existing installs (defined before normalizeRecipes which runs at boot) */
-const DRINK_BUILTINS={"Espresso":"kaffee","Schwarzer Kaffee":"kaffee","Cappuccino":"kaffee","Latte Macchiato":"kaffee","Milchkaffee":"kaffee","Flat White":"kaffee","Caffè Latte":"kaffee"};
+const DRINK_BUILTINS={"Espresso":"kaffee","Schwarzer Kaffee":"kaffee","Cappuccino":"kaffee","Latte Macchiato":"kaffee","Milchkaffee":"kaffee","Flat White":"kaffee","Caffè Latte":"kaffee",
+  "Kuhmilch Vollmilch (3,5 %)":"unalk","Kuhmilch fettarm (1,5 %)":"unalk","Magermilch (0,3 %)":"unalk","Hafermilch":"unalk","Mandelmilch (ungesüßt)":"unalk","Sojamilch (ungesüßt)":"unalk","Reismilch":"unalk","Kokosmilch (Drink)":"unalk"};
 function normalizeRecipes(recipes){
   Object.values(recipes||{}).forEach(r=>{
     if(!r.mealType) r.mealType=MEAL_TYPE[r.id]||"snack";
