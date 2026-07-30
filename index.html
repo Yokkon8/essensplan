@@ -194,6 +194,11 @@ a{color:var(--brand)}
 .dn-free{width:52px;text-align:right;color:var(--muted);flex:none;font-variant-numeric:tabular-nums;font-size:9.5px}
 .dn-free-kcal{font-size:12px;margin:5px 0 2px}
 .dn-free-kcal b{color:var(--accent)}
+.dn-red{color:#d64545;font-weight:700}
+.dn-fill.over{background:#d64545}
+.dn-lab.over,.dn-free.over{color:#d64545;font-weight:700}
+.dn-kcal.over,.dn-kcal.over small{color:#d64545}
+.dn-free-kcal.over b{color:#d64545}
 .dn-planned{font-size:10.5px;color:var(--muted);margin-top:5px}
 .slotcard{position:relative}
 .slotcard .slotlabel{padding-right:36px}
@@ -1113,6 +1118,248 @@ const NEW_RECIPES = [
 {"name":"Kräutertee","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kräutertee","a":250,"u":"ml","nutri":{"kcal":1,"protein":0,"carbs":0.2,"fat":0,"fiber":0}}]},
 {"name":"Heiße Schokolade","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Heiße Schokolade","a":250,"u":"ml","nutri":{"kcal":80,"protein":3,"carbs":11,"fat":2.5,"fiber":1}}]},
 {"name":"Smoothie","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Smoothie","a":250,"u":"ml","nutri":{"kcal":55,"protein":1,"carbs":12,"fat":0.3,"fiber":1.5}}]},
+
+/* --- v15: ~250 gÃ¤ngige Alltags-Lebensmittel (kind:food, auto-generiert+geprÃ¼ft) --- */
+{"name":"Fruchtjoghurt Erdbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtjoghurt Erdbeere","a":150,"u":"g","nutri":{"kcal":95,"protein":3,"carbs":14,"fat":2.8,"fiber":0.3}}]},
+{"name":"Fruchtjoghurt Kirsche","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtjoghurt Kirsche","a":150,"u":"g","nutri":{"kcal":96,"protein":3.2,"carbs":14.5,"fat":2.7,"fiber":0.3}}]},
+{"name":"Fruchtjoghurt Pfirsich-Maracuja","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtjoghurt Pfirsich-Maracuja","a":150,"u":"g","nutri":{"kcal":92,"protein":3,"carbs":13.5,"fat":2.6,"fiber":0.2}}]},
+{"name":"Fruchtjoghurt Heidelbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtjoghurt Heidelbeere","a":150,"u":"g","nutri":{"kcal":94,"protein":3.1,"carbs":14,"fat":2.6,"fiber":0.4}}]},
+{"name":"Fruchtjoghurt Waldfrucht","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtjoghurt Waldfrucht","a":150,"u":"g","nutri":{"kcal":93,"protein":3,"carbs":13.8,"fat":2.6,"fiber":0.4}}]},
+{"name":"Griechischer Joghurt 10%","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Griechischer Joghurt 10%","a":150,"u":"g","nutri":{"kcal":120,"protein":3.5,"carbs":4,"fat":10,"fiber":0}}]},
+{"name":"Griechischer Joghurt Honig","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Griechischer Joghurt Honig","a":150,"u":"g","nutri":{"kcal":140,"protein":3.6,"carbs":13,"fat":7.5,"fiber":0}}]},
+{"name":"Trinkjoghurt Erdbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Trinkjoghurt Erdbeere","a":250,"u":"ml","nutri":{"kcal":78,"protein":2.8,"carbs":13,"fat":1.5,"fiber":0.1}}]},
+{"name":"Kefir mild Natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kefir mild Natur","a":250,"u":"ml","nutri":{"kcal":62,"protein":3.3,"carbs":4,"fat":3.5,"fiber":0}}]},
+{"name":"Kefir Himbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kefir Himbeere","a":250,"u":"ml","nutri":{"kcal":82,"protein":2.9,"carbs":13,"fat":1.6,"fiber":0.2}}]},
+{"name":"Fruchtquark Erdbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtquark Erdbeere","a":150,"u":"g","nutri":{"kcal":115,"protein":6.5,"carbs":15,"fat":3,"fiber":0.3}}]},
+{"name":"Kräuterquark","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kräuterquark","a":100,"u":"g","nutri":{"kcal":130,"protein":8,"carbs":3.5,"fat":9,"fiber":0.3}}]},
+{"name":"Speisequark Magerstufe","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Speisequark Magerstufe","a":250,"u":"g","nutri":{"kcal":67,"protein":12,"carbs":4,"fat":0.3,"fiber":0}}]},
+{"name":"Grießpudding","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Grießpudding","a":150,"u":"g","nutri":{"kcal":115,"protein":3.5,"carbs":18,"fat":3,"fiber":0.4}}]},
+{"name":"Schokopudding","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schokopudding","a":150,"u":"g","nutri":{"kcal":120,"protein":3.3,"carbs":19,"fat":3.3,"fiber":0.6}}]},
+{"name":"Vanillepudding","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vanillepudding","a":150,"u":"g","nutri":{"kcal":110,"protein":3,"carbs":18,"fat":2.8,"fiber":0.1}}]},
+{"name":"Sahnepudding Schokolade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sahnepudding Schokolade","a":150,"u":"g","nutri":{"kcal":155,"protein":3.2,"carbs":20,"fat":6.5,"fiber":0.7}}]},
+{"name":"Milchreis Natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Milchreis Natur","a":200,"u":"g","nutri":{"kcal":128,"protein":3.6,"carbs":20,"fat":3.5,"fiber":0.3}}]},
+{"name":"Milchreis Zimt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Milchreis Zimt","a":200,"u":"g","nutri":{"kcal":135,"protein":3.5,"carbs":21,"fat":3.6,"fiber":0.3}}]},
+{"name":"Fruchtquark-Zwerge","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtquark-Zwerge","a":50,"u":"g","nutri":{"kcal":135,"protein":4.5,"carbs":17.5,"fat":5,"fiber":0.2}}]},
+{"name":"Skyr Erdbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Skyr Erdbeere","a":150,"u":"g","nutri":{"kcal":65,"protein":9,"carbs":7,"fat":0.2,"fiber":0.2}}]},
+{"name":"Skyr Natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Skyr Natur","a":150,"u":"g","nutri":{"kcal":63,"protein":11,"carbs":4,"fat":0.2,"fiber":0}}]},
+{"name":"Buttermilch-Drink Zitrone","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Buttermilch-Drink Zitrone","a":250,"u":"ml","nutri":{"kcal":55,"protein":3,"carbs":9.5,"fat":0.6,"fiber":0}}]},
+{"name":"Vanillejoghurt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vanillejoghurt","a":150,"u":"g","nutri":{"kcal":100,"protein":3.2,"carbs":15,"fat":2.8,"fiber":0.1}}]},
+{"name":"Joghurt-Mousse Schokolade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Joghurt-Mousse Schokolade","a":100,"u":"g","nutri":{"kcal":175,"protein":3.5,"carbs":22,"fat":8,"fiber":0.8}}]},
+{"name":"Dickmilch","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Dickmilch","a":250,"u":"g","nutri":{"kcal":65,"protein":3.3,"carbs":4,"fat":3.8,"fiber":0}}]},
+{"name":"Trinkkefir Natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Trinkkefir Natur","a":250,"u":"ml","nutri":{"kcal":60,"protein":3.2,"carbs":4.2,"fat":3.3,"fiber":0}}]},
+{"name":"Bircher Müsli Becher","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bircher Müsli Becher","a":150,"u":"g","nutri":{"kcal":130,"protein":3.8,"carbs":19,"fat":3.8,"fiber":1.8}}]},
+{"name":"Toastbrot Weizen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Toastbrot Weizen","a":25,"u":"g","nutri":{"kcal":270,"protein":8.5,"carbs":49,"fat":4,"fiber":2.7}}]},
+{"name":"Toastbrot Vollkorn","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Toastbrot Vollkorn","a":25,"u":"g","nutri":{"kcal":250,"protein":9,"carbs":41,"fat":4,"fiber":6.5}}]},
+{"name":"Toastbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Toastbrötchen","a":40,"u":"g","nutri":{"kcal":280,"protein":9,"carbs":50,"fat":4.5,"fiber":3}}]},
+{"name":"Mehrkornbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mehrkornbrötchen","a":70,"u":"g","nutri":{"kcal":260,"protein":9.5,"carbs":45,"fat":4,"fiber":5}}]},
+{"name":"Laugenbrezel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Laugenbrezel","a":80,"u":"g","nutri":{"kcal":290,"protein":9,"carbs":55,"fat":3.5,"fiber":3}}]},
+{"name":"Croissant","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Croissant","a":50,"u":"g","nutri":{"kcal":430,"protein":8,"carbs":45,"fat":24,"fiber":2.5}}]},
+{"name":"Milchbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Milchbrötchen","a":50,"u":"g","nutri":{"kcal":320,"protein":8,"carbs":52,"fat":8.5,"fiber":2}}]},
+{"name":"Zwieback","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Zwieback","a":10,"u":"g","nutri":{"kcal":390,"protein":10,"carbs":73,"fat":6,"fiber":4}}]},
+{"name":"Knäckebrot","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Knäckebrot","a":10,"u":"g","nutri":{"kcal":350,"protein":10,"carbs":65,"fat":2.5,"fiber":15}}]},
+{"name":"Vollkorn-Knäckebrot","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vollkorn-Knäckebrot","a":10,"u":"g","nutri":{"kcal":340,"protein":11,"carbs":58,"fat":3,"fiber":18}}]},
+{"name":"Reiswaffeln","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Reiswaffeln","a":10,"u":"g","nutri":{"kcal":385,"protein":8,"carbs":80,"fat":3,"fiber":4}}]},
+{"name":"Maiswaffeln","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Maiswaffeln","a":10,"u":"g","nutri":{"kcal":380,"protein":7,"carbs":78,"fat":3.5,"fiber":5}}]},
+{"name":"Waffeln","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Waffeln","a":40,"u":"g","nutri":{"kcal":450,"protein":6,"carbs":60,"fat":20,"fiber":2}}]},
+{"name":"Lebkuchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Lebkuchen","a":30,"u":"g","nutri":{"kcal":390,"protein":6,"carbs":68,"fat":9,"fiber":4}}]},
+{"name":"Russisch Brot","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Russisch Brot","a":15,"u":"g","nutri":{"kcal":385,"protein":7,"carbs":82,"fat":2,"fiber":2.5}}]},
+{"name":"Butterkeks","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Butterkeks","a":30,"u":"g","nutri":{"kcal":460,"protein":7,"carbs":72,"fat":15,"fiber":2.5}}]},
+{"name":"Laugenstange","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Laugenstange","a":90,"u":"g","nutri":{"kcal":280,"protein":9,"carbs":53,"fat":3,"fiber":3}}]},
+{"name":"Sandwichbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sandwichbrötchen","a":60,"u":"g","nutri":{"kcal":275,"protein":9,"carbs":49,"fat":4.5,"fiber":3}}]},
+{"name":"Baguette abgepackt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Baguette abgepackt","a":125,"u":"g","nutri":{"kcal":270,"protein":9,"carbs":53,"fat":2,"fiber":3}}]},
+{"name":"Aufbackbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Aufbackbrötchen","a":50,"u":"g","nutri":{"kcal":265,"protein":9,"carbs":51,"fat":2.5,"fiber":3}}]},
+{"name":"Ciabatta abgepackt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Ciabatta abgepackt","a":100,"u":"g","nutri":{"kcal":270,"protein":9,"carbs":50,"fat":3.5,"fiber":3}}]},
+{"name":"Pumpernickel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pumpernickel","a":30,"u":"g","nutri":{"kcal":250,"protein":8,"carbs":46,"fat":2,"fiber":9}}]},
+{"name":"Vollkornbrot geschnitten","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vollkornbrot geschnitten","a":45,"u":"g","nutri":{"kcal":210,"protein":8.5,"carbs":34,"fat":3,"fiber":8}}]},
+{"name":"Rosinenbrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Rosinenbrötchen","a":60,"u":"g","nutri":{"kcal":300,"protein":7.5,"carbs":55,"fat":5.5,"fiber":3}}]},
+{"name":"Schokobrötchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schokobrötchen","a":65,"u":"g","nutri":{"kcal":350,"protein":8,"carbs":52,"fat":12,"fiber":3}}]},
+{"name":"Löffelbiskuit","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Löffelbiskuit","a":10,"u":"g","nutri":{"kcal":390,"protein":8,"carbs":78,"fat":4,"fiber":1.5}}]},
+{"name":"Leberwurst fein","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Leberwurst fein","a":30,"u":"g","nutri":{"kcal":326,"protein":12,"carbs":2,"fat":30,"fiber":0}}]},
+{"name":"Leberwurst grob","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Leberwurst grob","a":30,"u":"g","nutri":{"kcal":319,"protein":13,"carbs":1.5,"fat":29,"fiber":0}}]},
+{"name":"Teewurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Teewurst","a":30,"u":"g","nutri":{"kcal":405,"protein":13,"carbs":0.5,"fat":39,"fiber":0}}]},
+{"name":"Salami-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Salami-Aufschnitt","a":30,"u":"g","nutri":{"kcal":372,"protein":20,"carbs":1,"fat":32,"fiber":0}}]},
+{"name":"Kochschinken","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kochschinken","a":30,"u":"g","nutri":{"kcal":111,"protein":20,"carbs":1,"fat":3,"fiber":0}}]},
+{"name":"Geflügelwurst-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Geflügelwurst-Aufschnitt","a":30,"u":"g","nutri":{"kcal":200,"protein":13,"carbs":1,"fat":16,"fiber":0}}]},
+{"name":"Bierschinken","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bierschinken","a":30,"u":"g","nutri":{"kcal":208,"protein":15,"carbs":1,"fat":16,"fiber":0}}]},
+{"name":"Mortadella","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mortadella","a":30,"u":"g","nutri":{"kcal":316,"protein":15,"carbs":1,"fat":28,"fiber":0}}]},
+{"name":"Fleischwurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fleischwurst","a":30,"u":"g","nutri":{"kcal":295,"protein":12,"carbs":1,"fat":27,"fiber":0}}]},
+{"name":"Jagdwurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Jagdwurst","a":30,"u":"g","nutri":{"kcal":254,"protein":13,"carbs":1,"fat":22,"fiber":0}}]},
+{"name":"Zwiebelmettwurst streichfähig","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Zwiebelmettwurst streichfähig","a":30,"u":"g","nutri":{"kcal":384,"protein":14,"carbs":1,"fat":36,"fiber":0}}]},
+{"name":"Cervelatwurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Cervelatwurst","a":25,"u":"g","nutri":{"kcal":387,"protein":17,"carbs":1,"fat":35,"fiber":0}}]},
+{"name":"Putenbrust-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Putenbrust-Aufschnitt","a":30,"u":"g","nutri":{"kcal":102,"protein":20,"carbs":1,"fat":2,"fiber":0}}]},
+{"name":"Bratenaufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bratenaufschnitt","a":30,"u":"g","nutri":{"kcal":202,"protein":18,"carbs":1,"fat":14,"fiber":0}}]},
+{"name":"Corned Beef","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Corned Beef","a":30,"u":"g","nutri":{"kcal":227,"protein":22,"carbs":1,"fat":15,"fiber":0}}]},
+{"name":"Frühstücksfleisch","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frühstücksfleisch","a":50,"u":"g","nutri":{"kcal":281,"protein":12,"carbs":2,"fat":25,"fiber":0}}]},
+{"name":"Wiener Würstchen im Glas","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Wiener Würstchen im Glas","a":50,"u":"g","nutri":{"kcal":268,"protein":12,"carbs":1,"fat":24,"fiber":0}}]},
+{"name":"Gelbwurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gelbwurst","a":30,"u":"g","nutri":{"kcal":286,"protein":12,"carbs":1,"fat":26,"fiber":0}}]},
+{"name":"Krakauer-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Krakauer-Aufschnitt","a":30,"u":"g","nutri":{"kcal":289,"protein":15,"carbs":1,"fat":25,"fiber":0}}]},
+{"name":"Schinkenwurst","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schinkenwurst","a":30,"u":"g","nutri":{"kcal":254,"protein":13,"carbs":1,"fat":22,"fiber":0}}]},
+{"name":"Kabanossi","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kabanossi","a":30,"u":"g","nutri":{"kcal":452,"protein":22,"carbs":1,"fat":40,"fiber":0}}]},
+{"name":"Landjäger","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Landjäger","a":35,"u":"g","nutri":{"kcal":401,"protein":25,"carbs":1,"fat":33,"fiber":0}}]},
+{"name":"Frühstücksspeck in Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frühstücksspeck in Scheiben","a":30,"u":"g","nutri":{"kcal":355,"protein":14,"carbs":0.5,"fat":33,"fiber":0}}]},
+{"name":"Kassler-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kassler-Aufschnitt","a":30,"u":"g","nutri":{"kcal":132,"protein":22,"carbs":1,"fat":4.5,"fiber":0}}]},
+{"name":"Hähnchenbrust-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Hähnchenbrust-Aufschnitt","a":30,"u":"g","nutri":{"kcal":106,"protein":21,"carbs":1,"fat":2,"fiber":0}}]},
+{"name":"Roastbeef-Aufschnitt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Roastbeef-Aufschnitt","a":30,"u":"g","nutri":{"kcal":130,"protein":22,"carbs":0.5,"fat":4.5,"fiber":0}}]},
+{"name":"Bockwurst im Glas","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bockwurst im Glas","a":100,"u":"g","nutri":{"kcal":273,"protein":11,"carbs":1,"fat":25,"fiber":0}}]},
+{"name":"Schweinskopfsülze","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schweinskopfsülze","a":50,"u":"g","nutri":{"kcal":114,"protein":13,"carbs":2,"fat":6,"fiber":0}}]},
+{"name":"Gouda-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gouda-Scheiben","a":30,"u":"g","nutri":{"kcal":356,"protein":25,"carbs":0,"fat":28,"fiber":0}}]},
+{"name":"Emmentaler-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Emmentaler-Scheiben","a":30,"u":"g","nutri":{"kcal":382,"protein":28,"carbs":0.5,"fat":30,"fiber":0}}]},
+{"name":"Edamer-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Edamer-Scheiben","a":30,"u":"g","nutri":{"kcal":334,"protein":26,"carbs":0,"fat":26,"fiber":0}}]},
+{"name":"Butterkäse-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Butterkäse-Scheiben","a":30,"u":"g","nutri":{"kcal":372,"protein":21,"carbs":0.5,"fat":32,"fiber":0}}]},
+{"name":"Bergkäse-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bergkäse-Scheiben","a":30,"u":"g","nutri":{"kcal":388,"protein":27,"carbs":0,"fat":31,"fiber":0}}]},
+{"name":"Maasdamer-Scheiben","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Maasdamer-Scheiben","a":30,"u":"g","nutri":{"kcal":350,"protein":27,"carbs":0,"fat":27,"fiber":0}}]},
+{"name":"Scheibletten Schmelzkäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Scheibletten Schmelzkäse","a":20,"u":"g","nutri":{"kcal":275,"protein":12,"carbs":6,"fat":22,"fiber":0}}]},
+{"name":"Frischkäse natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frischkäse natur","a":30,"u":"g","nutri":{"kcal":310,"protein":6,"carbs":3.5,"fat":30,"fiber":0}}]},
+{"name":"Frischkäse Kräuter","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frischkäse Kräuter","a":30,"u":"g","nutri":{"kcal":295,"protein":6,"carbs":4,"fat":28,"fiber":0}}]},
+{"name":"Streichkäse cremig","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Streichkäse cremig","a":30,"u":"g","nutri":{"kcal":285,"protein":12,"carbs":5,"fat":24,"fiber":0}}]},
+{"name":"Camembert","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Camembert","a":30,"u":"g","nutri":{"kcal":290,"protein":20,"carbs":0.5,"fat":23,"fiber":0}}]},
+{"name":"Brie am Stück","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Brie am Stück","a":30,"u":"g","nutri":{"kcal":330,"protein":19,"carbs":0.5,"fat":28,"fiber":0}}]},
+{"name":"Harzer Käse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Harzer Käse","a":25,"u":"g","nutri":{"kcal":128,"protein":30,"carbs":0,"fat":1,"fiber":0}}]},
+{"name":"Hüttenkäse natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Hüttenkäse natur","a":200,"u":"g","nutri":{"kcal":103,"protein":13,"carbs":3,"fat":4.3,"fiber":0}}]},
+{"name":"Mozzarella-Kugel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mozzarella-Kugel","a":125,"u":"g","nutri":{"kcal":245,"protein":18,"carbs":1,"fat":19,"fiber":0}}]},
+{"name":"Feta-Würfel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Feta-Würfel","a":50,"u":"g","nutri":{"kcal":258,"protein":14,"carbs":1,"fat":22,"fiber":0}}]},
+{"name":"Geriebener Pizzakäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Geriebener Pizzakäse","a":50,"u":"g","nutri":{"kcal":345,"protein":24,"carbs":1.5,"fat":27,"fiber":0}}]},
+{"name":"Geriebener Hartkäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Geriebener Hartkäse","a":10,"u":"g","nutri":{"kcal":402,"protein":36,"carbs":0,"fat":29,"fiber":0}}]},
+{"name":"Halloumi Grillkäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Halloumi Grillkäse","a":90,"u":"g","nutri":{"kcal":320,"protein":22,"carbs":2,"fat":25,"fiber":0}}]},
+{"name":"Mozzarella light","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mozzarella light","a":125,"u":"g","nutri":{"kcal":180,"protein":20,"carbs":2,"fat":10,"fiber":0}}]},
+{"name":"Kräuterbutter","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kräuterbutter","a":15,"u":"g","nutri":{"kcal":725,"protein":1,"carbs":1,"fat":80,"fiber":0}}]},
+{"name":"Margarine","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Margarine","a":10,"u":"g","nutri":{"kcal":720,"protein":0.2,"carbs":0.5,"fat":80,"fiber":0}}]},
+{"name":"Halbfettmargarine","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Halbfettmargarine","a":10,"u":"g","nutri":{"kcal":361,"protein":0.2,"carbs":0.5,"fat":40,"fiber":0}}]},
+{"name":"Streichzarte Butter mit Rapsöl","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Streichzarte Butter mit Rapsöl","a":15,"u":"g","nutri":{"kcal":680,"protein":0.6,"carbs":0.6,"fat":75,"fiber":0}}]},
+{"name":"Kräuterquark Streichcreme","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kräuterquark Streichcreme","a":50,"u":"g","nutri":{"kcal":148,"protein":8,"carbs":4,"fat":11,"fiber":0}}]},
+{"name":"Geräucherter Schmelzkäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Geräucherter Schmelzkäse","a":30,"u":"g","nutri":{"kcal":285,"protein":14,"carbs":3,"fat":24,"fiber":0}}]},
+{"name":"Cornflakes","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Cornflakes","a":30,"u":"g","nutri":{"kcal":378,"protein":7,"carbs":84,"fat":0.9,"fiber":3}}]},
+{"name":"Schoko-Cornflakes","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schoko-Cornflakes","a":30,"u":"g","nutri":{"kcal":384,"protein":6,"carbs":82,"fat":3,"fiber":4}}]},
+{"name":"Knuspermüsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Knuspermüsli","a":45,"u":"g","nutri":{"kcal":448,"protein":8,"carbs":64,"fat":16,"fiber":7}}]},
+{"name":"Früchtemüsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Früchtemüsli","a":60,"u":"g","nutri":{"kcal":350,"protein":8,"carbs":62,"fat":6,"fiber":8}}]},
+{"name":"Schoko-Müsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schoko-Müsli","a":60,"u":"g","nutri":{"kcal":418,"protein":9,"carbs":65,"fat":12,"fiber":7}}]},
+{"name":"Nuss-Honig-Müsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Nuss-Honig-Müsli","a":60,"u":"g","nutri":{"kcal":440,"protein":9,"carbs":63,"fat":15,"fiber":7}}]},
+{"name":"Beeren-Knuspermüsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Beeren-Knuspermüsli","a":45,"u":"g","nutri":{"kcal":428,"protein":8,"carbs":66,"fat":13,"fiber":7}}]},
+{"name":"Mandel-Knuspermüsli","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mandel-Knuspermüsli","a":45,"u":"g","nutri":{"kcal":466,"protein":10,"carbs":58,"fat":20,"fiber":8}}]},
+{"name":"Haferflocken kernig","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Haferflocken kernig","a":50,"u":"g","nutri":{"kcal":372,"protein":13,"carbs":59,"fat":7,"fiber":10}}]},
+{"name":"Haferflocken zart","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Haferflocken zart","a":50,"u":"g","nutri":{"kcal":369,"protein":13,"carbs":60,"fat":6.5,"fiber":9.5}}]},
+{"name":"Haferkleie","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Haferkleie","a":15,"u":"g","nutri":{"kcal":355,"protein":16,"carbs":50,"fat":8,"fiber":15}}]},
+{"name":"Porridge Instant Natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Porridge Instant Natur","a":50,"u":"g","nutri":{"kcal":362,"protein":11,"carbs":60,"fat":7,"fiber":8}}]},
+{"name":"Porridge Instant Apfel-Zimt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Porridge Instant Apfel-Zimt","a":50,"u":"g","nutri":{"kcal":380,"protein":9,"carbs":66,"fat":6,"fiber":7}}]},
+{"name":"Zimt-Cerealien","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Zimt-Cerealien","a":30,"u":"g","nutri":{"kcal":424,"protein":6,"carbs":78,"fat":9,"fiber":4}}]},
+{"name":"Honig-Weizenpops","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Honig-Weizenpops","a":30,"u":"g","nutri":{"kcal":384,"protein":6,"carbs":86,"fat":1.5,"fiber":2}}]},
+{"name":"Weizenpops ungezuckert","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Weizenpops ungezuckert","a":25,"u":"g","nutri":{"kcal":361,"protein":11,"carbs":73,"fat":1.5,"fiber":6}}]},
+{"name":"Schoko-Reispops","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schoko-Reispops","a":30,"u":"g","nutri":{"kcal":386,"protein":5,"carbs":84,"fat":3,"fiber":2}}]},
+{"name":"Vollkorn-Haferkringel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vollkorn-Haferkringel","a":30,"u":"g","nutri":{"kcal":378,"protein":10,"carbs":70,"fat":5,"fiber":8}}]},
+{"name":"Gefüllte Schoko-Cerealien-Kissen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gefüllte Schoko-Cerealien-Kissen","a":30,"u":"g","nutri":{"kcal":445,"protein":8,"carbs":68,"fat":15,"fiber":5}}]},
+{"name":"Hafer-Müsliriegel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Hafer-Müsliriegel","a":25,"u":"g","nutri":{"kcal":424,"protein":7,"carbs":65,"fat":14,"fiber":6}}]},
+{"name":"Schoko-Müsliriegel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schoko-Müsliriegel","a":25,"u":"g","nutri":{"kcal":442,"protein":6,"carbs":66,"fat":16,"fiber":5}}]},
+{"name":"Frucht-Müsliriegel","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frucht-Müsliriegel","a":25,"u":"g","nutri":{"kcal":382,"protein":5,"carbs":70,"fat":8,"fiber":6}}]},
+{"name":"Konfitüre Erdbeere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Konfitüre Erdbeere","a":20,"u":"g","nutri":{"kcal":248,"protein":0.4,"carbs":60,"fat":0.1,"fiber":1}}]},
+{"name":"Honig","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Honig","a":20,"u":"g","nutri":{"kcal":320,"protein":0.3,"carbs":80,"fat":0,"fiber":0}}]},
+{"name":"Nuss-Nougat-Creme","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Nuss-Nougat-Creme","a":15,"u":"g","nutri":{"kcal":539,"protein":6,"carbs":57,"fat":31,"fiber":4}}]},
+{"name":"Erdnussbutter","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Erdnussbutter","a":20,"u":"g","nutri":{"kcal":600,"protein":25,"carbs":12,"fat":50,"fiber":6}}]},
+{"name":"Vollmilchschokolade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Vollmilchschokolade","a":25,"u":"g","nutri":{"kcal":535,"protein":7.5,"carbs":57,"fat":30,"fiber":3}}]},
+{"name":"Zartbitterschokolade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Zartbitterschokolade","a":25,"u":"g","nutri":{"kcal":560,"protein":8,"carbs":45,"fat":38,"fiber":11}}]},
+{"name":"Schokoriegel Karamell-Nougat","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schokoriegel Karamell-Nougat","a":50,"u":"g","nutri":{"kcal":470,"protein":4,"carbs":65,"fat":19,"fiber":1.5}}]},
+{"name":"Waffelriegel Schoko","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Waffelriegel Schoko","a":40,"u":"g","nutri":{"kcal":520,"protein":6,"carbs":60,"fat":27,"fiber":2}}]},
+{"name":"Schokokeks Vollmilch","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schokokeks Vollmilch","a":25,"u":"g","nutri":{"kcal":500,"protein":6.5,"carbs":65,"fat":23,"fiber":2.5}}]},
+{"name":"Doppelkeks mit Cremefüllung","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Doppelkeks mit Cremefüllung","a":30,"u":"g","nutri":{"kcal":490,"protein":5.5,"carbs":68,"fat":21,"fiber":3}}]},
+{"name":"Gummibärchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gummibärchen","a":30,"u":"g","nutri":{"kcal":340,"protein":7,"carbs":77,"fat":0.5,"fiber":0}}]},
+{"name":"Fruchtgummi sauer","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtgummi sauer","a":30,"u":"g","nutri":{"kcal":350,"protein":5,"carbs":82,"fat":0.2,"fiber":0}}]},
+{"name":"Lakritzschnecken","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Lakritzschnecken","a":30,"u":"g","nutri":{"kcal":340,"protein":3,"carbs":78,"fat":1,"fiber":1}}]},
+{"name":"Fruchtbonbons","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtbonbons","a":5,"u":"g","nutri":{"kcal":390,"protein":0,"carbs":97,"fat":0.1,"fiber":0}}]},
+{"name":"Sahnekaramellen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sahnekaramellen","a":8,"u":"g","nutri":{"kcal":430,"protein":2.5,"carbs":78,"fat":12,"fiber":0}}]},
+{"name":"Kartoffelchips gesalzen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kartoffelchips gesalzen","a":30,"u":"g","nutri":{"kcal":535,"protein":6,"carbs":50,"fat":34,"fiber":4}}]},
+{"name":"Paprikachips","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Paprikachips","a":30,"u":"g","nutri":{"kcal":530,"protein":6,"carbs":51,"fat":33,"fiber":4}}]},
+{"name":"Salzstangen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Salzstangen","a":30,"u":"g","nutri":{"kcal":390,"protein":10,"carbs":76,"fat":3.5,"fiber":3}}]},
+{"name":"Salzcracker","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Salzcracker","a":25,"u":"g","nutri":{"kcal":490,"protein":8,"carbs":62,"fat":22,"fiber":3}}]},
+{"name":"Erdnussflips","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Erdnussflips","a":30,"u":"g","nutri":{"kcal":540,"protein":14,"carbs":46,"fat":33,"fiber":5}}]},
+{"name":"Popcorn süß","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Popcorn süß","a":30,"u":"g","nutri":{"kcal":430,"protein":6,"carbs":78,"fat":11,"fiber":8}}]},
+{"name":"Studentenfutter","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Studentenfutter","a":30,"u":"g","nutri":{"kcal":480,"protein":13,"carbs":40,"fat":29,"fiber":6}}]},
+{"name":"Salzige Erdnüsse geröstet","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Salzige Erdnüsse geröstet","a":30,"u":"g","nutri":{"kcal":610,"protein":26,"carbs":12,"fat":49,"fiber":8}}]},
+{"name":"Tortilla-Chips Nacho","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tortilla-Chips Nacho","a":30,"u":"g","nutri":{"kcal":500,"protein":7,"carbs":60,"fat":25,"fiber":5}}]},
+{"name":"Weiße Schokolade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Weiße Schokolade","a":25,"u":"g","nutri":{"kcal":540,"protein":6,"carbs":58,"fat":32,"fiber":0}}]},
+{"name":"Nuss-Schokolade mit Haselnüssen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Nuss-Schokolade mit Haselnüssen","a":25,"u":"g","nutri":{"kcal":560,"protein":9,"carbs":48,"fat":37,"fiber":4}}]},
+{"name":"Pralinen gemischt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pralinen gemischt","a":12,"u":"g","nutri":{"kcal":530,"protein":6,"carbs":55,"fat":32,"fiber":2}}]},
+{"name":"Schokolinsen bunt","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schokolinsen bunt","a":30,"u":"g","nutri":{"kcal":490,"protein":5,"carbs":70,"fat":21,"fiber":2}}]},
+{"name":"Käsegebäck Cracker","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Käsegebäck Cracker","a":25,"u":"g","nutri":{"kcal":510,"protein":11,"carbs":55,"fat":27,"fiber":3}}]},
+{"name":"Schaumküsse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schaumküsse","a":25,"u":"g","nutri":{"kcal":390,"protein":4,"carbs":55,"fat":17,"fiber":1}}]},
+{"name":"Marshmallows","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Marshmallows","a":30,"u":"g","nutri":{"kcal":330,"protein":4,"carbs":78,"fat":0.2,"fiber":0}}]},
+{"name":"Tiefkühl-Pizza Margherita","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tiefkühl-Pizza Margherita","a":350,"u":"g","nutri":{"kcal":230,"protein":10,"carbs":28,"fat":8,"fiber":2}}]},
+{"name":"Tiefkühl-Pizza Salami","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tiefkühl-Pizza Salami","a":350,"u":"g","nutri":{"kcal":260,"protein":11,"carbs":28,"fat":11,"fiber":2}}]},
+{"name":"Tiefkühl-Lasagne Bolognese","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tiefkühl-Lasagne Bolognese","a":400,"u":"g","nutri":{"kcal":130,"protein":6,"carbs":13,"fat":6,"fiber":1.5}}]},
+{"name":"Tiefkühl-Gemüsepfanne","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tiefkühl-Gemüsepfanne","a":200,"u":"g","nutri":{"kcal":65,"protein":2.5,"carbs":8,"fat":2.5,"fiber":3}}]},
+{"name":"Fischstäbchen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fischstäbchen","a":30,"u":"g","nutri":{"kcal":190,"protein":12,"carbs":18,"fat":8,"fiber":1}}]},
+{"name":"Backfisch paniert","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Backfisch paniert","a":100,"u":"g","nutri":{"kcal":210,"protein":13,"carbs":15,"fat":11,"fiber":1}}]},
+{"name":"Pommes frites (TK, gebacken)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pommes frites (TK, gebacken)","a":150,"u":"g","nutri":{"kcal":150,"protein":2.5,"carbs":22,"fat":5,"fiber":3}}]},
+{"name":"Kroketten (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kroketten (TK)","a":150,"u":"g","nutri":{"kcal":190,"protein":3,"carbs":25,"fat":9,"fiber":2}}]},
+{"name":"Chicken Nuggets (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Chicken Nuggets (TK)","a":20,"u":"g","nutri":{"kcal":250,"protein":14,"carbs":16,"fat":14,"fiber":1}}]},
+{"name":"Frühlingsrollen (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Frühlingsrollen (TK)","a":60,"u":"g","nutri":{"kcal":200,"protein":5,"carbs":26,"fat":8,"fiber":2}}]},
+{"name":"Maultaschen","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Maultaschen","a":200,"u":"g","nutri":{"kcal":200,"protein":9,"carbs":23,"fat":8,"fiber":2}}]},
+{"name":"Tortellini mit Käsefüllung (Kühlregal)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tortellini mit Käsefüllung (Kühlregal)","a":250,"u":"g","nutri":{"kcal":270,"protein":11,"carbs":40,"fat":7,"fiber":2.5}}]},
+{"name":"Currywurst mit Sauce","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Currywurst mit Sauce","a":220,"u":"g","nutri":{"kcal":230,"protein":9,"carbs":12,"fat":16,"fiber":1}}]},
+{"name":"Gulaschsuppe (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gulaschsuppe (Dose)","a":400,"u":"g","nutri":{"kcal":75,"protein":5,"carbs":6,"fat":3.5,"fiber":1}}]},
+{"name":"Linseneintopf (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Linseneintopf (Dose)","a":400,"u":"g","nutri":{"kcal":90,"protein":5,"carbs":12,"fat":2.5,"fiber":3}}]},
+{"name":"Erbseneintopf (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Erbseneintopf (Dose)","a":400,"u":"g","nutri":{"kcal":95,"protein":5.5,"carbs":11,"fat":3.5,"fiber":3.5}}]},
+{"name":"Fertig-Bolognese (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fertig-Bolognese (Glas)","a":200,"u":"g","nutri":{"kcal":110,"protein":5,"carbs":8,"fat":6,"fiber":1.5}}]},
+{"name":"Instant-Nudelsuppe (zubereitet)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Instant-Nudelsuppe (zubereitet)","a":250,"u":"ml","nutri":{"kcal":40,"protein":1.2,"carbs":6,"fat":1.2,"fiber":0.5}}]},
+{"name":"Kartoffelpüree (aus Pulver zubereitet)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kartoffelpüree (aus Pulver zubereitet)","a":200,"u":"g","nutri":{"kcal":85,"protein":2,"carbs":12,"fat":3,"fiber":1.5}}]},
+{"name":"Rahmspinat (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Rahmspinat (TK)","a":200,"u":"g","nutri":{"kcal":70,"protein":3,"carbs":4,"fat":4.5,"fiber":2}}]},
+{"name":"Kartoffel-Rösti (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kartoffel-Rösti (TK)","a":125,"u":"g","nutri":{"kcal":180,"protein":2.5,"carbs":22,"fat":9,"fiber":2.5}}]},
+{"name":"Semmelknödel (Kloßteig)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Semmelknödel (Kloßteig)","a":75,"u":"g","nutri":{"kcal":155,"protein":5,"carbs":27,"fat":3,"fiber":2}}]},
+{"name":"Schupfnudeln (Kühlregal)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schupfnudeln (Kühlregal)","a":200,"u":"g","nutri":{"kcal":170,"protein":4,"carbs":30,"fat":3.5,"fiber":2}}]},
+{"name":"Hähnchen Cordon Bleu (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Hähnchen Cordon Bleu (TK)","a":180,"u":"g","nutri":{"kcal":230,"protein":15,"carbs":13,"fat":13,"fiber":1}}]},
+{"name":"Pizzabaguette (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pizzabaguette (TK)","a":125,"u":"g","nutri":{"kcal":260,"protein":9,"carbs":30,"fat":11,"fiber":2}}]},
+{"name":"Flammkuchen (TK)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Flammkuchen (TK)","a":200,"u":"g","nutri":{"kcal":250,"protein":7,"carbs":28,"fat":12,"fiber":2}}]},
+{"name":"Käsespätzle (Fertiggericht)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Käsespätzle (Fertiggericht)","a":400,"u":"g","nutri":{"kcal":200,"protein":8,"carbs":20,"fat":10,"fiber":1.5}}]},
+{"name":"Chili con Carne (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Chili con Carne (Dose)","a":400,"u":"g","nutri":{"kcal":110,"protein":7,"carbs":12,"fat":3.5,"fiber":3}}]},
+{"name":"Gnocchi (Kühlregal)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gnocchi (Kühlregal)","a":250,"u":"g","nutri":{"kcal":170,"protein":4,"carbs":34,"fat":1.5,"fiber":2}}]},
+{"name":"Mais (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mais (Dose)","a":140,"u":"g","nutri":{"kcal":85,"protein":3,"carbs":15,"fat":1.2,"fiber":3.5}}]},
+{"name":"Kidneybohnen (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kidneybohnen (Dose)","a":130,"u":"g","nutri":{"kcal":115,"protein":8,"carbs":15,"fat":0.6,"fiber":7}}]},
+{"name":"Kichererbsen (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kichererbsen (Dose)","a":130,"u":"g","nutri":{"kcal":120,"protein":7,"carbs":16,"fat":2.6,"fiber":6}}]},
+{"name":"Weiße Bohnen in Tomatensauce","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Weiße Bohnen in Tomatensauce","a":200,"u":"g","nutri":{"kcal":95,"protein":5,"carbs":15,"fat":0.6,"fiber":4.5}}]},
+{"name":"Erbsen & Möhren (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Erbsen & Möhren (Dose)","a":150,"u":"g","nutri":{"kcal":60,"protein":3.5,"carbs":8,"fat":0.5,"fiber":4}}]},
+{"name":"Thunfisch in Öl (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Thunfisch in Öl (Dose)","a":100,"u":"g","nutri":{"kcal":190,"protein":25,"carbs":0,"fat":9,"fiber":0}}]},
+{"name":"Thunfisch im eigenen Saft (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Thunfisch im eigenen Saft (Dose)","a":100,"u":"g","nutri":{"kcal":116,"protein":26,"carbs":0,"fat":1,"fiber":0}}]},
+{"name":"Sauerkraut (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sauerkraut (Dose)","a":150,"u":"g","nutri":{"kcal":20,"protein":1.5,"carbs":2.5,"fat":0.3,"fiber":2.5}}]},
+{"name":"Apfel-Rotkohl (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Apfel-Rotkohl (Glas)","a":200,"u":"g","nutri":{"kcal":65,"protein":1,"carbs":13,"fat":0.3,"fiber":2.5}}]},
+{"name":"Apfelmus (gezuckert)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Apfelmus (gezuckert)","a":100,"u":"g","nutri":{"kcal":80,"protein":0.3,"carbs":19,"fat":0.1,"fiber":1.2}}]},
+{"name":"Erbsen (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Erbsen (Dose)","a":150,"u":"g","nutri":{"kcal":70,"protein":5,"carbs":9,"fat":0.5,"fiber":5}}]},
+{"name":"Champignons Scheiben (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Champignons Scheiben (Dose)","a":100,"u":"g","nutri":{"kcal":22,"protein":2.5,"carbs":1,"fat":0.3,"fiber":2}}]},
+{"name":"Ravioli in Tomatensauce (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Ravioli in Tomatensauce (Dose)","a":400,"u":"g","nutri":{"kcal":90,"protein":3.5,"carbs":14,"fat":2,"fiber":1.2}}]},
+{"name":"Linsen (Dose)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Linsen (Dose)","a":130,"u":"g","nutri":{"kcal":100,"protein":7,"carbs":13,"fat":0.5,"fiber":5}}]},
+{"name":"Gewürzgurken (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gewürzgurken (Glas)","a":30,"u":"g","nutri":{"kcal":20,"protein":0.7,"carbs":3.5,"fat":0.2,"fiber":1}}]},
+{"name":"Tomatensauce Napoli (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tomatensauce Napoli (Glas)","a":200,"u":"g","nutri":{"kcal":55,"protein":1.8,"carbs":8.5,"fat":1.5,"fiber":1.8}}]},
+{"name":"Pesto Genovese (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pesto Genovese (Glas)","a":45,"u":"g","nutri":{"kcal":460,"protein":5,"carbs":6,"fat":46,"fiber":2}}]},
+{"name":"Pesto Rosso (Glas)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pesto Rosso (Glas)","a":45,"u":"g","nutri":{"kcal":400,"protein":4,"carbs":8,"fat":40,"fiber":2}}]},
+{"name":"Tomatenketchup","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tomatenketchup","a":20,"u":"g","nutri":{"kcal":110,"protein":1.2,"carbs":25,"fat":0.2,"fiber":0.3}}]},
+{"name":"Mayonnaise 80%","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mayonnaise 80%","a":15,"u":"g","nutri":{"kcal":720,"protein":1.1,"carbs":2.5,"fat":78,"fiber":0}}]},
+{"name":"Senf mittelscharf","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Senf mittelscharf","a":10,"u":"g","nutri":{"kcal":100,"protein":5,"carbs":8,"fat":5,"fiber":3}}]},
+{"name":"Remoulade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Remoulade","a":20,"u":"g","nutri":{"kcal":580,"protein":1,"carbs":6,"fat":60,"fiber":0.5}}]},
+{"name":"Salatdressing Joghurt-Kräuter","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Salatdressing Joghurt-Kräuter","a":25,"u":"g","nutri":{"kcal":250,"protein":1.5,"carbs":8,"fat":23,"fiber":0.3}}]},
+{"name":"Barbecue-Sauce","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Barbecue-Sauce","a":25,"u":"g","nutri":{"kcal":150,"protein":1,"carbs":33,"fat":0.5,"fiber":0.6}}]},
+{"name":"Sweet-Chili-Sauce","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sweet-Chili-Sauce","a":25,"u":"g","nutri":{"kcal":225,"protein":0.8,"carbs":54,"fat":0.2,"fiber":0.5}}]},
+{"name":"Sojasauce","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sojasauce","a":15,"u":"g","nutri":{"kcal":60,"protein":8,"carbs":6,"fat":0.1,"fiber":0.5}}]},
+{"name":"Ajvar mild","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Ajvar mild","a":30,"u":"g","nutri":{"kcal":100,"protein":1.5,"carbs":10,"fat":6,"fiber":2.5}}]},
+{"name":"Hummus (Becher)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Hummus (Becher)","a":50,"u":"g","nutri":{"kcal":300,"protein":7,"carbs":12,"fat":24,"fiber":5}}]},
+{"name":"Apfelsaft klar","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Apfelsaft klar","a":200,"u":"ml","nutri":{"kcal":46,"protein":0.1,"carbs":11,"fat":0.1,"fiber":0.1}}]},
+{"name":"Multivitaminsaft","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Multivitaminsaft","a":200,"u":"ml","nutri":{"kcal":54,"protein":0.5,"carbs":12,"fat":0.1,"fiber":0.3}}]},
+{"name":"Eistee Pfirsich","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Eistee Pfirsich","a":250,"u":"ml","nutri":{"kcal":28,"protein":0,"carbs":7,"fat":0,"fiber":0}}]},
+{"name":"Zitronen-Limonade","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Zitronen-Limonade","a":330,"u":"ml","nutri":{"kcal":38,"protein":0,"carbs":9,"fat":0,"fiber":0}}]},
+{"name":"Energydrink","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Energydrink","a":250,"u":"ml","nutri":{"kcal":46,"protein":0,"carbs":11.5,"fat":0,"fiber":0}}]},
+{"name":"Fruchtsmoothie Beere","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtsmoothie Beere","a":250,"u":"ml","nutri":{"kcal":58,"protein":0.8,"carbs":12,"fat":0.3,"fiber":1.5}}]},
+{"name":"Proteinshake Vanille (Fertig)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Proteinshake Vanille (Fertig)","a":250,"u":"ml","nutri":{"kcal":63,"protein":10,"carbs":3.5,"fat":1.2,"fiber":0}}]},
+{"name":"Buttermilch natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Buttermilch natur","a":250,"u":"ml","nutri":{"kcal":37,"protein":3.5,"carbs":4,"fat":0.5,"fiber":0}}]},
+{"name":"Kokoswasser","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kokoswasser","a":330,"u":"ml","nutri":{"kcal":20,"protein":0.7,"carbs":3.9,"fat":0.2,"fiber":0}}]},
+{"name":"Fruchtschorle Traube","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Fruchtschorle Traube","a":300,"u":"ml","nutri":{"kcal":30,"protein":0.1,"carbs":7,"fat":0,"fiber":0}}]},
+{"name":"Proteinriegel Schoko","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Proteinriegel Schoko","a":50,"u":"g","nutri":{"kcal":350,"protein":33,"carbs":30,"fat":10,"fiber":5}}]},
+{"name":"Proteinpudding Schoko (Fertig)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Proteinpudding Schoko (Fertig)","a":200,"u":"g","nutri":{"kcal":90,"protein":10,"carbs":8,"fat":1.8,"fiber":0.5}}]},
+{"name":"Skyr Vanille","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Skyr Vanille","a":150,"u":"g","nutri":{"kcal":72,"protein":9,"carbs":8,"fat":0.2,"fiber":0}}]},
+{"name":"Körniger Frischkäse","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Körniger Frischkäse","a":150,"u":"g","nutri":{"kcal":100,"protein":12,"carbs":3,"fat":4.5,"fiber":0}}]},
+{"name":"Tofu natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tofu natur","a":100,"u":"g","nutri":{"kcal":120,"protein":13,"carbs":1,"fat":7,"fiber":0.5}}]},
+{"name":"Tofu geräuchert","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Tofu geräuchert","a":100,"u":"g","nutri":{"kcal":150,"protein":16,"carbs":1,"fat":9,"fiber":0.8}}]},
+{"name":"Veganer Aufschnitt (Scheiben)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Veganer Aufschnitt (Scheiben)","a":30,"u":"g","nutri":{"kcal":200,"protein":15,"carbs":5,"fat":13,"fiber":2}}]},
+{"name":"Whey-Proteinpulver Vanille","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Whey-Proteinpulver Vanille","a":30,"u":"g","nutri":{"kcal":380,"protein":78,"carbs":6,"fat":5,"fiber":1}}]},
+{"name":"Pflanzlicher Kokosjoghurt natur","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Pflanzlicher Kokosjoghurt natur","a":150,"u":"g","nutri":{"kcal":55,"protein":1.5,"carbs":3,"fat":4,"fiber":0.5}}]},
+{"name":"Proteinquark-Drink (Fertig)","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Proteinquark-Drink (Fertig)","a":250,"u":"ml","nutri":{"kcal":70,"protein":12,"carbs":4,"fat":0.5,"fiber":0}}]},
+{"name":"Trockenfrüchte-Mix","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Trockenfrüchte-Mix","a":40,"u":"g","nutri":{"kcal":300,"protein":3,"carbs":62,"fat":1,"fiber":8}}]},
+{"name":"Reiswaffeln mit Schokoüberzug","kind":"food","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Reiswaffeln mit Schokoüberzug","a":15,"u":"g","nutri":{"kcal":450,"protein":6,"carbs":70,"fat":16,"fiber":3}}]}
 ];
 
 const NUTRI={}, UNIT_G={}, CATALOG={}, FOOD_LABELS={}, FOOD_HEALTHY={}, FOOD_PG={}, ALIAS={};
@@ -1323,6 +1570,7 @@ function isDone(day,slot){ const d=DONE(); return !!(d && d[doneKey(day,slot)]);
 function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); const nowDone=!d[k]; if(nowDone) d[k]=true; else delete d[k]; const ded=pantryAdjustForSlot(day,slot,nowDone?1:-1); checkStreak(); save(); if(ded) toast(nowDone?("🧊 "+ded+" Zutat(en) vom Vorrat abgezogen"):"🧊 Vorrat zurückgebucht"); }
 function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
 function dayEaten(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ if(isDone(dayId,e.id)){ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); } }); return t; }
+function dayConsumed(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }   // wie dayEaten, aber ALLE Extras (Drinks/Zusatzmahlzeiten) zählen sofort zum Tagesbedarf
 function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]) || dayExtras(dayId).some(e=>isDone(dayId,e.id)); }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
 /* per-week cheat day: state.weekCheat[weekKey]=dayId|null, with a per-key edit timestamp weekCheatAt[weekKey] so cloud merge converges (last-write-wins). No global fallback — a missing key simply means "no cheat". */
@@ -1946,20 +2194,24 @@ function dayNutriEl(dayId){
   const cheatId=cheatDay();
   const wrap=el("div","daynutri"+(dayId===cheatId?" cheat":"")+(nutriOpen?"":" collapsed"));
   if(dayId===cheatId){ wrap.innerHTML="<div class='dn-cheat'>⚡🍕 Cheat-Day – alles erlaubt</div>"; return wrap; }
-  const eaten=dayEaten(dayId), planned=dayNutrients(dayId), t=targets(), burn=dayBurn(dayId);
-  const freeK=Math.max(0,Math.round(t.kcal-eaten.kcal+burn));   // training burns kcal → more free budget for the day
+  const consumed=dayConsumed(dayId), planned=dayNutrients(dayId), t=targets(), burn=dayBurn(dayId);
+  const budgetK=t.kcal+burn;                                    // Training erhöht das kcal-Budget
+  const freeK=Math.round(budgetK-consumed.kcal);               // kann negativ sein → über dem Ziel
+  const overK=consumed.kcal>budgetK;
+  const hasIntake=consumed.kcal>0;
   if(!nutriOpen){
-    wrap.innerHTML="<button class='dn-head' type='button'><span class='dn-lbl'>📊 Nährwerte"+((anyDone(dayId)||burn)?" · frei "+freeK+" kcal":"")+(burn?" 🏋️":"")+"</span><span class='dn-chev'>▸</span></button>";
+    wrap.innerHTML="<button class='dn-head' type='button'><span class='dn-lbl'>📊 Nährwerte"+((hasIntake||burn)?" · "+(overK?"<span class='dn-red'>"+(-freeK)+" kcal über Ziel</span>":"frei "+Math.max(0,freeK)+" kcal"):"")+(burn?" 🏋️":"")+"</span><span class='dn-chev'>▸</span></button>";
   } else {
     const bars=["protein","carbs","fat","fiber"].map(k=>{
-      const pct=t[k]?Math.min(100,Math.round(eaten[k]/t[k]*100)):0;
-      const ok=t[k] && eaten[k]>=t[k]*0.9;
-      const free=Math.max(0,Math.round((t[k]||0)-eaten[k]));
-      return "<div class='dn-b'><span class='dn-lab'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free'>"+free+" g frei</span></div>";
+      const over=!!(t[k] && consumed[k]>t[k]);
+      const pct=t[k]?Math.min(100,Math.round(consumed[k]/t[k]*100)):0;
+      const ok=t[k] && !over && consumed[k]>=t[k]*0.9;
+      const free=Math.round((t[k]||0)-consumed[k]);
+      return "<div class='dn-b'><span class='dn-lab"+(over?" over":"")+"'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+(over?" over":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free"+(over?" over":"")+"'>"+(over?"+"+(-free)+" g über":free+" g frei")+"</span></div>";
     }).join("");
     wrap.innerHTML=
-      "<button class='dn-head' type='button'><span class='dn-kcal'>Gegessen ≈ "+Math.round(eaten.kcal)+" <small>/ "+Math.round(t.kcal)+" kcal</small></span><span class='dn-chev'>▾</span></button>"+
-      "<div class='dn-free-kcal'>Noch frei heute: <b>"+freeK+" kcal</b></div>"+
+      "<button class='dn-head' type='button'><span class='dn-kcal"+(overK?" over":"")+"'>Aufgenommen ≈ "+Math.round(consumed.kcal)+" <small>/ "+Math.round(t.kcal)+" kcal</small></span><span class='dn-chev'>▾</span></button>"+
+      "<div class='dn-free-kcal"+(overK?" over":"")+"'>"+(overK?"<b>"+(-freeK)+" kcal über dem Ziel</b>":"Noch frei heute: <b>"+Math.max(0,freeK)+" kcal</b>")+"</div>"+
       (burn>0?"<div class='dn-burn'>🏋️ +"+burn+" kcal frei durch Training</div>":"")+
       "<div class='dn-bars'>"+bars+"</div>"+
       "<div class='dn-planned'>Geplant gesamt: "+Math.round(planned.kcal)+" kcal</div>";
@@ -2089,8 +2341,8 @@ function renderPlan(){
       ecard.appendChild(eacts);
       col.appendChild(ecard);
     });
-    const addMeal=el("button","addmeal","＋ Mahlzeit hinzufügen"); addMeal.onclick=()=>openPicker(d.id,null,{extra:true,slotType:"snack"}); col.appendChild(addMeal);
-    const addDrink=el("button","addmeal","🥤 Drink hinzufügen"); addDrink.onclick=()=>openDrinkAdd(d.id); col.appendChild(addDrink);
+    const addMeal=el("button","addmeal","＋ 🍽️ Mahlzeit hinzufügen"); addMeal.onclick=()=>openPicker(d.id,null,{extra:true,slotType:"snack"}); col.appendChild(addMeal);
+    const addDrink=el("button","addmeal","＋ 🥤 Drink hinzufügen"); addDrink.onclick=()=>openDrinkAdd(d.id); col.appendChild(addDrink);
     col.appendChild(waterEl(d.id));
     col.appendChild(trainingEl(d.id));
     const dayCart=el("button","daycartbtn","<span>🛒 Tag in den Wagen</span>"); dayCart.onclick=(e)=>{ const b=e.currentTarget; if(fillCartFromDay(d.id)) animateCartSlide(b); }; col.appendChild(dayCart);
@@ -2317,7 +2569,7 @@ function openPicker(day,slot,opts){
     "<div class='mhead'><h3>"+esc(dn)+" · "+esc(sn)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div id='nutriPanel'></div>"+
-    "<div class='pickactions'><button class='btn' id='scanDishBtn'>📷 Lebensmittel scannen</button><button class='btn' id='customDish'>＋ Eigenes Gericht</button></div>"+
+    "<div class='pickactions'><button class='btn' id='scanDishBtn'>📷 Lebensmittel scannen</button><button class='btn' id='customDish'>＋ Eigenes Gericht (Zutaten)</button></div>"+
     "<input class='searchbox' id='pickSearch' placeholder='Gericht suchen …' autocomplete='off'>"+
     "<label class='togglerow'><input type='checkbox' id='showAll'> Alle Mahlzeiten zeigen (nicht nur "+esc(mealLabel(slotType))+")</label>"+
     "<div class='chips' id='pickDiet'></div>"+
@@ -2349,9 +2601,10 @@ function openPicker(day,slot,opts){
   render();
   $("#customDish").onclick=()=>{
     const nm=($("#pickSearch").value||"").trim();
-    if(!nm){ $("#pickSearch").focus(); toast("Namen oben eingeben"); return; }
-    const id=newId(); state.recipes[id]={id,name:nm,mealType:slotType,steps:"",ing:[]}; assign(id); renderRecipes();
-    toast("Gericht angelegt");
+    const id=newId(); state.recipes[id]={id,name:nm||"Neues Gericht",mealType:slotType,steps:"",goals:[],ing:[]};
+    assign(id); renderRecipes();      // fügt das Gericht dem Tag hinzu + schließt den Picker
+    openRecipeEdit(id);               // direkt alle Zutaten eingeben → Nährwerte werden automatisch berechnet
+    toast("Zutaten eingeben – Nährwerte werden automatisch berechnet");
   };
 }
 
