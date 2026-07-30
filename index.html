@@ -152,6 +152,7 @@ main{padding-top:8px}
 .fscard b{font-size:14px}
 .fazit-score{font-size:34px;font-weight:800;text-align:center;color:var(--brand);margin:2px 0 10px}
 .fazit-score small{font-size:16px;color:var(--muted);font-weight:600}
+.fazit-roast{background:linear-gradient(90deg,rgba(232,98,58,.12),rgba(201,150,43,.12));border:1px solid var(--line);border-radius:11px;padding:10px 13px;margin:0 0 11px;font-size:13.5px;font-style:italic;font-weight:600;color:var(--ink);text-align:center}
 .fazit-list{list-style:none;padding:0;margin:0 0 10px;display:flex;flex-direction:column;gap:6px}
 .fazit-list li{font-size:13.5px;background:var(--chip);border-radius:9px;padding:8px 11px}
 .fazit-tips{background:rgba(63,143,107,.10);border:1px solid var(--line);border-radius:11px;padding:9px 12px;margin-bottom:8px}
@@ -3318,6 +3319,39 @@ function endingMonthDue(){ const now=new Date(), dim=new Date(now.getFullYear(),
 }
 function shiftDays(dstr,n){ const dt=new Date(dstr+"T00:00:00"); dt.setDate(dt.getDate()+n); return dt.getFullYear()+"-"+("0"+(dt.getMonth()+1)).slice(-2)+"-"+("0"+dt.getDate()).slice(-2); }
 /* ---- Tages-Fazit: poppt ab ~21 Uhr einmal am Tag auf, bewertet Nährstoffe/Wasser/Training + Tipps ---- */
+function fazitRoast(o){   // liebevoll-frecher Spruch als Motivation, je nach Schwachstelle
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  if(o.pct>=85) return pick([
+    "Ok Angeber 😎 – heute war fast zu perfekt. Nicht übermütig werden, morgen nochmal!",
+    "Wer bist du und was hast du mit dem Schummler von gestern gemacht? Stark! 👏",
+    "So sauber, da wird sogar dein Waagen-Zeiger neidisch. 🌟"
+  ]);
+  if(o.overK) return pick([
+    "Der Kühlschrank hatte heute Angst vor dir. 😅 Morgen zeigst du ihm, wer der Boss ist!",
+    "Dein Kaloriendefizit ist heute in den Urlaub gefahren – hol es zurück! ✈️",
+    "So viele Kalorien … heimlich das Buffet leergeräumt? Morgen wird gezähmt! 💪"
+  ]);
+  if(o.noSport) return pick([
+    "Die Couch hat heute deine Abdrücke gespeichert. 🛋️ Morgen bewegst du den Hintern!",
+    "Der einzige Sport heute waren Gabel-zum-Mund-Curls? Morgen läuft was! 🏋️",
+    "Dein Sofa sagt danke, dein Körper eher nicht. 😜 Auf geht's morgen!"
+  ]);
+  if(o.waterLow) return pick([
+    "Ein Kaktus trinkt mehr als du heute. 🌵 Morgen: Flasche marsch!",
+    "Deine Nieren funken Durst-SOS. Trink was, du Dörrpflaume! 💧",
+    "So trocken hier – bestehst du zu 90 % aus Chips? Wasser marsch! 😄"
+  ]);
+  if(o.protLow) return pick([
+    "Eiweiß? Kennste? Deine Muskeln hätten heute gern mal Hallo gesagt. 🥚",
+    "So wenig Protein – deine Muskeln machen gerade Homeoffice. Hol sie zurück! 💪",
+    "Deine Gabel hat heute jedes Stück Eiweiß umkurvt. Morgen zielsicherer!"
+  ]);
+  return pick([
+    "War okay – aber ‚okay' baut keine Traumfigur. 😏 Einen Tick mehr morgen!",
+    "Nicht schlecht, Herr/Frau Specht – aber da geht noch was! 🐦",
+    "Heute Durchschnitt, morgen Diva. Leg nach! ✨"
+  ]);
+}
 function openDayFazit(dayId){
   const n=dayNutrients(dayId), t=targets(), burn=dayBurn(dayId);
   const water=waterCount(dayId), wgoal=waterGoalGlasses(), prof=weekProfile();
@@ -3341,9 +3375,11 @@ function openDayFazit(dayId){
   if(wgoal&&water<wgoal) tips.push((wgoal-water)+" Glas Wasser fehlen noch – morgens direkt eine Flasche bereitstellen.");
   if(burn<=0) tips.push("Schon 20–30 Min zügiges Gehen verbrennen ~150–250 kcal.");
   if(dKcal<=0 && protPct>=90 && (!wgoal||water>=wgoal)) tips.push("Perfekt eingehalten – ein paar solcher Tage und dein Ziel rückt näher! 🎯");
+  const roast=fazitRoast({ pct:pct, overK:(prof==="abnehmen"?dKcal>150:Math.abs(dKcal)>budget*0.2), noSport:burn<=0, waterLow:(wgoal&&water<wgoal), protLow:protPct<90 });
   openModal("<div class='mhead'><h3>"+head+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
     "<p class='hint' style='margin-top:0'>Dein Tages-Fazit für "+esc((DAYS.find(d=>d.id===dayId)||{}).name||"heute")+":</p>"+
     "<div class='fazit-score'>"+pct+" <small>%</small></div>"+
+    "<div class='fazit-roast'>"+esc(roast)+"</div>"+
     "<ul class='fazit-list'>"+L.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>"+
     (tips.length?"<div class='fazit-tips'><b>💡 Tipps für morgen</b><ul>"+tips.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul></div>":"")+
     "<p class='hint'>🐥 Dranbleiben lohnt sich: gekochte Tage füllen deine Nugget-Bande.</p>"+
