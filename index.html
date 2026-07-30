@@ -200,8 +200,15 @@ a{color:var(--brand)}
 .profilechip{flex:none;display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px;box-shadow:var(--shadow)}
 .profilechip.set{border-color:var(--brand)}
 .profilechip .dn-chev{color:var(--muted);font-size:11px}
-.planctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 2px 12px}
-.planctrls .profilechip{margin:0}
+.weekcard{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:12px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.weekcard .weekbar{margin:0}
+.wc-goal{display:flex;justify-content:center}
+.wc-goal:empty{display:none}
+.wc-goal .profilechip{margin:0}
+.weekcard #planWeekBtn{padding:12px;font-size:15px}
+.wc-icons{display:flex;justify-content:center;gap:12px}
+.btn.icononly{width:46px;height:40px;padding:0;justify-content:center;font-size:19px}
+.btn.icononly.cheatbtn.on{background:#e8b923;color:#3a2f00;border-color:#e8b923}
 .pickactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
 .pickactions .btn{width:100%}
 .tag.eff-schnell{color:#1f7a3d} .tag.eff-auf{color:#8a6d3b} .tag.eff-mit{color:var(--muted)}
@@ -455,8 +462,16 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
   <!-- WOCHENPLAN -->
   <section class="view active" id="view-plan">
     <div class="viewhead"><h2>Wochenplan</h2></div>
-    <div class="planctrls" id="planCtrls"><button class="btn sm primary" id="planWeekBtn">🎯 Woche planen</button><span id="planProfileSlot"></span><button class="btn sm" id="shareWeekBtn">📤 Teilen</button><button class="btn sm cheatbtn" id="cheatBtn">⚡ Cheat-Day</button><button class="btn sm" id="wishBtn">🌟 Wunschgericht</button></div>
-    <div class="weekbar" id="weekBar"></div>
+    <div class="weekcard">
+      <div class="weekbar" id="weekBar"></div>
+      <div class="wc-goal" id="planProfileSlot"></div>
+      <button class="btn primary block" id="planWeekBtn">🎯 Woche planen</button>
+      <div class="wc-icons">
+        <button class="btn sm icononly" id="shareWeekBtn" title="Wochenplan teilen" aria-label="Wochenplan teilen">📤</button>
+        <button class="btn sm icononly cheatbtn" id="cheatBtn" title="Cheat-Day" aria-label="Cheat-Day">⚡</button>
+        <button class="btn sm icononly" id="wishBtn" title="Wunschgericht" aria-label="Wunschgericht">🌟</button>
+      </div>
+    </div>
     <div class="daybar" id="dayBar"></div>
     <div class="weekgrid" id="weekGrid"></div>
   </section>
@@ -857,6 +872,32 @@ const NEW_RECIPES = [
 {"name":"Flammkuchen mit Spinat und Feta","mealType":"abend","goals":["ausgewogen"],"steps":"Flammkuchenteig mit Frischkäse bestreichen, mit Spinat und zerbröseltem Feta belegen und knusprig backen. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Flammkuchenteig","a":120,"u":"g","nutri":{"kcal":280,"protein":8,"carbs":52,"fat":4,"fiber":2}},{"n":"Spinat","a":100,"u":"g"},{"n":"Feta","a":60,"u":"g"},{"n":"Frischkäse","a":50,"u":"g"}]},
 {"name":"Kartoffelpuffer mit Kräuterquark","mealType":"abend","goals":["ausgewogen"],"steps":"Kartoffeln reiben, mit Ei und Zwiebel mischen und als Puffer goldbraun braten. Magerquark mit Kräutern verrühren und dazu servieren. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Kartoffeln","a":250,"u":"g"},{"n":"Ei (ganzes Hühnerei)","a":1,"u":"Stk"},{"n":"Magerquark","a":200,"u":"g"},{"n":"Zwiebel","a":30,"u":"g"}]},
 {"name":"Spinatknödel mit Parmesan und Salat","mealType":"abend","goals":["ausgewogen"],"steps":"Spinatknödel in siedendem Wasser garen. Mit zerlassener Butter und Parmesan anrichten, dazu ein Salat. Abschmecken und entsprechend nach Geschmack würzen.","ing":[{"n":"Spinatknödel","a":200,"u":"g","nutri":{"kcal":180,"protein":6,"carbs":28,"fat":4,"fiber":2}},{"n":"Parmesan","a":30,"u":"g"},{"n":"Salat","a":100,"u":"g"},{"n":"Butter","a":10,"u":"g"}]},
+
+{"name":"Eiskaffee","kind":"drink","drinkCat":"kaffee","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Eiskaffee","a":250,"u":"ml","nutri":{"kcal":80,"protein":2,"carbs":9,"fat":4,"fiber":0}}]},
+{"name":"Bier (Pils)","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Bier (Pils)","a":330,"u":"ml","nutri":{"kcal":43,"protein":0.5,"carbs":3.6,"fat":0,"fiber":0}}]},
+{"name":"Weizenbier","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Weizenbier","a":500,"u":"ml","nutri":{"kcal":43,"protein":0.5,"carbs":3.8,"fat":0,"fiber":0}}]},
+{"name":"Radler","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Radler","a":500,"u":"ml","nutri":{"kcal":40,"protein":0.3,"carbs":5,"fat":0,"fiber":0}}]},
+{"name":"Rotwein","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Rotwein","a":150,"u":"ml","nutri":{"kcal":85,"protein":0.1,"carbs":2.6,"fat":0,"fiber":0}}]},
+{"name":"Weißwein","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Weißwein","a":150,"u":"ml","nutri":{"kcal":82,"protein":0.1,"carbs":2.6,"fat":0,"fiber":0}}]},
+{"name":"Sekt / Prosecco","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Sekt / Prosecco","a":100,"u":"ml","nutri":{"kcal":80,"protein":0.2,"carbs":1.5,"fat":0,"fiber":0}}]},
+{"name":"Aperol Spritz","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Aperol Spritz","a":200,"u":"ml","nutri":{"kcal":90,"protein":0,"carbs":10,"fat":0,"fiber":0}}]},
+{"name":"Gin Tonic","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Gin Tonic","a":250,"u":"ml","nutri":{"kcal":70,"protein":0,"carbs":7,"fat":0,"fiber":0}}]},
+{"name":"Mojito","kind":"drink","drinkCat":"alk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mojito","a":200,"u":"ml","nutri":{"kcal":120,"protein":0,"carbs":14,"fat":0,"fiber":0}}]},
+{"name":"Wasser","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Wasser","a":250,"u":"ml","nutri":{"kcal":0,"protein":0,"carbs":0,"fat":0,"fiber":0}}]},
+{"name":"Mineralwasser","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Mineralwasser","a":250,"u":"ml","nutri":{"kcal":0,"protein":0,"carbs":0,"fat":0,"fiber":0}}]},
+{"name":"Apfelschorle","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Apfelschorle","a":300,"u":"ml","nutri":{"kcal":24,"protein":0,"carbs":6,"fat":0,"fiber":0}}]},
+{"name":"Saftschorle","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Saftschorle","a":300,"u":"ml","nutri":{"kcal":25,"protein":0.2,"carbs":6,"fat":0,"fiber":0}}]},
+{"name":"Orangensaft","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Orangensaft","a":200,"u":"ml","nutri":{"kcal":45,"protein":0.7,"carbs":10,"fat":0.2,"fiber":0.2}}]},
+{"name":"Apfelsaft","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Apfelsaft","a":200,"u":"ml","nutri":{"kcal":46,"protein":0.1,"carbs":11,"fat":0,"fiber":0.1}}]},
+{"name":"Cola","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Cola","a":330,"u":"ml","nutri":{"kcal":42,"protein":0,"carbs":10.6,"fat":0,"fiber":0}}]},
+{"name":"Cola Zero","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Cola Zero","a":330,"u":"ml","nutri":{"kcal":0.3,"protein":0,"carbs":0,"fat":0,"fiber":0}}]},
+{"name":"Limonade","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Limonade","a":330,"u":"ml","nutri":{"kcal":38,"protein":0,"carbs":9,"fat":0,"fiber":0}}]},
+{"name":"Eistee","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Eistee","a":330,"u":"ml","nutri":{"kcal":30,"protein":0,"carbs":7,"fat":0,"fiber":0}}]},
+{"name":"Schwarzer Tee (ungesüßt)","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Schwarzer Tee (ungesüßt)","a":250,"u":"ml","nutri":{"kcal":1,"protein":0,"carbs":0.3,"fat":0,"fiber":0}}]},
+{"name":"Grüner Tee","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Grüner Tee","a":250,"u":"ml","nutri":{"kcal":1,"protein":0,"carbs":0.2,"fat":0,"fiber":0}}]},
+{"name":"Kräutertee","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Kräutertee","a":250,"u":"ml","nutri":{"kcal":1,"protein":0,"carbs":0.2,"fat":0,"fiber":0}}]},
+{"name":"Heiße Schokolade","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Heiße Schokolade","a":250,"u":"ml","nutri":{"kcal":80,"protein":3,"carbs":11,"fat":2.5,"fiber":1}}]},
+{"name":"Smoothie","kind":"drink","drinkCat":"unalk","mealType":"snack","goals":[],"steps":"","ing":[{"n":"Smoothie","a":250,"u":"ml","nutri":{"kcal":55,"protein":1,"carbs":12,"fat":0.3,"fiber":1.5}}]},
 ];
 
 const NUTRI={}, UNIT_G={}, CATALOG={}, FOOD_LABELS={}, FOOD_HEALTHY={}, FOOD_PG={}, ALIAS={};
@@ -1031,7 +1072,7 @@ function lockSet(dayId){ const s=new Set(); const w=state.weekLocks&&state.weekL
 function setLock(dayId,slot,on){ if(!state.weekLocks) state.weekLocks={}; if(!state.weekLocks[uiWeek]) state.weekLocks[uiWeek]={}; if(!state.weekLocks[uiWeek][dayId]) state.weekLocks[uiWeek][dayId]={}; if(on) state.weekLocks[uiWeek][dayId][slot]=true; else delete state.weekLocks[uiWeek][dayId][slot]; }
 /* ---- rebalance a day's non-locked base slots to hit the targets again, keeping manual dishes + extras fixed ---- */
 const BASE_ORDER=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
-function recipesByType(t){ return Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r)); }   // Lebensmittel nie automatisch (auch nicht via rebalanceDay)
+function recipesByType(t){ return Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && !r.kind && r.ing && r.ing.length && recipeAvailable(r)); }   // Lebensmittel nie automatisch (auch nicht via rebalanceDay)
 function weekOrder(){ return weekProfile()==="abnehmen" ? BASE_ORDER.filter(x=>x[0]!=="s2") : BASE_ORDER; }
 function rebalanceDay(dayId){
   if(cheatDay()===dayId) return;                                  // cheat day has no targets
@@ -1117,7 +1158,7 @@ function foodsRichIn(nutrient,n,healthyOnly){
     .sort((a,b)=>NUTRI[b][nutrient]-NUTRI[a][nutrient]).slice(0,n).map(k=>foodLabel(k));
 }
 function recipesRichIn(nutrient,n,mealType){
-  return Object.values(state.recipes).filter(r=>r.kind!=="food" && r.ing.length && recipeAvailable(r) && (!mealType||r.mealType===mealType))
+  return Object.values(state.recipes).filter(r=>!r.kind && r.ing.length && recipeAvailable(r) && (!mealType||r.mealType===mealType))
     .map(r=>({r,v:recipeNutrients(r)[nutrient]})).filter(x=>x.v>0)
     .sort((a,b)=>b.v-a.v).slice(0,n).map(x=>x.r);
 }
@@ -1168,7 +1209,7 @@ function generateWeek(profileId){
   const prof=profile(profileId); const tg=computeTargets(prof.id); const used={}; let recent=[];
   const blockSet=()=>{ const s=new Set(); recent.forEach(st=>st.forEach(id=>s.add(id))); return s; };   // block dishes from the last 2 days → no repeat within any 3-day window
   const cd=cheatDay();
-  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r));   // Lebensmittel (kind:food) werden nie automatisch eingeplant
+  const byType=t=>Object.values(state.recipes).filter(r=>(r.mealType||"snack")===t && !r.kind && r.ing && r.ing.length && recipeAvailable(r));   // Lebensmittel (kind:food) werden nie automatisch eingeplant
   const fullOrder=[["l","mittag"],["d","abend"],["b","fruehstueck"],["s1","snack"],["s2","snack"]];
   const order = prof.id==="abnehmen" ? fullOrder.filter(x=>x[0]!=="s2") : fullOrder; // no 2nd snack for weight loss
   const defs={}; SLOTS.forEach(s=>{ const rid=state.defaults&&state.defaults[s.id]; if(rid && state.recipes[rid] && recipeAvailable(state.recipes[rid])) defs[s.id]=rid; }); // standard meals (always the same)
@@ -1182,7 +1223,9 @@ function generateWeek(profileId){
     if(m && meatLimited){ if(slot!=="l" && slot!=="d") return false; if(!meatDays.has(dayId)) return false; }
     if(f && fishLimited){ if(slot!=="l" && slot!=="d") return false; if(!fishDays.has(dayId)) return false; }
     return true; };
-  const allowFor=(dayId)=>(slot)=>((r)=>{ if(!themeAllows(dayId,slot,r)) return false; return dietAllowedOn(r,dayId,slot); });   // Motto-Tag (veg/fisch/fleisch) hart einhalten
+  const allowFor=(dayId)=>(slot)=>((r)=>{ const th=dayTheme(dayId);
+    if((th==="fish"||th==="fleisch") && slot==="l") return th==="fish"?hasFish(r):hasMeat(r);   // Motto-Mittagsgericht hat Vorrang vor den Wochen-Fleisch/Fisch-Limits
+    if(!themeAllows(dayId,slot,r)) return false; return dietAllowedOn(r,dayId,slot); });
   const np={}; let placed=0;
   const proteinRepair=(dayId,bs)=>{ const tgP=tg.protein; if(!tgP) return;   // ensure the day covers the protein target: swap in higher-protein dishes where possible
     const dayProtein=()=>{ let p=extrasNut(dayId).protein; Object.values(np[dayId]).forEach(rid=>{ const r=rid&&state.recipes[rid]; if(r) p+=recipeNutrients(r).protein; }); return p; };
@@ -1323,12 +1366,15 @@ function openFoodSelect(){
   render();
 }
 
+/* built-in coffees added earlier as kind:"food" → re-tag to Drinks/Kaffee on existing installs (defined before normalizeRecipes which runs at boot) */
+const DRINK_BUILTINS={"Espresso":"kaffee","Schwarzer Kaffee":"kaffee","Cappuccino":"kaffee","Latte Macchiato":"kaffee","Milchkaffee":"kaffee","Flat White":"kaffee","Caffè Latte":"kaffee"};
 function normalizeRecipes(recipes){
   Object.values(recipes||{}).forEach(r=>{
     if(!r.mealType) r.mealType=MEAL_TYPE[r.id]||"snack";
     if(typeof r.steps!=="string") r.steps=STEPS[r.id]||"";
     if(!Array.isArray(r.goals)) r.goals=RECIPE_GOALS[r.id]||["ausgewogen"];
     if(!Array.isArray(r.ing)) r.ing=[];
+    const dc=(typeof DRINK_BUILTINS!=="undefined")&&DRINK_BUILTINS[r.name]; if(dc){ r.kind="drink"; r.drinkCat=dc; }   // eingebaute Kaffees als Drinks führen (auch wenn früher als Lebensmittel gespeichert)
   });
   return recipes;
 }
@@ -1337,11 +1383,11 @@ function normalizeRecipes(recipes){
 function ensureNewRecipes(recipes){
   if(!recipes||typeof recipes!=="object") return recipes;
   if(Object.keys(recipes).some(id=>/^n\d+$/.test(id))) return recipes;
-  NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{})}; });
+  NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{}),...(r.drinkCat?{drinkCat:r.drinkCat}:{})}; });
   return recipes;
 }
 const BUILTIN_BASE=24;   // recipes n1..n24 shipped earlier; only n25+ are topped up for existing users (so their older deletions stick)
-function topUpBuiltins(recipes,deleted){ if(!recipes||typeof recipes!=="object") return; for(let ix=BUILTIN_BASE; ix<NEW_RECIPES.length; ix++){ const id="n"+(ix+1); if(recipes[id]) continue; if(deleted && deleted[id]) continue; const r=NEW_RECIPES[ix]; recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{})}; } }
+function topUpBuiltins(recipes,deleted){ if(!recipes||typeof recipes!=="object") return; for(let ix=BUILTIN_BASE; ix<NEW_RECIPES.length; ix++){ const id="n"+(ix+1); if(recipes[id]) continue; if(deleted && deleted[id]) continue; const r=NEW_RECIPES[ix]; recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{}),...(r.drinkCat?{drinkCat:r.drinkCat}:{})}; } }
 
 /* ---- Seed recipes (amounts per 1 person). i(name,amount,unit) ---- */
 function i(n,a,u){ return {n:n, a:(a===undefined?null:a), u:(u||"")}; }
@@ -1393,7 +1439,8 @@ const SEED_PLAN = {
 function defaultRewards(){ return { nuggets:[], goldCount:0, streakBest:0, awardedStreaks:[], lastWeighMonth:null, dropDays:{}, aquaCount:0 }; }
 function seedState(){
   const recipes={}; SEED_RECIPES.forEach(r=>recipes[r.id]={id:r.id,name:r.name,mealType:MEAL_TYPE[r.id]||"snack",steps:STEPS[r.id]||"",goals:["ausgewogen"],ing:r.ing.map(x=>({...x}))});
-  NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{})}; });
+  NEW_RECIPES.forEach((r,ix)=>{ const id="n"+(ix+1); recipes[id]={id,name:r.name,mealType:r.mealType||"snack",steps:r.steps||"",goals:Array.isArray(r.goals)?r.goals.slice():[],ing:r.ing.map(x=>({...x})),...(r.kind?{kind:r.kind}:{}),...(r.drinkCat?{drinkCat:r.drinkCat}:{})}; });
+  normalizeRecipes(recipes);   // u. a. eingebaute Kaffees als Drinks taggen
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
   const ck=currentMondayStr();
   return {persons:4, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, deletedBuiltins:{}, pantry:[], meatPerWeek:-1, fishPerWeek:-1,
@@ -1713,7 +1760,7 @@ function renderPlan(){
     }
   }
   const abnehmenWeek = weekProfile()==="abnehmen";
-  const cb=$("#cheatBtn"); if(cb){ const cd0=cheatDay(); const dd=cd0?DAYS.find(x=>x.id===cd0):null; cb.innerHTML=dd?("⚡ "+esc(dd.short)+" 🍕"):"⚡ Cheat-Day"; cb.classList.toggle("on",!!cd0); }
+  const cb=$("#cheatBtn"); if(cb){ const cd0=cheatDay(); const dd=cd0?DAYS.find(x=>x.id===cd0):null; cb.innerHTML=dd?"⚡🍕":"⚡"; cb.title=dd?("Cheat-Day: "+dd.name):"Cheat-Day festlegen"; cb.classList.toggle("on",!!cd0); }
   const bar=$("#dayBar"); bar.innerHTML="";
   DAYS.forEach(d=>{
     const cheat=d.id===cheatDay();
@@ -1761,39 +1808,52 @@ function renderPlan(){
   });
 }
 
-let recipeFilter="all", recipeDiet="all", recipeKind="dish", recipeEffortF="all";
+let recipeFilter="all", recipeDiet="all", recipeKind="dish", recipeEffortF="all", drinkFilter="all";
 const EFFORT_OPTS=[{id:"all",label:"Alle"},{id:"schnell",label:"⏱️ Schnell"},{id:"mittel",label:"🍳 Mittel"},{id:"aufwendig",label:"🕐 Aufwendig"}];
 const EFFORT_LABEL={schnell:"⏱️ schnell",mittel:"🍳 mittel",aufwendig:"🕐 aufwendig"};
+const DRINK_CATS=[{id:"all",label:"Alle"},{id:"kaffee",label:"☕ Kaffee"},{id:"alk",label:"🍷 Alkoholisch"},{id:"unalk",label:"🥤 Alkoholfrei"}];
+const DRINK_CAT_META={kaffee:{e:"☕",l:"Kaffee"},alk:{e:"🍷",l:"Alkoholisch"},unalk:{e:"🥤",l:"Alkoholfrei"}};
 function scanFoodToLibrary(){ openScanner(prod=>{ const id=makeFoodFromProduct(prod); save(); renderRecipes(); toast("🏷️ „"+prod.name+"“ zur Bibliothek hinzugefügt"); openRecipeEdit(id); }, null, "✓ In Bibliothek speichern"); }
 function renderRecipes(){
-  const foodMode = recipeKind==="food";
+  const foodMode = recipeKind==="food", drinkMode = recipeKind==="drink", special = foodMode||drinkMode;
   const q=($("#recipeSearch").value||"").toLowerCase().trim();
-  // Gerichte / Lebensmittel Umschalter
+  // Gerichte / Lebensmittel / Drinks Umschalter
   const kt=$("#recipeKindTabs");
-  if(kt){ kt.innerHTML=""; [{id:"dish",label:"🍽️ Gerichte"},{id:"food",label:"🏷️ Lebensmittel"}].forEach(m=>{ const b=el("button","kindtab"+(recipeKind===m.id?" active":""),esc(m.label)); b.onclick=()=>{ recipeKind=m.id; renderRecipes(); }; kt.appendChild(b); }); }
-  const nb=$("#newRecipeBtn"); if(nb) nb.textContent = foodMode? "＋ Neu" : "＋ Neu";
-  const sb=$("#recipeSearch"); if(sb) sb.placeholder = foodMode? "Lebensmittel suchen …" : "Rezept suchen …";
-  // Diät-Filter nur bei Gerichten; Mahlzeit-Filter nur bei Gerichten; Abwählen-Button nur bei Gerichten
+  if(kt){ kt.innerHTML=""; [{id:"dish",label:"🍽️ Gerichte"},{id:"food",label:"🏷️ Lebensmittel"},{id:"drink",label:"🥤 Drinks"}].forEach(m=>{ const b=el("button","kindtab"+(recipeKind===m.id?" active":""),esc(m.label)); b.onclick=()=>{ recipeKind=m.id; renderRecipes(); }; kt.appendChild(b); }); }
+  const sb=$("#recipeSearch"); if(sb) sb.placeholder = drinkMode?"Drink suchen …":foodMode?"Lebensmittel suchen …":"Rezept suchen …";
+  // Diät-/Aufwand-/Abwählen nur bei Gerichten; die Mahlzeit-Zeile wird bei Drinks zur Rubrik-Zeile
   const df=$("#recipeDietFilter");
-  if(df){ df.style.display=foodMode?"none":""; df.innerHTML=""; if(!foodMode) DIET_OPTS.forEach(m=>{ const c=el("button","chip diet"+(recipeDiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeDiet=m.id; renderRecipes(); }; df.appendChild(c); }); }
+  if(df){ df.style.display=special?"none":""; df.innerHTML=""; if(!special) DIET_OPTS.forEach(m=>{ const c=el("button","chip diet"+(recipeDiet===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeDiet=m.id; renderRecipes(); }; df.appendChild(c); }); }
   const fc=$("#recipeFilter");
-  if(fc){ fc.style.display=foodMode?"none":""; fc.innerHTML=""; if(!foodMode) [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{ const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); }; fc.appendChild(c); }); }
+  if(fc){ fc.style.display=foodMode?"none":""; fc.innerHTML="";
+    if(drinkMode) DRINK_CATS.forEach(m=>{ const c=el("button","chip"+(drinkFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ drinkFilter=m.id; renderRecipes(); }; fc.appendChild(c); });
+    else if(!foodMode) [{id:"all",label:"Alle"}].concat(MEAL_TYPES).forEach(m=>{ const c=el("button","chip"+(recipeFilter===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeFilter=m.id; renderRecipes(); }; fc.appendChild(c); }); }
   const ec=$("#recipeEffortFilter");
-  if(ec){ ec.style.display=foodMode?"none":""; ec.innerHTML=""; if(!foodMode) EFFORT_OPTS.forEach(m=>{ const c=el("button","chip"+(recipeEffortF===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeEffortF=m.id; renderRecipes(); }; ec.appendChild(c); }); }
-  const fb=$("#recipeFoodBtn"); if(fb) fb.style.display=foodMode?"none":"";
-  // Scan-Leiste nur bei Lebensmitteln
+  if(ec){ ec.style.display=special?"none":""; ec.innerHTML=""; if(!special) EFFORT_OPTS.forEach(m=>{ const c=el("button","chip"+(recipeEffortF===m.id?" active":""),esc(m.label)); c.onclick=()=>{ recipeEffortF=m.id; renderRecipes(); }; ec.appendChild(c); }); }
+  const fb=$("#recipeFoodBtn"); if(fb) fb.style.display=special?"none":"";
   const bar=$("#recipeFoodBar"); if(bar){ bar.innerHTML=""; if(foodMode){ const scan=el("button","btn block primary","📷 Lebensmittel scannen"); scan.style.margin="0 0 10px"; scan.onclick=scanFoodToLibrary; bar.appendChild(scan); } }
   const list=$("#recipeList"); list.innerHTML="";
-  let rs=Object.values(state.recipes).filter(r=> (foodMode?isFood(r):!isFood(r)) && (!q||r.name.toLowerCase().includes(q)));
-  if(!foodMode && recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
-  if(!foodMode && recipeDiet!=="all") rs=rs.filter(r=>dietMatch(r,recipeDiet));
-  if(!foodMode && recipeEffortF!=="all") rs=rs.filter(r=>recipeEffort(r)===recipeEffortF);
+  let rs=Object.values(state.recipes).filter(r=> (drinkMode?isDrink(r):foodMode?isFood(r):(!isFood(r)&&!isDrink(r))) && (!q||r.name.toLowerCase().includes(q)));
+  if(drinkMode && drinkFilter!=="all") rs=rs.filter(r=>(r.drinkCat||"unalk")===drinkFilter);
+  if(!special && recipeFilter!=="all") rs=rs.filter(r=>(r.mealType||"snack")===recipeFilter);
+  if(!special && recipeDiet!=="all") rs=rs.filter(r=>dietMatch(r,recipeDiet));
+  if(!special && recipeEffortF!=="all") rs=rs.filter(r=>recipeEffort(r)===recipeEffortF);
   rs.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   if(!rs.length){ let msg;
-    if(foodMode){ const anyFood=Object.values(state.recipes).some(isFood); msg="<div class='big'>🏷️</div>"+(anyFood?"Keine Lebensmittel gefunden.":"Noch keine Lebensmittel. Tippe auf »📷 Lebensmittel scannen«, um ein Produkt aufzunehmen."); }
+    if(drinkMode){ msg="<div class='big'>🥤</div>Keine Drinks in dieser Rubrik. Tippe oben rechts auf »＋ Neu«, um einen anzulegen."; }
+    else if(foodMode){ const anyFood=Object.values(state.recipes).some(isFood); msg="<div class='big'>🏷️</div>"+(anyFood?"Keine Lebensmittel gefunden.":"Noch keine Lebensmittel. Tippe auf »📷 Lebensmittel scannen«, um ein Produkt aufzunehmen."); }
     else msg="<div class='big'>📖</div>Keine Rezepte gefunden.";
     list.appendChild(el("div","empty-state",msg)); return; }
   rs.forEach(r=>{
+    if(drinkMode){
+      const kcal=Math.round(recipeNutrients(r).kcal), dm=DRINK_CAT_META[r.drinkCat]||DRINK_CAT_META.unalk;
+      const g=(r.ing&&r.ing[0]&&r.ing[0].a!=null)?(fmtNum(r.ing[0].a)+" "+(r.ing[0].u||"ml")):"";
+      const row=el("div","rowcard");
+      row.innerHTML="<div class='grow'><div class='title'>"+dm.e+" "+esc(r.name)+"</div><div class='meta'>"+esc(dm.l+(g?" · "+g:""))+"</div></div>"+
+        "<div class='rmeta'><span class='kcaltag'>"+(kcal||0)+" kcal</span></div>";
+      row.onclick=()=>openRecipeEdit(r.id);
+      list.appendChild(row); return;
+    }
     if(foodMode){
       const kcal=Math.round(recipeNutrients(r).kcal);
       // Portion muss zur kcal-Angabe passen: eine Selbst-Zutat → deren Menge; sonst (z. B. umgewandeltes Gericht) die Gesamt-Gramm
@@ -2118,7 +2178,8 @@ function openRecipeEdit(id){
     "<div class='mhead'><h3>Rezept</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
     "<div class='field'><label>Name</label><input class='input' id='rName' value='"+esc(r.name)+"'></div>"+
-    "<div class='field'><label>Art</label><select class='input' id='rKind'><option value='dish'"+(isFood(r)?"":" selected")+">🍽️ Gericht</option><option value='food'"+(isFood(r)?" selected":"")+">🏷️ Lebensmittel</option></select></div>"+
+    "<div class='field'><label>Art</label><select class='input' id='rKind'><option value='dish'"+(!r.kind?" selected":"")+">🍽️ Gericht</option><option value='food'"+(r.kind==="food"?" selected":"")+">🏷️ Lebensmittel</option><option value='drink'"+(r.kind==="drink"?" selected":"")+">🥤 Drink</option></select></div>"+
+    "<div class='field' id='rDrinkCatField'"+(r.kind==="drink"?"":" style='display:none'")+"><label>Drink-Rubrik</label><select class='input' id='rDrinkCat'><option value='kaffee'"+(r.drinkCat==="kaffee"?" selected":"")+">☕ Kaffee</option><option value='alk'"+(r.drinkCat==="alk"?" selected":"")+">🍷 Alkoholisch</option><option value='unalk'"+((!r.drinkCat||r.drinkCat==="unalk")?" selected":"")+">🥤 Alkoholfrei</option></select></div>"+
     "<div class='field'><label>Aufwand</label><select class='input' id='rEffort'><option value=''"+(!r.effort?" selected":"")+">🤖 Automatisch</option><option value='schnell'"+(r.effort==='schnell'?" selected":"")+">⏱️ Schnell</option><option value='mittel'"+(r.effort==='mittel'?" selected":"")+">🍳 Mittel</option><option value='aufwendig'"+(r.effort==='aufwendig'?" selected":"")+">🕐 Aufwendig</option></select></div>"+
     "<div class='field'><label>Kategorie (Mahlzeit)</label><select class='input' id='rType'>"+typeOpts+"</select></div>"+
     "<label style='font-size:12.5px;font-weight:600;color:var(--muted)'>Zutaten (Menge pro 1 Person)</label>"+
@@ -2150,11 +2211,12 @@ function openRecipeEdit(id){
   const bind=(row)=>{ row.querySelector(".del").onclick=()=>{row.remove();updateNutri();}; row.querySelectorAll("input,select").forEach(inp=>inp.addEventListener("input",updateNutri)); };
   $$(".ingrow",ingList).forEach(bind);
   updateNutri();
+  { const rk=$("#rKind"); if(rk) rk.onchange=()=>{ const f=$("#rDrinkCatField"); if(f) f.style.display=(rk.value==="drink")?"":"none"; }; }
   $("#addIng").onclick=()=>{ const d=el("div"); d.innerHTML=ingRow({n:"",a:null,u:"g"}); const row=d.firstChild; ingList.appendChild(row); bind(row); row.querySelector(".nm").focus(); };
   $("#scanIng").onclick=()=>{ persistForm(); save(); openScanner(prod=>{ r.ing.push({n:prod.name,a:100,u:"g",nutri:prod.per100}); save(); openRecipeEdit(id); toast("Zutat übernommen: "+prod.per100.kcal+" kcal / 100 g"); }, ()=>openRecipeEdit(id), "✓ Als Zutat übernehmen"); };
   const refreshAsg=()=>{ const slot=$("#asgSlot").value; const isDef=state.defaults&&state.defaults[slot]===id; const cb=$("#asgDefault"); if(cb) cb.checked=!!isDef; const nt=$("#asgNote"); if(nt) nt.innerHTML=isDef?("⭐ Wird beim automatischen Planen immer als <b>"+esc(SLOT_LABEL2[slot])+"</b> verwendet."):""; };
   $("#asgSlot").onchange=refreshAsg; refreshAsg();
-  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food") r.kind="food"; else delete r.kind; } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } };
+  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } };
   $("#asgBtn").onclick=()=>{ const dayV=$("#asgDay").value, slot=$("#asgSlot").value; persistForm(); ensureWeek(uiWeek);
     const applyDay=(dy)=>{ clearDone(dy,slot); PLAN()[dy][slot]=id; setLock(dy,slot,true); rebalanceDay(dy); };
     if(dayV==="all"){ DAYS.forEach(d=>applyDay(d.id)); } else { applyDay(dayV); uiDay=dayV; }
@@ -2163,7 +2225,7 @@ function openRecipeEdit(id){
   $("#asgDefault").onchange=(e)=>{ const slot=$("#asgSlot").value; if(!state.defaults) state.defaults={}; if(e.target.checked) state.defaults[slot]=id; else if(state.defaults[slot]===id) state.defaults[slot]=null; save(); refreshAsg(); toast(e.target.checked?("⭐ Standard-"+SLOT_LABEL2[slot]+" gesetzt"):"Standard entfernt"); };
   $("#saveRecipe").onclick=()=>{
     const nm=$("#rName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
-    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food") r.kind="food"; else delete r.kind; } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; }
+    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; }
     save(); closeModal(); renderRecipes(); renderPlan();
     toast(isFood(r)?"Lebensmittel gespeichert":"Rezept gespeichert");
   };
@@ -2238,7 +2300,7 @@ function recipeCoverage(r){ if(!r||!Array.isArray(r.ing)) return null;
   return { have, total:real.length, ratio:have/real.length, usesExpiring:exp };
 }
 function pantrySuggestions(n){ const out=[];
-  Object.values(state.recipes).forEach(r=>{ if(isFood(r)||!r.ing||!r.ing.length||!recipeAvailable(r)) return; const c=recipeCoverage(r); if(!c||c.have===0) return; out.push({r,c}); });   // Lebensmittel sind keine Gerichte zum Kochen
+  Object.values(state.recipes).forEach(r=>{ if(r.kind||!r.ing||!r.ing.length||!recipeAvailable(r)) return; const c=recipeCoverage(r); if(!c||c.have===0) return; out.push({r,c}); });   // Lebensmittel/Drinks sind keine Gerichte zum Kochen
   out.sort((a,b)=> (b.c.usesExpiring-a.c.usesExpiring) || (b.c.ratio-a.c.ratio) || (b.c.have-a.c.have));
   return out.slice(0,n||12);
 }
@@ -2253,8 +2315,8 @@ function fillSlotRandom(day,slot){ const type=SLOT_TYPE[slot]||"snack"; let c=re
 function isWish(day,slot){ const w=state.wishes&&state.wishes[uiWeek]; return !!(w&&w[day+"|"+slot]===true); }
 function setWish(day,slot,on){ if(!state.wishes) state.wishes={}; if(!state.wishes[uiWeek]) state.wishes[uiWeek]={}; state.wishes[uiWeek][day+"|"+slot]=!!on; }
 function openWishPicker(){ ensureWeek(uiWeek);
-  let list=Object.values(state.recipes).filter(r=>r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r) && ["abend","mittag"].indexOf(r.mealType||"snack")>=0);
-  if(!list.length) list=Object.values(state.recipes).filter(r=>r.kind!=="food" && r.ing && r.ing.length && recipeAvailable(r));
+  let list=Object.values(state.recipes).filter(r=>!r.kind && r.ing && r.ing.length && recipeAvailable(r) && ["abend","mittag"].indexOf(r.mealType||"snack")>=0);
+  if(!list.length) list=Object.values(state.recipes).filter(r=>!r.kind && r.ing && r.ing.length && recipeAvailable(r));
   list.sort((a,b)=>a.name.localeCompare(b.name,"de"));
   openModal("<div class='mhead'><h3>🌟 Wunschgericht</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'><p class='hint'>Was wünschst du dir diese Woche? Es kommt fest in den Wochenplan (Abendessen).</p><input class='searchbox' id='wishSearch' placeholder='Gericht suchen …' autocomplete='off'><div id='wishList' class='list'></div></div>");
   $("#mX").onclick=closeModal;
@@ -2276,12 +2338,22 @@ function placeWish(rid){ ensureWeek(uiWeek); let target;
 const THEMES=[{id:"",label:"Kein Motto",emoji:""},{id:"veg",label:"Veggie-Tag",emoji:"🌱"},{id:"fish",label:"Fisch-Tag",emoji:"🐟"},{id:"fleisch",label:"Fleisch-Tag",emoji:"🍗"},{id:"pizza",label:"Wunschessen",emoji:"🍕"},{id:"reste",label:"Reste-Tag",emoji:"♻️"}];
 function dayTheme(dayId){ return (state.dayThemes&&state.dayThemes[dayId])||""; }
 /* hard Motto constraint: veg = every slot vegetarian; fish/fleisch = the MAIN slots (Mittag/Abend) must be fish/meat */
-function themeAllows(dayId,slot,r){ const th=dayTheme(dayId); if(th==="veg") return isVeg(r); if(th==="fish"&&(slot==="l"||slot==="d")) return hasFish(r); if(th==="fleisch"&&(slot==="l"||slot==="d")) return hasMeat(r); return true; }
+function themeAllows(dayId,slot,r){ const th=dayTheme(dayId); if(th==="veg") return isVeg(r); if(th==="fish"&&slot==="l") return hasFish(r); if(th==="fleisch"&&slot==="l") return hasMeat(r); return true; }   // fisch/fleisch: das Mittagsgericht ist das Motto-Gericht (mind. eins am Tag)
 function themeMeta(id){ return THEMES.find(t=>t.id===id)||THEMES[0]; }
 function setDayTheme(dayId,t){ if(!state.dayThemes) state.dayThemes={}; if(t) state.dayThemes[dayId]=t; else delete state.dayThemes[dayId]; save(); }
+/* Motto sofort auf den vorhandenen Tag anwenden: nur das Nötige tauschen (kein komplettes Neu-Planen) */
+function applyThemeToDay(dayId){ const th=dayTheme(dayId); if(!th||th==="pizza"||th==="reste") return 0; let changed=0;
+  const swap=(slot,pred)=>{ if(cheatDay()===dayId) return; const cur=PLAN()[dayId][slot], curR=cur?state.recipes[cur]:null; if(curR&&pred(curR)) return;
+    const type=SLOT_TYPE[slot]||"snack"; let c=recipesByType(type).filter(pred); if(!c.length) return;
+    const usedToday=SLOTS.map(s=>PLAN()[dayId][s.id]).filter(Boolean); const fresh=c.filter(r=>usedToday.indexOf(r.id)<0); if(fresh.length) c=fresh;
+    clearDone(dayId,slot); PLAN()[dayId][slot]=c[Math.floor(Math.random()*c.length)].id; setLock(dayId,slot,true); setWish(dayId,slot,false); changed++; };
+  if(th==="veg"){ SLOTS.forEach(s=>{ if(s.id==="s2"&&weekProfile()==="abnehmen")return; swap(s.id,isVeg); }); }
+  else if(th==="fish"){ swap("l",hasFish); }
+  else if(th==="fleisch"){ swap("l",hasMeat); }
+  return changed; }
 function dayThemeEl(dayId){ const t=dayTheme(dayId), m=themeMeta(t); const b=el("button","themechip"+(t?" set":""), t?(m.emoji+" "+esc(m.label)):"+ Motto-Tag"); b.title="Motto-Tag festlegen (gilt jede Woche)"; b.onclick=()=>openThemeChooser(dayId); return b; }
-function openThemeChooser(dayId){ const dn=DAYS.find(d=>d.id===dayId).name; openModal("<div class='mhead'><h3>Motto für "+esc(dn)+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'><p class='hint'>Gilt jede Woche an diesem Wochentag. Der Plan-Generator richtet sich danach.</p>"+THEMES.map(t=>"<button class='btn block theme-pick' data-t='"+t.id+"' style='margin-bottom:8px'>"+(t.emoji?t.emoji+" ":"")+esc(t.label)+"</button>").join("")+"</div>");
-  $("#mX").onclick=closeModal; $$(".theme-pick").forEach(b=>b.onclick=()=>{ setDayTheme(dayId,b.dataset.t); closeModal(); renderPlan(); toast(b.dataset.t?("Motto: "+themeMeta(b.dataset.t).label):"Motto entfernt"); }); }
+function openThemeChooser(dayId){ const dn=DAYS.find(d=>d.id===dayId).name; openModal("<div class='mhead'><h3>Motto für "+esc(dn)+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'><p class='hint'>Gilt jede Woche an diesem Wochentag – der aktuelle Tag wird sofort passend angepasst (z. B. Fisch-Tag = ein Fischgericht mittags).</p>"+THEMES.map(t=>"<button class='btn block theme-pick' data-t='"+t.id+"' style='margin-bottom:8px'>"+(t.emoji?t.emoji+" ":"")+esc(t.label)+"</button>").join("")+"</div>");
+  $("#mX").onclick=closeModal; $$(".theme-pick").forEach(b=>b.onclick=()=>{ setDayTheme(dayId,b.dataset.t); closeModal(); let ch=0; if(b.dataset.t) ch=applyThemeToDay(dayId); save(); renderPlan(); toast(b.dataset.t?("Motto: "+themeMeta(b.dataset.t).label+(ch?" – Tag angepasst":"")):"Motto entfernt"); }); }
 function themeBonus(dayId){ const t=dayTheme(dayId); if(t!=="pizza") return null; return (r)=>/pizza|burger|auflauf|pfanne|nudeln|pasta|lasagne/i.test(r.name)?0.6:0; }   // fisch/fleisch sind harte Filter (themeAllows); pizza nur als Präferenz
 /* week goal-profile quick switch */
 function openProfileSwitcher(){ openModal("<div class='mhead'><h3>Ziel dieser Woche</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+PROFILES.map(p=>"<button class='btn block prof-pick"+(state.weekProfile[uiWeek]===p.id?" primary":"")+"' data-p='"+p.id+"' style='margin-bottom:8px'>"+p.emoji+" "+esc(p.label)+"</button>").join("")+"<p class='hint'>Ändert die Nährwert-Ziele der Woche. Zum kompletten Neuplanen »🎯 Woche planen«.</p></div>");
@@ -2354,14 +2426,16 @@ $("#recipeSearch").addEventListener("input",renderRecipes);
 function createRecipe(){ const id=newId(); state.recipes[id]={id,name:"Neues Rezept",mealType:"snack",steps:"",ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
 /* ---- Lebensmittel (kind:"food"): ein einzelnes Produkt, gespeichert als Rezept mit einer Selbst-Zutat (per-100g nutri) ---- */
 function isFood(r){ return !!(r && r.kind==="food"); }
+function isDrink(r){ return !!(r && r.kind==="drink"); }
 function createFood(){ const id=newId(); state.recipes[id]={id,name:"Neues Lebensmittel",kind:"food",mealType:"snack",steps:"",goals:[],ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
+function createDrink(){ const id=newId(); state.recipes[id]={id,name:"Neuer Drink",kind:"drink",drinkCat:"unalk",mealType:"snack",steps:"",goals:[],ing:[]}; save(); renderRecipes(); openRecipeEdit(id); }
 function makeFoodFromProduct(prod){   // dedup by barcode; returns the recipe id (does NOT save — caller saves)
   const ex=Object.values(state.recipes).find(r=>r&&r.kind==="food"&&prod.code&&r.barcode===prod.code);
   if(ex){ if(!ex.ing||!ex.ing.length){ ex.name=prod.name; ex.ing=[{n:prod.name,a:100,u:"g",nutri:prod.per100}]; } return ex.id; }   // schon vorhanden → wiederverwenden, eigene Änderungen (Name/Nährwerte/Menge) NICHT überschreiben
   const id=newId(); state.recipes[id]={id,name:prod.name,kind:"food",mealType:"snack",barcode:prod.code||null,steps:"",goals:[],ing:[{n:prod.name,a:100,u:"g",nutri:prod.per100}]};
   return id;
 }
-$("#newRecipeBtn").onclick=()=>{ if(recipeKind==="food") createFood(); else createRecipe(); };
+$("#newRecipeBtn").onclick=()=>{ if(recipeKind==="food") createFood(); else if(recipeKind==="drink") createDrink(); else createRecipe(); };
 $("#planWeekBtn").onclick=()=>openWeekChooser();
 $("#shareWeekBtn").onclick=()=>shareWeekPlan();
 $("#wishBtn").onclick=()=>openWishPicker();
