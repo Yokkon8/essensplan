@@ -288,6 +288,17 @@ a{color:var(--brand)}
 .nutriline span{white-space:nowrap}
 .nutriline b{font-variant-numeric:tabular-nums}
 .stepsbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-top:12px}
+.notesbox{background:rgba(201,150,43,.10);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-top:10px}
+.authgate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:22px}
+.authcard{width:100%;max-width:360px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:26px 22px;text-align:center}
+.authlogo{font-size:40px;line-height:1}
+.authcard h2{font-size:22px;margin:8px 0 2px}
+.authsub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.authcard .input{width:100%;margin-bottom:10px;text-align:left;box-sizing:border-box}
+.authmsg{font-size:12.5px;margin-bottom:8px;color:var(--muted);min-height:1px}
+.authmsg.err{color:#d64545;font-weight:600}
+.authswitch{margin-top:12px;background:none;border:0;color:var(--brand);font-weight:600;font-size:13px;cursor:pointer}
+body.gated{overflow:hidden}
 .stepshd{font-weight:700;font-size:13px;margin-bottom:5px}
 .stepstext{font-size:13.5px;line-height:1.5}
 .targets{display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -625,6 +636,19 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 </nav>
 
 <div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
+<div class="authgate" id="authGate" style="display:none">
+  <div class="authcard">
+    <div class="authlogo">🍽️</div>
+    <h2 id="authTitle">Anmelden</h2>
+    <p class="authsub" id="authSub">Bei deinem Familien-Konto anmelden.</p>
+    <div class="authmsg" id="authMsg"></div>
+    <input class="input" id="authUser" placeholder="Benutzername" autocomplete="username" autocapitalize="none" spellcheck="false">
+    <input class="input" id="authPass" type="password" placeholder="Kennwort" autocomplete="current-password">
+    <input class="input" id="authPass2" type="password" placeholder="Kennwort wiederholen" autocomplete="new-password" style="display:none">
+    <button class="btn primary block" id="authSubmit">Anmelden</button>
+    <button class="authswitch" id="authSwitch">Noch kein Konto? Familie registrieren</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2157,14 +2181,13 @@ function openFamilySetup(){
     "<div id='famList'></div>"+
     "<button class='btn block' id='famAdd' style='margin-top:8px'>＋ Mitglied hinzufügen</button>"+
     "<div class='divider'></div>"+
-    "<div class='hh-box'><div class='hh-lbl'>🏠 Haushalt-Code</div><div class='hh-code' id='hhCode'>"+esc(householdId())+"</div>"+
-    "<p class='hint' style='margin-top:4px'>Gib diesen Code an deine Familie weiter. Auf einem anderen Gerät unten auf „Haushalt beitreten“ tippen und den Code eingeben – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Jede Familie hat ihren eigenen Code (keine Anmeldung nötig).</p>"+
-    "<div class='btnrow'><button class='btn sm' id='hhCopy'>📋 Code teilen</button><button class='btn sm ghost' id='hhJoin'>Haushalt beitreten</button><button class='btn sm ghost' id='hhNew'>Neuer Haushalt</button></div></div>"+
+    "<div class='hh-box'><div class='hh-lbl'>👤 Konto</div>"+
+    (isLoggedIn()? "<div class='hh-code'>"+esc((_session&&_session.username)||"angemeldet")+"</div><p class='hint' style='margin-top:4px'>Eure Familie meldet sich auf jedem Gerät mit DIESEM Benutzernamen + Kennwort an – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Andere Familien können eure Daten nicht sehen.</p><div class='btnrow'><button class='btn sm ghost' id='hhLogout'>🚪 Abmelden</button></div>"
+      : "<p class='hint'>Nicht angemeldet – aktuell nur lokal auf diesem Gerät.</p>")+
+    "</div>"+
     "</div>");
   $("#mX").onclick=closeModal;
-  $("#hhCopy").onclick=()=>{ const code=householdId(); if(navigator.share){ navigator.share({title:"Foodies Haushalt-Code",text:code}).catch(()=>{}); } else if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(()=>toast("Code kopiert: "+code)).catch(()=>toast("Dein Code: "+code)); } else { toast("Dein Code: "+code); } };
-  $("#hhJoin").onclick=()=>{ let code=(window.prompt("Haushalt-Code eingeben (von einem anderen Gerät der Familie):")||"").trim().replace(/[^a-zA-Z0-9_-]/g,""); if(!code) return; if(!confirm("Dem Haushalt „"+code+"“ beitreten?\nDie aktuellen Daten DIESES Geräts werden durch den geteilten Haushalt ersetzt.")) return; try{ localStorage.setItem(LS_HOUSE,code); localStorage.removeItem(LS_KEY); }catch(e){} location.reload(); };
-  $("#hhNew").onclick=()=>{ if(!confirm("Neuen eigenen Haushalt starten?\nDeine aktuellen Daten bleiben auf diesem Gerät und werden dem neuen Code zugeordnet.")) return; try{ localStorage.setItem(LS_HOUSE,newHouseholdId()); }catch(e){} location.reload(); };
+  { const lo=$("#hhLogout"); if(lo) lo.onclick=async()=>{ if(!confirm("Abmelden? Du musst dich danach neu anmelden. Eure Familiendaten bleiben in der Cloud gespeichert.")) return; await authLogout(); try{ localStorage.removeItem("foodies_lastUser"); }catch(e){} location.reload(); }; }
   const renderList=()=>{ const l=$("#famList"); if(!l) return; l.innerHTML="";
     if(!state.familyMode){ l.innerHTML="<p class='hint'>Aktiviere den Familienmodus, um Mitglieder anzulegen.</p>"; return; }
     members().forEach(m=>{ const row=el("div","fam-row"); row.innerHTML="<span class='memav'>"+esc(m.emoji||"🙂")+"</span><b class='fam-nm'>"+esc(m.name)+"</b><small>"+esc(goalLabel(m.goal))+"</small>";
@@ -2302,18 +2325,46 @@ function cloudConfig(){
   c.url=c.url.replace(/\/+$/,"");
   return c;
 }
+/* ============================ AUTH (Supabase GoTrue REST + RLS) ============================ */
+const LS_SESSION="foodies_session_v1", AUTH_DOMAIN="@foodies.local";
+let _session=null, _appStarted=false, _refreshing=null;
+function authBase(){ const c=cloudConfig(); return c?c.url:null; }
+function authKey(){ const c=cloudConfig(); return c?c.key:null; }
+function normUser(u){ return String(u||"").trim().toLowerCase().replace(/\s+/g,""); }
+function userToEmail(u){ return normUser(u)+AUTH_DOMAIN; }
+function loadSession(){ try{ const s=JSON.parse(localStorage.getItem(LS_SESSION)); if(s&&s.access_token&&s.refresh_token) return s; }catch(e){} return null; }
+function saveSession(tok){ const u=tok.user||{}; _session={ access_token:tok.access_token, refresh_token:tok.refresh_token, expires_at: Date.now()+((tok.expires_in||3600)*1000)-60000, uid:u.id, username:(u.user_metadata&&u.user_metadata.username)||(_session&&_session.username) }; try{ localStorage.setItem(LS_SESSION,JSON.stringify(_session)); }catch(e){} }
+function clearSession(){ _session=null; try{ localStorage.removeItem(LS_SESSION); }catch(e){} }
+function isLoggedIn(){ return !!(_session&&_session.access_token); }
+function authUid(){ return _session?_session.uid:null; }
+function rowId(){ return authUid(); }
+function authHeader(){ return "Bearer "+((_session&&_session.access_token)||""); }
+async function authFetch(path,body){ const b=authBase(),k=authKey(); if(!b||!k) throw new Error("no-config");
+  const r=await fetch(b+"/auth/v1/"+path,{method:"POST",headers:{apikey:k,"Content-Type":"application/json"},body:JSON.stringify(body)});
+  let j={}; try{ j=await r.json(); }catch(e){}
+  if(!r.ok){ const err=new Error(j.msg||j.error_description||j.error||("HTTP "+r.status)); err.code=String(j.error_code||j.code||j.error||r.status); throw err; } return j; }
+async function authRegister(u,p){ const j=await authFetch("signup",{email:userToEmail(u),password:p,data:{username:normUser(u)}}); if(!j.access_token) throw Object.assign(new Error("no-session"),{code:"email_confirm"}); if(!_session)_session={}; _session.username=normUser(u); saveSession(j); return j; }
+async function authLogin(u,p){ const j=await authFetch("token?grant_type=password",{email:userToEmail(u),password:p}); if(!_session)_session={}; _session.username=normUser(u); saveSession(j); return j; }
+async function authRefresh(){ if(_refreshing) return _refreshing; if(!_session||!_session.refresh_token) return false;   // Single-Flight: bündelt gleichzeitige Refreshes (GoTrue rotiert den Refresh-Token)
+  _refreshing=(async()=>{ try{ const j=await authFetch("token?grant_type=refresh_token",{refresh_token:_session.refresh_token}); saveSession(j); return true; }catch(e){ return false; } })();
+  try{ return await _refreshing; } finally { _refreshing=null; } }
+async function ensureToken(){ if(!_session) return false; if(Date.now()<_session.expires_at) return true; return await authRefresh(); }
+async function authLogout(){ try{ const b=authBase(),k=authKey(); if(b&&k&&_session) await fetch(b+"/auth/v1/logout?scope=local",{method:"POST",headers:{apikey:k,Authorization:"Bearer "+_session.access_token}}); }catch(e){} clearSession(); }   // scope=local: nur dieses Gerät abmelden
+function requireReauth(){ clearSession(); _appStarted=false; try{ clearInterval(polling); }catch(e){} openGate("Bitte melde dich erneut an."); }
 async function cloudGet(){
-  const c=cloudConfig(); if(!c) return null;
-  const r=await fetch(c.url+"/rest/v1/app_state?id=eq."+encodeURIComponent(householdId())+"&select=data,updated_at",
-    {headers:{apikey:c.key,Authorization:"Bearer "+c.key}});
+  const c=cloudConfig(); if(!c||!isLoggedIn()) return null; await ensureToken();
+  const r=await fetch(c.url+"/rest/v1/app_state?id=eq."+encodeURIComponent(rowId())+"&select=data,updated_at",
+    {headers:{apikey:c.key,Authorization:authHeader()}});
+  if(r.status===401){ if(navigator.onLine && !(await authRefresh())) requireReauth(); throw new Error("HTTP 401"); }
   if(!r.ok) throw new Error("HTTP "+r.status);
   const rows=await r.json(); return rows[0]||null;
 }
 async function cloudPush(){
-  const c=cloudConfig(); if(!c) return;
-  const body=[{id:householdId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,familyMode:state.familyMode,members:state.members,attend:state.attend,defaultDiners:state.defaultDiners,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,dayThemes:state.dayThemes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
+  const c=cloudConfig(); if(!c||!isLoggedIn()) return; await ensureToken();
+  const body=[{id:rowId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,familyMode:state.familyMode,members:state.members,attend:state.attend,defaultDiners:state.defaultDiners,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,dayThemes:state.dayThemes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
-    {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
+    {method:"POST",headers:{apikey:c.key,Authorization:authHeader(),"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
+  if(r.status===401){ if(navigator.onLine && !(await authRefresh())) requireReauth(); throw new Error("HTTP 401"); }
   if(!r.ok) throw new Error("HTTP "+r.status);
   let stamp=body[0].updated_at;
   try{ const rows=await r.json(); if(rows&&rows[0]&&rows[0].updated_at) stamp=rows[0].updated_at; }catch(e){}
@@ -2877,6 +2928,7 @@ function openSlotMenu(day,slot){
     NUTR_KEYS.map(k=>"<span><b>"+Math.round(rn[k])+(k==="kcal"?"":" g")+"</b> "+esc(NUTR_META[k].short)+"</span>").join("")+"</div>"+
     (unk.length?"<div class='np-ex' style='margin-top:5px'>⚠︎ Ohne Nährwertdaten (nicht mitgezählt): "+esc(unk.join(", "))+"</div>":"")+"</div>" : "";
   const stepsBlock = r.steps? "<div class='stepsbox'><div class='stepshd'>👩‍🍳 Zubereitung</div><div class='stepstext'>"+esc(r.steps).replace(/\n/g,"<br>")+"</div></div>" : "";
+  const notesBlock = r.notes? "<div class='notesbox'><div class='stepshd'>📝 Meine Notizen</div><div class='stepstext'>"+esc(r.notes).replace(/\n/g,"<br>")+"</div></div>" : "";
   const portionRow = "<div class='personsrow"+(pf!==1?" custom":"")+"'><span class='pr-lbl'>🍽️ Menge <small>"+(pf===1?"Normalportion":esc(fmtPortion(pf)+" Portion"))+"</small></span><span class='pr-step'><button class='pbtn' id='pfMinus' aria-label='weniger'>–</button><span class='pr-val'>"+esc(fmtPortion(pf))+"</span><button class='pbtn' id='pfPlus' aria-label='mehr'>+</button></span></div>";
   const attendRow = (state.familyMode && members().length) ? "<div class='attendrow'><div class='ar-lbl'>👨‍👩‍👧 Wer isst mit?</div><div class='ar-chips' id='attChips'>"+members().map(mm=>{ const on=attendeesFor(day,slot).indexOf(mm.id)>=0; return "<button class='memchip sm"+(on?" on":"")+"' data-m='"+mm.id+"'><span class='memav'>"+esc(mm.emoji||"🙂")+"</span>"+esc(mm.name)+"</button>"; }).join("")+"</div></div>" : "";
   openModal(
@@ -2887,6 +2939,7 @@ function openSlotMenu(day,slot){
     rows+
     nutriSum+
     stepsBlock+
+    notesBlock+
     "<div class='btnrow' style='margin-top:14px'><button class='btn sm "+(isDone(day,slot)?"primary":"")+"' id='doneBtn'>"+(isDone(day,slot)?"👨‍🍳 Gekocht":"Als gekocht markieren")+"</button><button class='btn sm "+(pinned?"primary":"ghost")+"' id='pinDish' title='Bleibt beim Neuplanen erhalten und zählt als 1 Person'>"+(pinned?"📌 Festgestellt":"📌 Festhalten")+"</button><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='rerollDish'>🎲 Zufällig</button><button class='btn sm ghost' id='editDish'>✏️ Zutaten bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
     (r.ing.length?"<div class='mfoot'><button class='btn primary block' id='toCart'>🛒 Ausgewählte in den Einkaufswagen</button></div>":"")
   );
@@ -3047,6 +3100,7 @@ function openRecipeEdit(id){
       "<div class='pb-note' id='asgNote'></div>"+
     "</div>"+
     "<div class='field' style='margin-top:12px'><label>Zubereitung</label><textarea class='input' id='rSteps' rows='5' placeholder='Zubereitungsschritte (eine Zeile pro Schritt) …'>"+esc(r.steps||"")+"</textarea></div>"+
+    "<div class='field' style='margin-top:12px'><label>📝 Meine Notizen</label><textarea class='input' id='rNotes' rows='3' placeholder='Persönliche Notizen – Abwandlungen, Einkaufstipps, was die Familie mag …'>"+esc(r.notes||"")+"</textarea></div>"+
     "</div>"+
     "<div class='mfoot'><button class='btn ghost' id='delRecipe'>Löschen</button><div style='flex:1'></div><button class='btn primary' id='saveRecipe'>Speichern</button></div>");
   $("#mX").onclick=closeModal;
@@ -3083,7 +3137,7 @@ function openRecipeEdit(id){
   $("#scanIng").onclick=()=>{ persistForm(); save(); openScanner(prod=>{ r.ing.push({n:prod.name,a:100,u:"g",nutri:prod.per100}); save(); openRecipeEdit(id); toast("Zutat übernommen: "+prod.per100.kcal+" kcal / 100 g"); }, ()=>openRecipeEdit(id), "✓ Als Zutat übernehmen"); };
   const refreshAsg=()=>{ const slot=$("#asgSlot").value; const isDef=state.defaults&&state.defaults[slot]===id; const cb=$("#asgDefault"); if(cb) cb.checked=!!isDef; const nt=$("#asgNote"); if(nt) nt.innerHTML=isDef?("⭐ Wird beim automatischen Planen immer als <b>"+esc(SLOT_LABEL2[slot])+"</b> verwendet."):""; };
   $("#asgSlot").onchange=refreshAsg; refreshAsg();
-  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } { const nm=readManualNutri(); if(nm) r.nutriM=nm; else delete r.nutriM; } };
+  const persistForm=()=>{ const nm=$("#rName").value.trim(); if(nm) r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; { const nt=$("#rNotes"); if(nt&&nt.value.trim()) r.notes=nt.value; else delete r.notes; } r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } { const nm=readManualNutri(); if(nm) r.nutriM=nm; else delete r.nutriM; } };
   $("#asgBtn").onclick=()=>{ const dayV=$("#asgDay").value, slot=$("#asgSlot").value; persistForm(); ensureWeek(uiWeek);
     const applyDay=(dy)=>{ clearDone(dy,slot); PLAN()[dy][slot]=id; setLock(dy,slot,true); rebalanceDay(dy); };
     if(dayV==="all"){ DAYS.forEach(d=>applyDay(d.id)); } else { applyDay(dayV); uiDay=dayV; }
@@ -3092,7 +3146,7 @@ function openRecipeEdit(id){
   $("#asgDefault").onchange=(e)=>{ const slot=$("#asgSlot").value; if(!state.defaults) state.defaults={}; if(e.target.checked) state.defaults[slot]=id; else if(state.defaults[slot]===id) state.defaults[slot]=null; save(); refreshAsg(); toast(e.target.checked?("⭐ Standard-"+SLOT_LABEL2[slot]+" gesetzt"):"Standard entfernt"); };
   $("#saveRecipe").onclick=()=>{
     const nm=$("#rName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
-    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } { const nm=readManualNutri(); if(nm) r.nutriM=nm; else delete r.nutriM; }
+    r.name=nm; r.mealType=$("#rType").value; r.steps=$("#rSteps").value; { const nt=$("#rNotes"); if(nt&&nt.value.trim()) r.notes=nt.value; else delete r.notes; } r.ing=readRows(); const kv=$("#rKind"); if(kv){ if(kv.value==="food"){ r.kind="food"; delete r.drinkCat; } else if(kv.value==="drink"){ r.kind="drink"; const dc=$("#rDrinkCat"); r.drinkCat=(dc&&dc.value)||"unalk"; } else { delete r.kind; delete r.drinkCat; } } const ev=$("#rEffort"); if(ev){ if(ev.value) r.effort=ev.value; else delete r.effort; } { const nm=readManualNutri(); if(nm) r.nutriM=nm; else delete r.nutriM; }
     save(); closeModal(); renderRecipes(); renderPlan();
     toast(isFood(r)?"Lebensmittel gespeichert":"Rezept gespeichert");
   };
@@ -3673,18 +3727,68 @@ function openBande(){
   $$(".nug-card.own").forEach(b=>b.onclick=()=>toast(b.dataset.n+": »"+b.dataset.q+"«"));
 }
 
-/* ============================ BOOT ============================ */
-setActiveWeek(uiWeek);
-if(state.familyMode && members().length && uiMember!=="all" && !memberById(uiMember)) uiMember="all";   // gelöschtes Mitglied abfangen
-setActiveMember(uiMember);
-rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; persistLocal();   // goldens granted live; monthly Nuggets need the Monats-Check, but award completes once the goal is (later) met
-renderAll();
-setSync(cloudConfig()?"busy":"local");
-if(cloudConfig()){
-  cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; setActiveMember(uiMember); save(); renderAll(); maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); });
-  startPolling();
-} else { maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); }
-setInterval(maybeDayFazit, 300000);   // während die App offen ist, ab 21 Uhr das Tages-Fazit anbieten
+/* ============================ BOOT + Anmeldung-Gate ============================ */
+function startAppSession(){
+  if(_appStarted) return; _appStarted=true;
+  setActiveWeek(uiWeek);
+  if(state.familyMode && members().length && uiMember!=="all" && !memberById(uiMember)) uiMember="all";
+  setActiveMember(uiMember);
+  rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; persistLocal();
+  renderAll();
+  const synced=cloudConfig() && isLoggedIn();
+  setSync(synced?"busy":"local");
+  if(synced){
+    cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; setActiveMember(uiMember); save(); renderAll(); maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); }).catch(()=>{});
+    startPolling();
+  } else { maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); }
+  setInterval(maybeDayFazit, 300000);
+}
+function hardReplaceFromRemote(row){ try{ localStorage.setItem(LS_KEY,JSON.stringify(row.data)); }catch(e){} location.reload(); }
+async function afterAuth(isSignup){
+  const prev=localStorage.getItem("foodies_lastUser"), fresh=(prev!==authUid());
+  try{ localStorage.setItem("foodies_lastUser",authUid()); }catch(e){}
+  if(fresh && !isSignup){                          // fremdes/neues Gerät meldet sich in BESTEHENDES Konto an → Remote autoritativ (keine Seed-Vermischung)
+    try{ await ensureToken(); const row=await cloudGet(); if(row&&row.data){ hardReplaceFromRemote(row); return; } }catch(e){}
+  }
+  startAppSession();                                // Registrierung ODER gleiches Gerät → normaler Pull (leer ⇒ Push = Migration der lokalen Daten)
+}
+let _authMode="login";
+function openGate(msg){ const g=$("#authGate"); if(!g) return; setAuthMode("login"); if(msg) showAuthError(msg); g.style.display="flex"; document.body.classList.add("gated"); const u=$("#authUser"); if(u) setTimeout(()=>{try{u.focus();}catch(e){}},60); }
+function closeGate(){ const g=$("#authGate"); if(g) g.style.display="none"; document.body.classList.remove("gated"); }
+function showAuthError(msg){ const m=$("#authMsg"); if(m){ m.textContent=msg; m.className="authmsg err"; } }
+function setAuthMode(mode){ _authMode=mode; const t=$("#authTitle"),s=$("#authSub"),sub=$("#authSubmit"),sw=$("#authSwitch"),p2=$("#authPass2"),m=$("#authMsg"),pw=$("#authPass");
+  if(m){ m.textContent=""; m.className="authmsg"; } if(p2) p2.value="";
+  if(mode==="signup"){ if(t)t.textContent="Familie registrieren"; if(s)s.textContent="Lege ein Konto für deine Familie an. Merke dir Benutzername + Kennwort gut."; if(sub)sub.textContent="Registrieren"; if(sw)sw.textContent="Schon ein Konto? Anmelden"; if(p2)p2.style.display=""; if(pw)pw.setAttribute("autocomplete","new-password"); }
+  else { if(t)t.textContent="Anmelden"; if(s)s.textContent="Bei deinem Familien-Konto anmelden."; if(sub)sub.textContent="Anmelden"; if(sw)sw.textContent="Noch kein Konto? Familie registrieren"; if(p2)p2.style.display="none"; if(pw)pw.setAttribute("autocomplete","current-password"); }
+}
+function authErrMsg(e,mode){ const c=String((e&&e.code)||"").toLowerCase(), msg=String((e&&e.message)||"").toLowerCase();
+  if(msg.indexOf("failed to fetch")>=0||c==="no-config") return "Keine Verbindung. Bitte Internet prüfen.";
+  if(c.indexOf("email_confirm")>=0||c.indexOf("no-session")>=0) return "Fast fertig – bitte in Supabase die E-Mail-Bestätigung ausschalten (siehe Anleitung), dann nochmal registrieren.";
+  if(c.indexOf("already")>=0||msg.indexOf("already registered")>=0||msg.indexOf("already exists")>=0) return "Diesen Benutzernamen gibt es schon. Bitte anmelden.";
+  if(c.indexOf("invalid_credentials")>=0||msg.indexOf("invalid login")>=0) return "Benutzername oder Kennwort falsch.";
+  if(c.indexOf("email_address_invalid")>=0) return "Benutzername nicht erlaubt – bitte nur Buchstaben/Zahlen verwenden.";
+  if(c.indexOf("weak_password")>=0||msg.indexOf("password should")>=0) return "Kennwort zu kurz (mindestens 8 Zeichen).";
+  if(c.indexOf("signup")>=0 && c.indexOf("disabled")>=0) return "Registrierung ist derzeit deaktiviert.";
+  return (mode==="signup"?"Registrierung":"Anmeldung")+" fehlgeschlagen. Bitte erneut versuchen.";
+}
+async function doAuthSubmit(){
+  const u=($("#authUser").value||"").trim(), p=$("#authPass").value||"", p2=$("#authPass2").value||"";
+  if(!u){ showAuthError("Bitte Benutzernamen eingeben."); return; }
+  if(p.length<8){ showAuthError("Kennwort: mindestens 8 Zeichen."); return; }
+  if(_authMode==="signup" && p!==p2){ showAuthError("Die Kennwörter stimmen nicht überein."); return; }
+  const btn=$("#authSubmit"), lbl=(_authMode==="signup"?"Registrieren":"Anmelden"); if(btn){ btn.disabled=true; btn.textContent="Bitte warten …"; }
+  try{ if(_authMode==="signup") await authRegister(u,p); else await authLogin(u,p); closeGate(); await afterAuth(_authMode==="signup"); }
+  catch(e){ showAuthError(authErrMsg(e,_authMode)); if(btn){ btn.disabled=false; btn.textContent=lbl; } }
+}
+(function wireGate(){ const sw=$("#authSwitch"); if(sw) sw.onclick=()=>setAuthMode(_authMode==="login"?"signup":"login");
+  const submit=$("#authSubmit"); if(submit) submit.onclick=doAuthSubmit;
+  ["#authUser","#authPass","#authPass2"].forEach(id=>{ const inp=$(id); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); doAuthSubmit(); } }); }); })();
+(async function bootAuth(){
+  if(!cloudConfig()){ startAppSession(); return; }   // ohne Cloud kein Login möglich → rein lokal nutzbar
+  _session=loadSession();
+  if(isLoggedIn()){ try{ await ensureToken(); }catch(e){} startAppSession(); }
+  else { openGate(); if(!navigator.onLine) showAuthError("Kein Internet. Zum ersten Anmelden ist einmalig eine Verbindung nötig."); }
+})();
 </script>
 </body>
 </html>
