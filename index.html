@@ -50,6 +50,9 @@ header.top{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,va
 .fam-row .fam-nm{font-size:14px} .fam-row small{color:var(--muted);flex:1}
 .fam-toggle{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;padding:4px 0}
 .emochip{font-size:17px;padding:5px 9px}
+.hh-box{background:var(--chip);border-radius:11px;padding:11px 13px}
+.hh-lbl{font-size:12.5px;font-weight:700;color:var(--muted)}
+.hh-code{font-size:20px;font-weight:800;letter-spacing:1px;font-family:ui-monospace,Menlo,Consolas,monospace;margin:3px 0;color:var(--brand);user-select:all;word-break:break-all}
 .spacer{flex:1}
 .persons{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 6px 4px 12px;box-shadow:var(--shadow)}
 .persons label{font-size:13px;color:var(--muted);white-space:nowrap}
@@ -252,8 +255,11 @@ a{color:var(--brand)}
 .pickactions .btn{width:100%}
 .tag.eff-schnell{color:#1f7a3d} .tag.eff-auf{color:#8a6d3b} .tag.eff-mit{color:var(--muted)}
 .pitem.food{cursor:pointer} .pitem.food .pi-name{color:var(--ink)}
-.instockbadge{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#1f7a3d;background:#e7f4ec;border-radius:999px;padding:1px 8px;vertical-align:middle}
+.instockbadge{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#1f7a3d;background:#e7f4ec;border:0;border-radius:999px;padding:2px 8px;vertical-align:middle}
+.instockbadge.rm{cursor:pointer}
 .cartitem.instock{opacity:.75} .cartitem.instock .cname{color:var(--muted)}
+.cart-pantrybar{display:flex;align-items:center;gap:10px;justify-content:space-between;background:#e7f4ec;border:1px solid #bfe0cd;border-radius:11px;padding:9px 12px;margin-bottom:11px;font-size:13px;color:#1f7a3d}
+.cart-pantrybar b{font-weight:800}
 .slotcard.done{border-left-color:var(--accent)}
 .slotcard.done .slotbtn{color:var(--muted)}
 .water-info{font-size:12px;color:var(--muted);font-weight:500;padding:0 12px}
@@ -2095,7 +2101,10 @@ function seedState(){
 }
 
 /* ============================ STATE ============================ */
-const LS_KEY="foodies_state_v1", LS_CLOUD="foodies_cloud_v1";
+const LS_KEY="foodies_state_v1", LS_CLOUD="foodies_cloud_v1", LS_HOUSE="foodies_household_v1";
+const _hadPriorState=(()=>{ try{ return localStorage.getItem(LS_KEY)!=null; }catch(e){ return false; } })();   // vor dem ersten Speichern erfasst
+function newHouseholdId(){ return "h"+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6); }
+function householdId(){ try{ let h=localStorage.getItem(LS_HOUSE); if(h) return h; h=_hadPriorState?"family":newHouseholdId(); localStorage.setItem(LS_HOUSE,h); return h; }catch(e){ return "family"; } }   // Bestandsnutzer behalten "family", frische Installationen bekommen einen eigenen Haushalt
 let state = load();
 let uiDay = todayDayId();                 // beim Öffnen: aktueller Wochentag
 let uiWeek = currentMondayStr();          // beim Öffnen: aktuelle Woche
@@ -2147,8 +2156,15 @@ function openFamilySetup(){
     "<p class='hint' style='margin-top:2px'>Mehrere Personen mit eigenen Zielen, Ernährungsform &amp; Allergien – ihr kocht trotzdem ein Gericht. Ausgeschaltet = normale Einzel-Ansicht.</p>"+
     "<div id='famList'></div>"+
     "<button class='btn block' id='famAdd' style='margin-top:8px'>＋ Mitglied hinzufügen</button>"+
+    "<div class='divider'></div>"+
+    "<div class='hh-box'><div class='hh-lbl'>🏠 Haushalt-Code</div><div class='hh-code' id='hhCode'>"+esc(householdId())+"</div>"+
+    "<p class='hint' style='margin-top:4px'>Gib diesen Code an deine Familie weiter. Auf einem anderen Gerät unten auf „Haushalt beitreten“ tippen und den Code eingeben – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Jede Familie hat ihren eigenen Code (keine Anmeldung nötig).</p>"+
+    "<div class='btnrow'><button class='btn sm' id='hhCopy'>📋 Code teilen</button><button class='btn sm ghost' id='hhJoin'>Haushalt beitreten</button><button class='btn sm ghost' id='hhNew'>Neuer Haushalt</button></div></div>"+
     "</div>");
   $("#mX").onclick=closeModal;
+  $("#hhCopy").onclick=()=>{ const code=householdId(); if(navigator.share){ navigator.share({title:"Foodies Haushalt-Code",text:code}).catch(()=>{}); } else if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(()=>toast("Code kopiert: "+code)).catch(()=>toast("Dein Code: "+code)); } else { toast("Dein Code: "+code); } };
+  $("#hhJoin").onclick=()=>{ let code=(window.prompt("Haushalt-Code eingeben (von einem anderen Gerät der Familie):")||"").trim().replace(/[^a-zA-Z0-9_-]/g,""); if(!code) return; if(!confirm("Dem Haushalt „"+code+"“ beitreten?\nDie aktuellen Daten DIESES Geräts werden durch den geteilten Haushalt ersetzt.")) return; try{ localStorage.setItem(LS_HOUSE,code); localStorage.removeItem(LS_KEY); }catch(e){} location.reload(); };
+  $("#hhNew").onclick=()=>{ if(!confirm("Neuen eigenen Haushalt starten?\nDeine aktuellen Daten bleiben auf diesem Gerät und werden dem neuen Code zugeordnet.")) return; try{ localStorage.setItem(LS_HOUSE,newHouseholdId()); }catch(e){} location.reload(); };
   const renderList=()=>{ const l=$("#famList"); if(!l) return; l.innerHTML="";
     if(!state.familyMode){ l.innerHTML="<p class='hint'>Aktiviere den Familienmodus, um Mitglieder anzulegen.</p>"; return; }
     members().forEach(m=>{ const row=el("div","fam-row"); row.innerHTML="<span class='memav'>"+esc(m.emoji||"🙂")+"</span><b class='fam-nm'>"+esc(m.name)+"</b><small>"+esc(goalLabel(m.goal))+"</small>";
@@ -2288,14 +2304,14 @@ function cloudConfig(){
 }
 async function cloudGet(){
   const c=cloudConfig(); if(!c) return null;
-  const r=await fetch(c.url+"/rest/v1/app_state?id=eq.family&select=data,updated_at",
+  const r=await fetch(c.url+"/rest/v1/app_state?id=eq."+encodeURIComponent(householdId())+"&select=data,updated_at",
     {headers:{apikey:c.key,Authorization:"Bearer "+c.key}});
   if(!r.ok) throw new Error("HTTP "+r.status);
   const rows=await r.json(); return rows[0]||null;
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c) return;
-  const body=[{id:"family",updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,familyMode:state.familyMode,members:state.members,attend:state.attend,defaultDiners:state.defaultDiners,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,dayThemes:state.dayThemes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:householdId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,familyMode:state.familyMode,members:state.members,attend:state.attend,defaultDiners:state.defaultDiners,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,dayThemes:state.dayThemes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -2697,6 +2713,10 @@ function renderCart(){
   const badge=$("#navCartBadge"); badge.textContent=open; badge.classList.toggle("show",open>0);
   body.innerHTML="";
   if(!n){ body.appendChild(el("div","empty-state","<div class='big'>🛒</div>Dein Einkaufswagen ist leer.<br>Tippe im Wochenplan auf ein Gericht oder nutze »Woche → Wagen«.")); return; }
+  const covered=state.cart.filter(it=>{ const c=pantryCoverForCart(it); return c&&c.full&&!it.checked; });   // vollständig im Vorrat vorhanden
+  if(covered.length){ const bn=el("div","cart-pantrybar"); bn.innerHTML="<span>🧊 <b>"+covered.length+"</b> "+(covered.length===1?"Artikel hast":"Artikel hast")+" du schon im Vorrat</span>";
+    const rm=el("button","btn sm","🗑️ Aus Wagen nehmen"); rm.onclick=()=>{ const removed=covered.map(it=>({it,idx:state.cart.indexOf(it)})).filter(x=>x.idx>=0).sort((a,b)=>b.idx-a.idx); removed.forEach(x=>state.cart.splice(x.idx,1)); save(); renderCart(); toastAction(removed.length+" schon im Vorrat – entfernt","Rückgängig",()=>{ removed.slice().reverse().forEach(x=>state.cart.splice(Math.min(x.idx,state.cart.length),0,x.it)); save(); renderCart(); }); };
+    bn.appendChild(rm); body.appendChild(bn); }
   CATS.forEach(c=>{
     const items=state.cart.filter(x=>x.category===c.id);
     if(!items.length) return;
@@ -2705,12 +2725,13 @@ function renderCart(){
     items.forEach(it=>{
       const idx=state.cart.indexOf(it);
       const cov=pantryCoverForCart(it);
-      const badge=cov?"<span class='instockbadge'>"+(cov.full?"🧊 schon da":"🧊 "+esc(fmtStock(cov.pg))+" da")+"</span>":"";
+      const badge=cov?"<button type='button' class='instockbadge"+(cov.full?" rm":"")+"' title='"+(cov.full?"Schon im Vorrat – antippen zum Entfernen":"Teilweise im Vorrat")+"'>"+(cov.full?"🧊 schon da ✕":"🧊 "+esc(fmtStock(cov.pg))+" da")+"</button>":"";
       const row=el("div","cartitem"+(it.checked?" checked":"")+(cov&&cov.full?" instock":""));
       row.innerHTML="<div class='cname'>"+esc(it.name)+badge+"</div><div class='camt'>"+esc(amtLabel(it.amount,it.unit))+"</div><div class='check'>"+(it.checked?"✓":"")+"</div><button class='xbtn' aria-label='entfernen'>×</button>";
       row.querySelector(".check").onclick=(e)=>{e.stopPropagation();it.checked=!it.checked;save();renderCart();};
       row.querySelector(".cname").onclick=()=>{it.checked=!it.checked;save();renderCart();};
       row.querySelector(".xbtn").onclick=(e)=>{e.stopPropagation();const removed=it;state.cart.splice(idx,1);save();renderCart();toastAction("Entfernt","Rückgängig",()=>{state.cart.splice(Math.min(idx,state.cart.length),0,removed);save();renderCart();});};
+      { const ib=row.querySelector(".instockbadge.rm"); if(ib) ib.onclick=(e)=>{e.stopPropagation(); const i=state.cart.indexOf(it); if(i<0) return; state.cart.splice(i,1); save(); renderCart(); toastAction("Aus Wagen genommen (im Vorrat)","Rückgängig",()=>{ state.cart.splice(Math.min(i,state.cart.length),0,it); save(); renderCart(); }); }; }
       g.appendChild(row);
     });
     body.appendChild(g);
