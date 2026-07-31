@@ -298,7 +298,16 @@ a{color:var(--brand)}
 .authmsg{font-size:12.5px;margin-bottom:8px;color:var(--muted);min-height:1px}
 .authmsg.err{color:#d64545;font-weight:600}
 .authswitch{margin-top:12px;background:none;border:0;color:var(--brand);font-weight:600;font-size:13px;cursor:pointer}
+.authhint{margin-top:12px;font-size:12px;color:var(--muted);text-align:center}
 body.gated{overflow:hidden}
+.fld{display:block;margin-bottom:9px}
+.fld>span{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.ck{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:7px 0;cursor:pointer}
+.ck input{width:17px;height:17px}
+.ad-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.ad-badge{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.ad-badge.admin{background:#e7f0ff;color:#2b6cb0}
+.ad-badge.warn{background:#fdecec;color:#c0392b}
 .stepshd{font-weight:700;font-size:13px;margin-bottom:5px}
 .stepstext{font-size:13.5px;line-height:1.5}
 .targets{display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -646,7 +655,28 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <input class="input" id="authPass" type="password" placeholder="Kennwort" autocomplete="current-password">
     <input class="input" id="authPass2" type="password" placeholder="Kennwort wiederholen" autocomplete="new-password" style="display:none">
     <button class="btn primary block" id="authSubmit">Anmelden</button>
-    <button class="authswitch" id="authSwitch">Noch kein Konto? Familie registrieren</button>
+    <button class="authswitch" id="authSwitch" style="display:none"></button>
+    <p class="authhint" id="authHint">Ein Konto bekommst du von eurem Familien-Admin.</p>
+  </div>
+</div>
+<div class="authgate" id="pwGate" style="display:none">
+  <div class="authcard">
+    <div class="authlogo">🔒</div>
+    <h2 id="pwTitle">Neues Kennwort festlegen</h2>
+    <p class="authsub" id="pwSub">Bitte lege zum ersten Anmelden ein eigenes Kennwort fest.</p>
+    <div class="authmsg" id="pwMsg"></div>
+    <input class="input" id="pwNew" type="password" placeholder="Neues Kennwort (mind. 8 Zeichen)" autocomplete="new-password">
+    <input class="input" id="pwNew2" type="password" placeholder="Neues Kennwort wiederholen" autocomplete="new-password">
+    <button class="btn primary block" id="pwSubmit">Kennwort speichern &amp; loslegen</button>
+    <button class="authswitch" id="pwCancel">Abmelden</button>
+  </div>
+</div>
+<div class="authgate" id="noFamGate" style="display:none">
+  <div class="authcard">
+    <div class="authlogo">👥</div>
+    <h2>Noch keiner Familie zugeordnet</h2>
+    <p class="authsub">Dein Konto ist noch keiner Familie zugewiesen. Bitte wende dich an euren Familien-Admin, damit er dich einer Familie zuordnet.</p>
+    <button class="authswitch" id="noFamLogout">Abmelden</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -2182,11 +2212,15 @@ function openFamilySetup(){
     "<button class='btn block' id='famAdd' style='margin-top:8px'>＋ Mitglied hinzufügen</button>"+
     "<div class='divider'></div>"+
     "<div class='hh-box'><div class='hh-lbl'>👤 Konto</div>"+
-    (isLoggedIn()? "<div class='hh-code'>"+esc((_session&&_session.username)||"angemeldet")+"</div><p class='hint' style='margin-top:4px'>Eure Familie meldet sich auf jedem Gerät mit DIESEM Benutzernamen + Kennwort an – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Andere Familien können eure Daten nicht sehen.</p><div class='btnrow'><button class='btn sm ghost' id='hhLogout'>🚪 Abmelden</button></div>"
+    (isLoggedIn()? "<div class='hh-code'>"+esc((_session&&_session.username)||"angemeldet")+"</div><p class='hint' style='margin-top:4px'>Eure Familie meldet sich auf jedem Gerät mit DIESEM Benutzernamen + Kennwort an – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Andere Familien können eure Daten nicht sehen.</p>"+
+        (isAdmin()? "<div class='btnrow'><button class='btn sm primary' id='adminOpen'>🛠️ Benutzer verwalten</button></div>":"")+
+        "<div class='btnrow'><button class='btn sm ghost' id='hhChgPw'>🔑 Kennwort ändern</button><button class='btn sm ghost' id='hhLogout'>🚪 Abmelden</button></div>"
       : "<p class='hint'>Nicht angemeldet – aktuell nur lokal auf diesem Gerät.</p>")+
     "</div>"+
     "</div>");
   $("#mX").onclick=closeModal;
+  { const ao=$("#adminOpen"); if(ao) ao.onclick=openAdminPanel; }
+  { const cp=$("#hhChgPw"); if(cp) cp.onclick=()=>{ closeModal(); openPwGate(true); }; }
   { const lo=$("#hhLogout"); if(lo) lo.onclick=async()=>{ if(!confirm("Abmelden? Du musst dich danach neu anmelden. Eure Familiendaten bleiben in der Cloud gespeichert.")) return; await authLogout(); try{ localStorage.removeItem("foodies_lastUser"); }catch(e){} location.reload(); }; }
   const renderList=()=>{ const l=$("#famList"); if(!l) return; l.innerHTML="";
     if(!state.familyMode){ l.innerHTML="<p class='hint'>Aktiviere den Familienmodus, um Mitglieder anzulegen.</p>"; return; }
@@ -2337,8 +2371,14 @@ function saveSession(tok){ const u=tok.user||{}; _session={ access_token:tok.acc
 function clearSession(){ _session=null; try{ localStorage.removeItem(LS_SESSION); }catch(e){} }
 function isLoggedIn(){ return !!(_session&&_session.access_token); }
 function authUid(){ return _session?_session.uid:null; }
-function rowId(){ return authUid(); }
 function authHeader(){ return "Bearer "+((_session&&_session.access_token)||""); }
+/* --- JWT-Claims lesen (family_id/is_admin stehen im app_metadata, tamper-sicher) --- */
+function decodeJwt(t){ try{ const p=String(t||"").split("."); if(p.length<2) return null; let b=p[1].replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4) b+="="; const json=decodeURIComponent(atob(b).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")); return JSON.parse(json); }catch(e){ return null; } }
+function jwtClaims(){ return (_session&&_session.access_token)?(decodeJwt(_session.access_token)||{}):{}; }
+function familyId(){ const c=jwtClaims(); return (c.app_metadata&&c.app_metadata.family_id)||null; }
+function isAdmin(){ const c=jwtClaims(); return !!(c.app_metadata&&c.app_metadata.is_admin===true); }
+function mustChangePw(){ const c=jwtClaims(); return !!(c.user_metadata&&c.user_metadata.must_change_password===true); }
+function rowId(){ return familyId(); }   // Datenzeile = Familie (nicht mehr die User-UUID)
 async function authFetch(path,body){ const b=authBase(),k=authKey(); if(!b||!k) throw new Error("no-config");
   const r=await fetch(b+"/auth/v1/"+path,{method:"POST",headers:{apikey:k,"Content-Type":"application/json"},body:JSON.stringify(body)});
   let j={}; try{ j=await r.json(); }catch(e){}
@@ -2349,11 +2389,17 @@ async function authRefresh(){ if(_refreshing) return _refreshing; if(!_session||
   _refreshing=(async()=>{ try{ const j=await authFetch("token?grant_type=refresh_token",{refresh_token:_session.refresh_token}); saveSession(j); return true; }catch(e){ return false; } })();
   try{ return await _refreshing; } finally { _refreshing=null; } }
 async function ensureToken(){ if(!_session) return false; if(Date.now()<_session.expires_at) return true; return await authRefresh(); }
+async function authUserPut(body){ const b=authBase(),k=authKey(); if(!b||!k) throw new Error("no-config"); await ensureToken();   // PUT /auth/v1/user – Kennwort oder user_metadata aktualisieren
+  const r=await fetch(b+"/auth/v1/user",{method:"PUT",headers:{apikey:k,"Content-Type":"application/json",Authorization:authHeader()},body:JSON.stringify(body)});
+  let j={}; try{ j=await r.json(); }catch(e){}
+  if(!r.ok){ const err=new Error(j.msg||j.error_description||j.error||("HTTP "+r.status)); err.code=String(j.error_code||j.code||j.error||r.status); throw err; } return j; }
+async function authUpdatePassword(pw){ return await authUserPut({password:pw}); }
 async function authLogout(){ try{ const b=authBase(),k=authKey(); if(b&&k&&_session) await fetch(b+"/auth/v1/logout?scope=local",{method:"POST",headers:{apikey:k,Authorization:"Bearer "+_session.access_token}}); }catch(e){} clearSession(); }   // scope=local: nur dieses Gerät abmelden
 function requireReauth(){ clearSession(); _appStarted=false; try{ clearInterval(polling); }catch(e){} openGate("Bitte melde dich erneut an."); }
 async function cloudGet(){
   const c=cloudConfig(); if(!c||!isLoggedIn()) return null; await ensureToken();
-  const r=await fetch(c.url+"/rest/v1/app_state?id=eq."+encodeURIComponent(rowId())+"&select=data,updated_at",
+  const fid=rowId(); if(!fid){ throw new Error("no-family"); }   // Konto ohne Familie: nicht mit leerer id synchronisieren
+  const r=await fetch(c.url+"/rest/v1/app_state?id=eq."+encodeURIComponent(fid)+"&select=data,updated_at",
     {headers:{apikey:c.key,Authorization:authHeader()}});
   if(r.status===401){ if(navigator.onLine && !(await authRefresh())) requireReauth(); throw new Error("HTTP 401"); }
   if(!r.ok) throw new Error("HTTP "+r.status);
@@ -3744,13 +3790,118 @@ function startAppSession(){
   setInterval(maybeDayFazit, 300000);
 }
 function hardReplaceFromRemote(row){ try{ localStorage.setItem(LS_KEY,JSON.stringify(row.data)); }catch(e){} location.reload(); }
-async function afterAuth(isSignup){
-  const prev=localStorage.getItem("foodies_lastUser"), fresh=(prev!==authUid());
-  try{ localStorage.setItem("foodies_lastUser",authUid()); }catch(e){}
-  if(fresh && !isSignup){                          // fremdes/neues Gerät meldet sich in BESTEHENDES Konto an → Remote autoritativ (keine Seed-Vermischung)
+async function afterAuth(){
+  const fid=rowId(), prev=localStorage.getItem("foodies_lastUser"), fresh=(prev!==fid);
+  try{ localStorage.setItem("foodies_lastUser",fid||""); }catch(e){}
+  if(fresh){                                        // fremdes/neues Gerät ODER andere Familie meldet sich an → Remote autoritativ (keine Seed-Vermischung)
     try{ await ensureToken(); const row=await cloudGet(); if(row&&row.data){ hardReplaceFromRemote(row); return; } }catch(e){}
   }
-  startAppSession();                                // Registrierung ODER gleiches Gerät → normaler Pull (leer ⇒ Push = Migration der lokalen Daten)
+  startAppSession();                                // gleiches Gerät/Familie → normaler Pull (leer ⇒ Push = Migration der lokalen Daten)
+}
+async function afterLogin(){                         // gemeinsame Reihenfolge nach erfolgreichem Login (Boot + Formular): Familie? → Zwangs-Kennwort? → App
+  try{ await ensureToken(); }catch(e){}
+  if(!rowId()){ openNoFamGate(); return; }
+  if(mustChangePw()){ openPwGate(); return; }
+  await afterAuth();
+}
+function openNoFamGate(){ closeGate(); const g=$("#noFamGate"); if(g) g.style.display="flex"; document.body.classList.add("gated"); }
+let _pwVoluntary=false;
+function openPwGate(voluntary){ _pwVoluntary=!!voluntary; closeGate(); const g=$("#pwGate"); if(!g) return;
+  const t=$("#pwTitle"),s=$("#pwSub"),c=$("#pwCancel");
+  if(t) t.textContent=voluntary?"Kennwort ändern":"Neues Kennwort festlegen";
+  if(s) s.textContent=voluntary?"Wähle ein neues Kennwort für dein Konto.":"Bitte lege zum ersten Anmelden ein eigenes Kennwort fest.";
+  if(c) c.textContent=voluntary?"Abbrechen":"Abmelden";
+  const m=$("#pwMsg"); if(m){ m.textContent=""; m.className="authmsg"; } const a=$("#pwNew"),b=$("#pwNew2"); if(a)a.value=""; if(b)b.value="";
+  g.style.display="flex"; document.body.classList.add("gated"); if(a) setTimeout(()=>{try{a.focus();}catch(e){}},60); }
+function closePwGate(){ const g=$("#pwGate"); if(g) g.style.display="none"; if(_pwVoluntary) document.body.classList.remove("gated"); }
+function pwCancel(){ if(_pwVoluntary){ closePwGate(); } else { gateLogout(); } }
+async function submitForcePw(){
+  const a=($("#pwNew").value||""), b=($("#pwNew2").value||""); const m=$("#pwMsg");
+  const setErr=t=>{ if(m){ m.textContent=t; m.className="authmsg err"; } };
+  if(a.length<8){ setErr("Kennwort: mindestens 8 Zeichen."); return; }
+  if(a!==b){ setErr("Die Kennwörter stimmen nicht überein."); return; }
+  const btn=$("#pwSubmit"); if(btn){ btn.disabled=true; btn.textContent="Bitte warten …"; }
+  try{
+    await authUserPut({password:a, data:{must_change_password:false}});   // 1) Kennwort setzen + Flag löschen in EINEM PUT (atomar)
+    await authRefresh();                              // 2) frischen Token holen (mustChangePw() ist danach false)
+    _pwVoluntary=false; closePwGate(); document.body.classList.remove("gated");
+    await afterAuth();
+  }catch(e){ setErr(authErrMsg(e,"login")); if(btn){ btn.disabled=false; btn.textContent="Kennwort speichern & loslegen"; } }
+}
+/* ===== Admin: Benutzerverwaltung (nur is_admin) – ruft die Edge Function admin-users ===== */
+let _adminUsers=[];
+async function adminFetch(action,payload){
+  const c=cloudConfig(); if(!c) throw new Error("Keine Cloud konfiguriert"); await ensureToken();
+  const r=await fetch(c.url+"/functions/v1/admin-users",{method:"POST",headers:{apikey:c.key,"Content-Type":"application/json",Authorization:authHeader()},body:JSON.stringify(Object.assign({action:action},payload||{}))});
+  let j={}; try{ j=await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(j.error||("HTTP "+r.status));
+  return j;
+}
+function slugFam(s){ const x=String(s||"").trim().toLowerCase().replace(/[^a-z0-9._-]+/g,"-").replace(/^[-.]+|[-.]+$/g,""); return /^[a-z0-9][a-z0-9._-]{1,63}$/.test(x)?x:""; }
+async function openAdminPanel(){
+  if(!isAdmin()){ toast("Nur für Admins."); return; }
+  openModal("<div class='mhead'><h3>🛠️ Benutzer verwalten</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
+    "<div class='btnrow' style='margin-bottom:8px'><button class='btn sm primary' id='adNew'>＋ Neuer Benutzer</button><button class='btn sm ghost' id='adReload'>↻ Aktualisieren</button></div>"+
+    "<div id='adList'><p class='hint'>Lade Benutzer …</p></div></div>");
+  $("#mX").onclick=closeModal;
+  $("#adNew").onclick=()=>openAdminEdit(null);
+  $("#adReload").onclick=renderAdminList;
+  renderAdminList();
+}
+async function renderAdminList(){
+  const box=$("#adList"); if(!box) return; box.innerHTML="<p class='hint'>Lade Benutzer …</p>";
+  try{
+    const j=await adminFetch("list",{});
+    _adminUsers=(j.users||[]).slice().sort((a,b)=> String(a.family_id||"~").localeCompare(String(b.family_id||"~")) || String(a.username||a.email||"").localeCompare(String(b.username||b.email||"")) );
+    if(!_adminUsers.length){ box.innerHTML="<p class='hint'>Noch keine Benutzer.</p>"; return; }
+    box.innerHTML="";
+    _adminUsers.forEach(u=>{
+      const row=el("div","fam-row");
+      const badges=(u.is_admin?"<span class='ad-badge admin'>Admin</span>":"")+(u.family_id?"<span class='ad-badge'>"+esc(u.family_id)+"</span>":"<span class='ad-badge warn'>keine Familie</span>")+(u.must_change_password?"<span class='ad-badge warn'>Kennwort ändern</span>":"");
+      row.innerHTML="<div style='flex:1;min-width:0'><b class='fam-nm'>"+esc(u.username||u.email||"?")+"</b><div class='ad-badges'>"+badges+"</div></div>";
+      const ed=el("button","btn sm ghost","Bearbeiten"); ed.onclick=()=>openAdminEdit(u); row.appendChild(ed);
+      box.appendChild(row);
+    });
+  }catch(e){ box.innerHTML="<p class='hint' style='color:#c0392b'>Fehler: "+esc(e.message||"unbekannt")+"</p><p class='hint'>Ist die Edge Function „admin-users“ deployt und bist du als Admin angemeldet?</p>"; }
+}
+function openAdminEdit(u){
+  const isNew=!u, cur=u?(u.family_id||""):"";
+  const set={}; _adminUsers.forEach(x=>{ if(x.family_id) set[x.family_id]=1; }); if(cur) set[cur]=1;
+  const fams=Object.keys(set).sort();
+  const mailShown=(u&&u.email&&u.email.indexOf("@foodies.local")<0)?u.email:"";
+  const famSel="<select class='input' id='afFam'>"+fams.map(f=>"<option value='"+esc(f)+"'"+(f===cur?" selected":"")+">"+esc(f)+"</option>").join("")+"<option value='__new__'"+((isNew&&!fams.length)?" selected":"")+">＋ Neue Familie…</option></select>";
+  openModal("<div class='mhead'><h3>"+(isNew?"Neuer Benutzer":"Benutzer bearbeiten")+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
+    "<div class='authmsg' id='afMsg'></div>"+
+    "<label class='fld'><span>Benutzername</span><input class='input' id='afUser' autocapitalize='none' spellcheck='false' value='"+esc(u?(u.username||""):"")+"'></label>"+
+    "<label class='fld'><span>E-Mail (optional)</span><input class='input' id='afEmail' type='email' autocapitalize='none' spellcheck='false' value='"+esc(mailShown)+"'></label>"+
+    "<label class='fld'><span>"+(isNew?"Startkennwort (mind. 8 Zeichen)":"Neues Kennwort (leer = unverändert)")+"</span><input class='input' id='afPw' type='text' autocomplete='off'></label>"+
+    "<label class='fld'><span>Familie</span>"+famSel+"</label>"+
+    "<label class='fld' id='afNewFamWrap' style='display:none'><span>Neues Familien-Kürzel</span><input class='input' id='afNewFam' placeholder='z.B. schneck' autocapitalize='none' spellcheck='false'></label>"+
+    "<label class='ck'><input type='checkbox' id='afMust'"+((isNew||(u&&u.must_change_password))?" checked":"")+"> <span>Kennwort beim ersten Login ändern</span></label>"+
+    "<label class='ck'><input type='checkbox' id='afAdmin'"+((u&&u.is_admin)?" checked":"")+"> <span>ist Admin (darf Benutzer verwalten)</span></label>"+
+    "<div class='btnrow' style='margin-top:10px'><button class='btn primary' id='afSave'>"+(isNew?"Anlegen":"Speichern")+"</button>"+(isNew?"":"<button class='btn ghost' id='afDel'>🗑️ Löschen</button>")+"</div></div>");
+  $("#mX").onclick=openAdminPanel;
+  const famEl=$("#afFam"), wrap=$("#afNewFamWrap");
+  const syncFam=()=>{ if(wrap) wrap.style.display=(famEl&&famEl.value==="__new__")?"":"none"; };
+  if(famEl){ famEl.onchange=syncFam; } syncFam();
+  const setMsg=t=>{ const m=$("#afMsg"); if(m){ m.textContent=t; m.className="authmsg err"; } };
+  $("#afSave").onclick=async()=>{
+    const username=($("#afUser").value||"").trim(), email=($("#afEmail").value||"").trim(), pw=($("#afPw").value||"");
+    let family=famEl?famEl.value:"";
+    if(family==="__new__"){ family=slugFam($("#afNewFam").value||""); if(!family){ setMsg("Bitte ein gültiges Familien-Kürzel eingeben (mind. 2 Zeichen, a–z 0–9)."); return; } }
+    const must=$("#afMust").checked, admin=$("#afAdmin").checked;
+    if(!username && !email){ setMsg("Benutzername oder E-Mail nötig."); return; }
+    if(!family){ setMsg("Bitte eine Familie wählen."); return; }
+    if(isNew && pw.length<8){ setMsg("Startkennwort: mindestens 8 Zeichen."); return; }
+    if(!isNew && pw && pw.length<8){ setMsg("Neues Kennwort: mindestens 8 Zeichen."); return; }
+    const btn=$("#afSave"); btn.disabled=true; btn.textContent="Bitte warten …";
+    try{
+      if(isNew){ await adminFetch("create",{username:username,email:email,password:pw,family_id:family,must_change:must,is_admin:admin}); toast("Benutzer angelegt."); }
+      else{ const payload={user_id:u.id,username:username,family_id:family,must_change:must,is_admin:admin}; if(pw) payload.password=pw; await adminFetch("update",payload); toast("Gespeichert."); }
+      openAdminPanel();
+    }catch(e){ setMsg("Fehler: "+(e.message||"unbekannt")); btn.disabled=false; btn.textContent=isNew?"Anlegen":"Speichern"; }
+  };
+  if(!isNew){ const d=$("#afDel"); if(d) d.onclick=async()=>{ if(!confirm("Benutzer „"+(u.username||u.email||"?")+"“ wirklich löschen? Das kann nicht rückgängig gemacht werden.")) return; try{ await adminFetch("delete",{user_id:u.id}); toast("Benutzer gelöscht."); openAdminPanel(); }catch(e){ setMsg("Fehler: "+(e.message||"unbekannt")); } }; }
 }
 let _authMode="login";
 function openGate(msg){ const g=$("#authGate"); if(!g) return; setAuthMode("login"); if(msg) showAuthError(msg); g.style.display="flex"; document.body.classList.add("gated"); const u=$("#authUser"); if(u) setTimeout(()=>{try{u.focus();}catch(e){}},60); }
@@ -3772,21 +3923,26 @@ function authErrMsg(e,mode){ const c=String((e&&e.code)||"").toLowerCase(), msg=
   return (mode==="signup"?"Registrierung":"Anmeldung")+" fehlgeschlagen: "+((e&&e.message)||"unbekannter Fehler")+((e&&e.code&&String(e.code)!=="undefined")?" ["+e.code+"]":"");
 }
 async function doAuthSubmit(){
-  const u=($("#authUser").value||"").trim(), p=$("#authPass").value||"", p2=$("#authPass2").value||"";
+  const u=($("#authUser").value||"").trim(), p=$("#authPass").value||"";
   if(!u){ showAuthError("Bitte Benutzernamen eingeben."); return; }
-  if(p.length<8){ showAuthError("Kennwort: mindestens 8 Zeichen."); return; }
-  if(_authMode==="signup" && p!==p2){ showAuthError("Die Kennwörter stimmen nicht überein."); return; }
-  const btn=$("#authSubmit"), lbl=(_authMode==="signup"?"Registrieren":"Anmelden"); if(btn){ btn.disabled=true; btn.textContent="Bitte warten …"; }
-  try{ if(_authMode==="signup") await authRegister(u,p); else await authLogin(u,p); closeGate(); await afterAuth(_authMode==="signup"); }
-  catch(e){ showAuthError(authErrMsg(e,_authMode)); if(btn){ btn.disabled=false; btn.textContent=lbl; } }
+  if(!p){ showAuthError("Bitte Kennwort eingeben."); return; }
+  const btn=$("#authSubmit"); if(btn){ btn.disabled=true; btn.textContent="Bitte warten …"; }
+  try{ await authLogin(u,p); closeGate(); await afterLogin(); }
+  catch(e){ showAuthError(authErrMsg(e,"login")); if(btn){ btn.disabled=false; btn.textContent="Anmelden"; } }
 }
-(function wireGate(){ const sw=$("#authSwitch"); if(sw) sw.onclick=()=>setAuthMode(_authMode==="login"?"signup":"login");
+async function gateLogout(){ try{ await authLogout(); }catch(e){} try{ localStorage.removeItem("foodies_lastUser"); }catch(e){} location.reload(); }
+(function wireGate(){
   const submit=$("#authSubmit"); if(submit) submit.onclick=doAuthSubmit;
-  ["#authUser","#authPass","#authPass2"].forEach(id=>{ const inp=$(id); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); doAuthSubmit(); } }); }); })();
+  ["#authUser","#authPass"].forEach(id=>{ const inp=$(id); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); doAuthSubmit(); } }); });
+  const ps=$("#pwSubmit"); if(ps) ps.onclick=submitForcePw;
+  ["#pwNew","#pwNew2"].forEach(id=>{ const inp=$(id); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); submitForcePw(); } }); });
+  const pl=$("#pwCancel"); if(pl) pl.onclick=pwCancel;
+  const nl=$("#noFamLogout"); if(nl) nl.onclick=gateLogout;
+})();
 (async function bootAuth(){
   if(!cloudConfig()){ startAppSession(); return; }   // ohne Cloud kein Login möglich → rein lokal nutzbar
   _session=loadSession();
-  if(isLoggedIn()){ try{ await ensureToken(); }catch(e){} startAppSession(); }
+  if(isLoggedIn()){ await afterLogin(); }             // Familie? → Zwangs-Kennwort? → App (gleiche Reihenfolge wie nach Formular-Login)
   else { openGate(); if(!navigator.onLine) showAuthError("Kein Internet. Zum ersten Anmelden ist einmalig eine Verbindung nötig."); }
 })();
 </script>
