@@ -642,7 +642,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <h2 id="authTitle">Anmelden</h2>
     <p class="authsub" id="authSub">Bei deinem Familien-Konto anmelden.</p>
     <div class="authmsg" id="authMsg"></div>
-    <input class="input" id="authUser" placeholder="Benutzername" autocomplete="username" autocapitalize="none" spellcheck="false">
+    <input class="input" id="authUser" placeholder="Benutzername oder E-Mail" autocomplete="username" autocapitalize="none" spellcheck="false">
     <input class="input" id="authPass" type="password" placeholder="Kennwort" autocomplete="current-password">
     <input class="input" id="authPass2" type="password" placeholder="Kennwort wiederholen" autocomplete="new-password" style="display:none">
     <button class="btn primary block" id="authSubmit">Anmelden</button>
@@ -2331,7 +2331,7 @@ let _session=null, _appStarted=false, _refreshing=null;
 function authBase(){ const c=cloudConfig(); return c?c.url:null; }
 function authKey(){ const c=cloudConfig(); return c?c.key:null; }
 function normUser(u){ return String(u||"").trim().toLowerCase().replace(/\s+/g,""); }
-function userToEmail(u){ return normUser(u)+AUTH_DOMAIN; }
+function userToEmail(u){ const s=normUser(u); return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s) ? s : (s+AUTH_DOMAIN); }   // echte E-Mail direkt nutzen, sonst Benutzername→synthetische Adresse
 function loadSession(){ try{ const s=JSON.parse(localStorage.getItem(LS_SESSION)); if(s&&s.access_token&&s.refresh_token) return s; }catch(e){} return null; }
 function saveSession(tok){ const u=tok.user||{}; _session={ access_token:tok.access_token, refresh_token:tok.refresh_token, expires_at: Date.now()+((tok.expires_in||3600)*1000)-60000, uid:u.id, username:(u.user_metadata&&u.user_metadata.username)||(_session&&_session.username) }; try{ localStorage.setItem(LS_SESSION,JSON.stringify(_session)); }catch(e){} }
 function clearSession(){ _session=null; try{ localStorage.removeItem(LS_SESSION); }catch(e){} }
@@ -3769,7 +3769,7 @@ function authErrMsg(e,mode){ const c=String((e&&e.code)||"").toLowerCase(), msg=
   if(c.indexOf("email_address_invalid")>=0) return "Benutzername nicht erlaubt – bitte nur Buchstaben/Zahlen verwenden.";
   if(c.indexOf("weak_password")>=0||msg.indexOf("password should")>=0) return "Kennwort zu kurz (mindestens 8 Zeichen).";
   if(c.indexOf("signup")>=0 && c.indexOf("disabled")>=0) return "Registrierung ist derzeit deaktiviert.";
-  return (mode==="signup"?"Registrierung":"Anmeldung")+" fehlgeschlagen. Bitte erneut versuchen.";
+  return (mode==="signup"?"Registrierung":"Anmeldung")+" fehlgeschlagen: "+((e&&e.message)||"unbekannter Fehler")+((e&&e.code&&String(e.code)!=="undefined")?" ["+e.code+"]":"");
 }
 async function doAuthSubmit(){
   const u=($("#authUser").value||"").trim(), p=$("#authPass").value||"", p2=$("#authPass2").value||"";
