@@ -205,7 +205,7 @@ a{color:var(--brand)}
 .dn-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:none;border:0;padding:0;color:var(--ink);text-align:left;cursor:pointer}
 .dn-chev{color:var(--muted);font-size:11px;flex:none}
 .dn-lbl{font-weight:700;font-size:12.5px;color:var(--muted)}
-.dn-free{width:52px;text-align:right;color:var(--muted);flex:none;font-variant-numeric:tabular-nums;font-size:9.5px}
+.dn-free{width:66px;text-align:right;color:var(--muted);flex:none;font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600}
 .dn-free-kcal{font-size:12px;margin:5px 0 2px}
 .dn-free-kcal b{color:var(--accent)}
 .dn-red{color:#d64545;font-weight:700}
@@ -214,6 +214,7 @@ a{color:var(--brand)}
 .dn-kcal.over,.dn-kcal.over small{color:#d64545}
 .dn-free-kcal.over b{color:#d64545}
 .dn-planned{font-size:10.5px;color:var(--muted);margin-top:5px}
+.dn-warn{margin-top:6px;font-size:11.5px;color:#b06d00;background:rgba(232,150,35,.14);border-radius:8px;padding:5px 8px;line-height:1.3}
 .slotcard{position:relative}
 .slotcard .slotlabel{padding-right:36px}
 .pfbadge{display:inline-block;background:var(--brand);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;vertical-align:middle;text-transform:none;letter-spacing:0}
@@ -233,7 +234,13 @@ a{color:var(--brand)}
 .wc-goal:empty{display:none}
 .wc-goal .profilechip{margin:0}
 .weekcard #planWeekBtn{padding:12px;font-size:15px}
-.wc-icons{display:flex;justify-content:center;gap:12px}
+.wc-icons{display:flex;justify-content:center;gap:8px}
+.wc-ib{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--chip);border:1px solid var(--line);border-radius:11px;padding:7px 4px;color:var(--ink);font-size:11px;font-weight:600;cursor:pointer}
+.wc-ib .ic{font-size:18px;line-height:1}
+.wc-ib.on{border-color:var(--brand);color:var(--brand);background:var(--card)}
+.wc-progress{display:flex;flex-wrap:wrap;gap:6px}
+.wc-progress:empty{display:none}
+.prog-chip{background:var(--chip);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--ink)}
 .btn.icononly{width:46px;height:40px;padding:0;justify-content:center;font-size:19px}
 .btn.icononly.cheatbtn.on{background:#e8b923;color:#3a2f00;border-color:#e8b923}
 .pickactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
@@ -503,11 +510,12 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <div class="weekcard">
       <div class="weekbar" id="weekBar"></div>
       <div class="wc-goal" id="planProfileSlot"></div>
+      <div class="wc-progress" id="planProgress"></div>
       <button class="btn primary block" id="planWeekBtn">🎯 Woche planen</button>
       <div class="wc-icons">
-        <button class="btn sm icononly" id="shareWeekBtn" title="Wochenplan teilen" aria-label="Wochenplan teilen">📤</button>
-        <button class="btn sm icononly cheatbtn" id="cheatBtn" title="Cheat-Day" aria-label="Cheat-Day">⚡</button>
-        <button class="btn sm icononly" id="wishBtn" title="Wunschgericht" aria-label="Wunschgericht">🌟</button>
+        <button class="wc-ib" id="shareWeekBtn" aria-label="Wochenplan teilen"><span class="ic">📤</span><span>Teilen</span></button>
+        <button class="wc-ib cheatbtn" id="cheatBtn" aria-label="Cheat-Day"><span class="ic">⚡</span><span>Cheat</span></button>
+        <button class="wc-ib" id="wishBtn" aria-label="Wunschgericht"><span class="ic">🌟</span><span>Wunsch</span></button>
       </div>
     </div>
     <div class="daybar" id="dayBar"></div>
@@ -1644,8 +1652,10 @@ function computeTargets(profileId){
   if(profileId==="abnehmen"){ kcal=maint-(state.loseKgPerWeek||0.5)*7700/7; ppk=2.0; }
   else if(profileId==="muskelaufbau"){ kcal=maint+(state.gainKgPerWeek||0.25)*7700/7; ppk=1.9; }
   else { kcal=maint; ppk=1.4; }
-  kcal=Math.max(1200, Math.round(kcal/10)*10);
-  const protein=Math.round(w*ppk);
+  const kcalFloor = state.sex==="m" ? 1500 : 1200;   // sicheres Minimum (Männer höher) – nicht gefährlich tief fallen
+  kcal=Math.max(kcalFloor, Math.round(kcal/10)*10);
+  const pBase=(typeof state.targetWeight==="number"&&state.targetWeight>0)?state.targetWeight:w;   // Eiweiß deckeln: max ~2,2 g/kg Zielgewicht (sonst bei hohem Gewicht absurd viel)
+  const protein=Math.min(Math.round(w*ppk), Math.round(pBase*2.2));
   const fat=Math.round(kcal*0.28/9);                 // ~28 % of kcal from fat
   const carbs=Math.max(0, Math.round((kcal - protein*4 - fat*9)/4));
   const fiber=Math.max(25, Math.round(kcal/1000*14));
@@ -1727,6 +1737,8 @@ function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); const 
 function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
 function dayEaten(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ if(isDone(dayId,e.id)){ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); } }); return t; }
 function dayConsumed(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }   // ALLE Extras zählen sofort
+function dayUnknownIngredients(dayId){ const set=new Set(); const add=r=>{ if(r) recipeUnknownIngredients(r).forEach(n=>set.add((n||"").toLowerCase())); };   // Zutaten ohne Nährwerte im Tag → Kalorien werden sonst still zu niedrig gezählt
+  SLOTS.forEach(s=>{ const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; if(rid) add(recipe(rid)); }); dayExtras(dayId).forEach(e=>add(state.recipes[e.rid])); return set.size; }
 function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]) || dayExtras(dayId).some(e=>isDone(dayId,e.id)); }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
 /* per-week cheat day: state.weekCheat[weekKey]=dayId|null, with a per-key edit timestamp weekCheatAt[weekKey] so cloud merge converges (last-write-wins). No global fallback — a missing key simply means "no cheat". */
@@ -2237,7 +2249,8 @@ function pruneEmptyWeeks(){                                // drop only fully-em
     if(emptyP&&emptyD&&noPf&&emptyW&&noCheat&&noExtra&&noTrain){ delete state.weeks[k]; delete state.weekDone[k]; delete state.weekProfile[k]; if(state.weekWater) delete state.weekWater[k]; if(state.weekCheat) delete state.weekCheat[k]; if(state.weekCheatAt) delete state.weekCheatAt[k]; if(state.weekExtra) delete state.weekExtra[k]; if(state.weekTrain) delete state.weekTrain[k]; if(state.weekPersons) delete state.weekPersons[k]; if(state.weekPortions) delete state.weekPortions[k]; if(state.weekPinned) delete state.weekPinned[k]; if(state.weekLocks) delete state.weekLocks[k]; if(state.weekCart) delete state.weekCart[k]; if(state.wishes) delete state.wishes[k]; }
   });
 }
-function persistLocal(){ pruneEmptyWeeks(); try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){} }
+let _storageWarned=false;
+function persistLocal(){ pruneEmptyWeeks(); try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); _storageWarned=false; }catch(e){ if(!_storageWarned){ _storageWarned=true; try{ toast("⚠️ Speicher voll – Änderung evtl. nicht gesichert. Bitte alte Wochen aufräumen."); }catch(x){} } } }
 function save(){ persistLocal(); scheduleCloudPush(); }
 
 /* ---- Cloud (Supabase REST) ---- */
@@ -2431,14 +2444,15 @@ function dayNutriEl(dayId){
       const pct=t[k]?Math.min(100,Math.round(consumed[k]/t[k]*100)):0;
       const ok=t[k] && !over && consumed[k]>=t[k]*0.9;   // grün ab 90 % (inkl. Überschuss bei Eiweiß/Ballaststoffen)
       const free=Math.round((t[k]||0)-consumed[k]);
-      return "<div class='dn-b'><span class='dn-lab"+(over?" over":"")+"'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+(over?" over":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free"+(over?" over":"")+"'>"+(exceed?"+"+(-free)+" g über":free+" g frei")+"</span></div>";
+      return "<div class='dn-b'><span class='dn-lab"+(over?" over":"")+"'>"+esc(NUTR_META[k].short)+"</span><span class='dn-track'><span class='dn-fill"+(ok?" ok":"")+(over?" over":"")+"' style='width:"+pct+"%'></span></span><span class='dn-free"+(over?" over":"")+"' title='"+(exceed?(-free)+' g über':free+' g frei')+"'>"+Math.round(consumed[k])+" / "+Math.round(t[k]||0)+"</span></div>";
     }).join("");
     wrap.innerHTML=
       "<button class='dn-head' type='button'><span class='dn-kcal"+(overK?" over":"")+"'>Aufgenommen ≈ "+Math.round(consumed.kcal)+" <small>/ "+Math.round(t.kcal)+" kcal</small></span><span class='dn-chev'>▾</span></button>"+
       "<div class='dn-free-kcal"+(overK?" over":"")+"'>"+(overK?"<b>"+(-freeK)+" kcal über dem Ziel</b>":"Noch frei heute: <b>"+Math.max(0,freeK)+" kcal</b>")+"</div>"+
       (burn>0?"<div class='dn-burn'>🏋️ +"+burn+" kcal frei durch Training</div>":"")+
       "<div class='dn-bars'>"+bars+"</div>"+
-      "<div class='dn-planned'>Geplant gesamt: "+Math.round(planned.kcal)+" kcal</div>";
+      "<div class='dn-planned'>Geplant gesamt: "+Math.round(planned.kcal)+" kcal</div>"+
+      (dayUnknownIngredients(dayId)>0?"<div class='dn-warn'>⚠️ "+dayUnknownIngredients(dayId)+" Zutat(en) ohne Nährwerte – tatsächliche Kalorien evtl. höher</div>":"");
   }
   const head=wrap.querySelector(".dn-head"); if(head) head.onclick=()=>{ nutriOpen=!nutriOpen; localStorage.setItem("foodies_nutri_open",nutriOpen?"1":"0"); renderPlan(); };
   return wrap;
@@ -2511,6 +2525,13 @@ function renderPlan(){
     if(uiWeek!==ck){ const jump=el("button","weekjump","📍"); jump.title="Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"; jump.setAttribute("aria-label","Zur aktuellen Woche (KW "+weekLabel(ck).kw+")"); jump.onclick=()=>{ weekPickerOpen=false; uiDay=todayDayId(); setActiveWeek(ck); renderAll(); }; wb.appendChild(jump); }
     const pfw=state.weekProfile[uiWeek], profw=PROFILES.find(x=>x.id===pfw);
     const pslot=$("#planProfileSlot"); if(pslot){ pslot.innerHTML=""; const pchip=el("button","profilechip"+(profw?" set":""),"<span>"+(profw?profw.emoji+" "+esc(profw.label):"🎯 Ziel wählen")+"</span><span class='dn-chev'>▾</span>"); pchip.title="Ziel dieser Woche"; pchip.onclick=()=>openProfileSwitcher(); pslot.appendChild(pchip); }
+    const pg=$("#planProgress"); if(pg){ const chips=[];   // Fortschritt direkt auf der Startseite
+      const cw=state.currentWeight, tw=state.targetWeight;
+      if(typeof cw==="number"&&cw>0&&typeof tw==="number"&&tw>0){ const dlt=Math.round((cw-tw)*10)/10;
+        chips.push(Math.abs(dlt)<0.1?"🎯 Ziel erreicht!":(dlt>0?"🎯 noch "+fmtNum(dlt)+" kg":"🎯 noch "+fmtNum(-dlt)+" kg zunehmen")); }
+      const stk=currentStreak(); if(stk>0) chips.push("🔥 "+stk+" Wo.-Streak");
+      const cdw=cookedInWeek(uiWeek); if(cdw>0) chips.push("✅ "+cdw+" diese Woche");
+      pg.innerHTML=chips.map(c=>"<span class='prog-chip'>"+esc(c)+"</span>").join(""); }
     if(weekPickerOpen){ const panel=el("div","weekpicker"); let activeEl=null;
       weekPickerKeys().forEach(k=>{ const wlk=weekLabel(k), isCur=k===ck, pk=state.weekProfile[k], pp=PROFILES.find(x=>x.id===pk);
         const used=(state.weeks[k]&&!isEmptyPlan(state.weeks[k]))||pk;
@@ -2525,7 +2546,7 @@ function renderPlan(){
     }
   }
   const abnehmenWeek = weekProfile()==="abnehmen";
-  const cb=$("#cheatBtn"); if(cb){ const cd0=cheatDay(); const dd=cd0?DAYS.find(x=>x.id===cd0):null; cb.innerHTML=dd?"⚡🍕":"⚡"; cb.title=dd?("Cheat-Day: "+dd.name):"Cheat-Day festlegen"; cb.classList.toggle("on",!!cd0); }
+  const cb=$("#cheatBtn"); if(cb){ const cd0=cheatDay(); const dd=cd0?DAYS.find(x=>x.id===cd0):null; const ci=cb.querySelector('.ic'); if(ci) ci.textContent=dd?"⚡🍕":"⚡"; cb.title=dd?("Cheat-Day: "+dd.name):"Cheat-Day festlegen"; cb.classList.toggle("on",!!cd0); }
   const bar=$("#dayBar"); bar.innerHTML="";
   DAYS.forEach(d=>{
     const cheat=d.id===cheatDay();
@@ -2546,7 +2567,7 @@ function renderPlan(){
       btn.onclick=()=> r? openSlotMenu(d.id,s.id) : openPicker(d.id,s.id);
       card.appendChild(btn);
       if(r){ const acts=el("div","slotacts");
-        const cook=el("button","slotcook"+(done?" on":""),"👨‍🍳"); cook.title=done?"Als nicht gekocht markieren":"Als gekocht markieren"; cook.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; acts.appendChild(cook);
+        const cook=el("button","slotcook"+(done?" on":""),"👨‍🍳"); cook.title=done?"Als nicht gegessen markieren":"Als gegessen markieren"; cook.onclick=(e)=>{ e.stopPropagation(); toggleDone(d.id,s.id); renderPlan(); }; acts.appendChild(cook);
         const inC=slotInCart(d.id,s.id); const cb=el("button","slotcart"+(inC?" on":""),"🛒"); cb.title=inC?"Zutaten aus dem Wagen entfernen":"Zutaten in den Einkaufswagen"; cb.onclick=(e)=>{ e.stopPropagation(); toggleSlotCart(d.id,s.id); }; acts.appendChild(cb);
         const pnd=isPinned(d.id,s.id); const pinB=el("button","slotpin"+(pnd?" on":""),"📌"); pinB.title=pnd?"Festgestellt – bleibt beim Neuplanen & zählt als 1 Person. Tippen zum Lösen.":"Mahlzeit feststellen (bleibt beim Neuplanen, zählt als 1 Person)"; pinB.onclick=(e)=>{ e.stopPropagation(); setPinned(d.id,s.id,!pnd); renderPlan(); toast(pnd?"Nicht mehr festgestellt":"📌 Festgestellt"); }; acts.appendChild(pinB);
         card.appendChild(acts); }
@@ -2558,7 +2579,7 @@ function renderPlan(){
       ecard.appendChild(el("div","slotlabel","➕ Extra"));
       const ebtn=el("button","slotbtn"+(er?"":" empty"),er?esc(er.name):"+ Gericht"); ebtn.onclick=()=>openPicker(d.id,null,{extraId:e.id,slotType:(er&&er.mealType)||"snack"}); ecard.appendChild(ebtn);
       const eacts=el("div","slotacts");
-      if(er){ const cook=el("button","slotcook"+(edone?" on":""),"👨‍🍳"); cook.title=edone?"Als nicht gekocht markieren":"Als gekocht markieren"; cook.onclick=(ev)=>{ ev.stopPropagation(); toggleDone(d.id,e.id); renderPlan(); }; eacts.appendChild(cook);
+      if(er){ const cook=el("button","slotcook"+(edone?" on":""),"👨‍🍳"); cook.title=edone?"Als nicht gegessen markieren":"Als gegessen markieren"; cook.onclick=(ev)=>{ ev.stopPropagation(); toggleDone(d.id,e.id); renderPlan(); }; eacts.appendChild(cook);
         const inC=slotInCart(d.id,e.id); const cb=el("button","slotcart"+(inC?" on":""),"🛒"); cb.title=inC?"Zutaten aus dem Wagen entfernen":"Zutaten in den Einkaufswagen"; cb.onclick=(ev)=>{ ev.stopPropagation(); toggleSlotCart(d.id,e.id); }; eacts.appendChild(cb); }
       const erm=el("button","slotrm","✕"); erm.title="Extra entfernen"; erm.onclick=(ev)=>{ ev.stopPropagation(); const dyId=d.id, exId=e.id; removeExtra(dyId,exId); save(); renderPlan(); toastAction("Extra-Mahlzeit entfernt","Rückgängig",()=>{ const l=state.weekExtra&&state.weekExtra[uiWeek]&&state.weekExtra[uiWeek][dyId]; const it=l&&l.find(x=>x&&x.id===exId); if(it) delete it.del; save(); renderPlan(); }); }; eacts.appendChild(erm);
       ecard.appendChild(eacts);
@@ -2862,7 +2883,7 @@ function openSlotMenu(day,slot){
     nutriSum+
     stepsBlock+
     notesBlock+
-    "<div class='btnrow' style='margin-top:14px'><button class='btn sm "+(isDone(day,slot)?"primary":"")+"' id='doneBtn'>"+(isDone(day,slot)?"👨‍🍳 Gekocht":"Als gekocht markieren")+"</button><button class='btn sm "+(pinned?"primary":"ghost")+"' id='pinDish' title='Bleibt beim Neuplanen erhalten und zählt als 1 Person'>"+(pinned?"📌 Festgestellt":"📌 Festhalten")+"</button><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='rerollDish'>🎲 Zufällig</button><button class='btn sm ghost' id='editDish'>✏️ Zutaten bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
+    "<div class='btnrow' style='margin-top:14px'><button class='btn sm "+(isDone(day,slot)?"primary":"")+"' id='doneBtn'>"+(isDone(day,slot)?"✅ Gegessen":"Als gegessen markieren")+"</button><button class='btn sm "+(pinned?"primary":"ghost")+"' id='pinDish' title='Bleibt beim Neuplanen erhalten und zählt als 1 Person'>"+(pinned?"📌 Festgestellt":"📌 Festhalten")+"</button><button class='btn sm ghost' id='changeDish'>Gericht ändern</button><button class='btn sm ghost' id='rerollDish'>🎲 Zufällig</button><button class='btn sm ghost' id='editDish'>✏️ Zutaten bearbeiten</button><button class='btn sm ghost' id='clearDish'>Leeren</button></div></div>"+
     (r.ing.length?"<div class='mfoot'><button class='btn primary block' id='toCart'>🛒 Ausgewählte in den Einkaufswagen</button></div>":"")
   );
   $("#mX").onclick=()=>{ closeModal(); renderPlan(); };
