@@ -41,15 +41,8 @@ header.top{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,va
 .logo{width:38px;height:38px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:20px;flex:none}
 .brandbar h1{font-size:19px}
 .brandbar .sub{color:var(--muted);font-size:12.5px;margin-top:1px}
-.memberbar{display:flex;gap:6px;overflow-x:auto;padding:9px 0 2px;-webkit-overflow-scrolling:touch}
-.memchip{flex:none;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:5px 12px 5px 8px;font-weight:600;font-size:12.5px;box-shadow:var(--shadow);cursor:pointer;white-space:nowrap}
-.memchip.on{border-color:var(--brand);background:var(--brand);color:#fff}
-.memchip.add{padding:5px 11px;color:var(--muted);font-size:15px}
-.memav{font-size:15px;line-height:1}
 .fam-row{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px solid var(--line)}
 .fam-row .fam-nm{font-size:14px} .fam-row small{color:var(--muted);flex:1}
-.fam-toggle{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;padding:4px 0}
-.emochip{font-size:17px;padding:5px 9px}
 .hh-box{background:var(--chip);border-radius:11px;padding:11px 13px}
 .hh-lbl{font-size:12.5px;font-weight:700;color:var(--muted)}
 .hh-code{font-size:20px;font-weight:800;letter-spacing:1px;font-family:ui-monospace,Menlo,Consolas,monospace;margin:3px 0;color:var(--brand);user-select:all;word-break:break-all}
@@ -224,12 +217,6 @@ a{color:var(--brand)}
 .slotcard{position:relative}
 .slotcard .slotlabel{padding-right:36px}
 .pfbadge{display:inline-block;background:var(--brand);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;vertical-align:middle;text-transform:none;letter-spacing:0}
-.fambadge{display:inline-block;background:var(--chip);color:var(--muted);font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;vertical-align:middle;text-transform:none;letter-spacing:0}
-.attendrow{background:var(--chip);border-radius:11px;padding:9px 11px;margin-bottom:8px}
-.attendrow .ar-lbl{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
-.ar-chips{display:flex;flex-wrap:wrap;gap:6px}
-.memchip.sm{padding:4px 10px 4px 7px;font-size:12px;opacity:.5;filter:grayscale(.6)}
-.memchip.sm.on{opacity:1;filter:none;border-color:var(--brand);background:var(--brand);color:#fff}
 .slotacts{position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:4px;align-items:center}
 .slotcook,.slotcart,.slotpin{width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:14px;line-height:1;display:grid;place-items:center;padding:0;filter:grayscale(1);opacity:.5;transition:opacity .12s,filter .12s}
 .slotcook.on{background:var(--accent);border-color:var(--accent);filter:none;opacity:1}
@@ -237,8 +224,6 @@ a{color:var(--brand)}
 .slotpin.on{background:var(--milch);border-color:var(--milch);filter:none;opacity:1}
 .slotacts .slotrm{width:27px;height:27px;margin:0;flex:none}
 .slotdice{width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:15px;line-height:1;display:grid;place-items:center;padding:0;opacity:.8}
-.themechip{align-self:center;margin:0 auto 2px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:2px 11px;font-size:11.5px;font-weight:600;max-width:100%}
-.themechip.set{border-style:solid;border-color:var(--brand);color:var(--brand);background:var(--chip)}
 .profilechip{flex:none;display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px;box-shadow:var(--shadow)}
 .profilechip.set{border-color:var(--brand)}
 .profilechip .dn-chev{color:var(--muted);font-size:11px}
@@ -254,12 +239,6 @@ a{color:var(--brand)}
 .pickactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
 .pickactions .btn{width:100%}
 .tag.eff-schnell{color:#1f7a3d} .tag.eff-auf{color:#8a6d3b} .tag.eff-mit{color:var(--muted)}
-.pitem.food{cursor:pointer} .pitem.food .pi-name{color:var(--ink)}
-.instockbadge{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#1f7a3d;background:#e7f4ec;border:0;border-radius:999px;padding:2px 8px;vertical-align:middle}
-.instockbadge.rm{cursor:pointer}
-.cartitem.instock{opacity:.75} .cartitem.instock .cname{color:var(--muted)}
-.cart-pantrybar{display:flex;align-items:center;gap:10px;justify-content:space-between;background:#e7f4ec;border:1px solid #bfe0cd;border-radius:11px;padding:9px 12px;margin-bottom:11px;font-size:13px;color:#1f7a3d}
-.cart-pantrybar b{font-weight:800}
 .slotcard.done{border-left-color:var(--accent)}
 .slotcard.done .slotbtn{color:var(--muted)}
 .water-info{font-size:12px;color:var(--muted);font-weight:500;padding:0 12px}
@@ -458,22 +437,6 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
 .pb-def{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px}
 .pb-def input{width:18px;height:18px;flex:none}
 .pb-note{font-size:12.5px;color:var(--muted);margin-top:6px}
-.pantry-add{background:var(--chip);border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:8px}
-.pan-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:11px;padding:11px 12px;color:var(--ink);font-weight:700;font-size:14px;text-align:left;margin-top:14px;box-shadow:var(--shadow)}
-.pan-head small{font-weight:500;color:var(--muted);margin-left:6px}
-.pan-head .dn-chev{color:var(--muted);font-size:13px}
-.pan-body{padding:8px 2px 2px}
-.pa-row{display:flex;gap:8px;align-items:center} .pa-row .input{flex:1;min-width:0}
-.pa-mhd{flex:1;display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:600} .pa-mhd .input{flex:1}
-.pa-row .btn{flex:none;white-space:nowrap}
-.pitem{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:1px solid var(--line)}
-.pi-name{flex:1;min-width:0;font-weight:600;font-size:13.5px} .pi-amt{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
-.mhd{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
-.mhd.soon{background:rgba(232,150,35,.2);color:#b06d00} .mhd.expired{background:rgba(220,60,60,.18);color:#c0392b}
-.reste-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.reste-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);color:var(--ink);display:flex;flex-direction:column;gap:3px}
-.reste-card b{font-size:13px} .reste-card small{color:var(--muted);font-size:11px}
-.reste-card.exp{border-color:rgba(232,150,35,.6)}
 .trainbtn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:1px solid var(--line);background:linear-gradient(90deg,rgba(63,143,107,.32) var(--tfill,0%),var(--card) var(--tfill,0%));color:var(--ink);border-radius:11px;padding:11px 12px;font-weight:600;font-size:13px;line-height:1.15;box-shadow:var(--shadow);transition:background .35s ease}
 .trainbtn .dn-chev{color:var(--muted);font-size:13px}
 .trainbtn.on{border-color:var(--accent);color:var(--accent)}
@@ -530,7 +493,6 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
       <button class="menubtn" id="menuBtn" aria-label="Menü">☰</button>
     </div>
     <div class="syncpill" id="syncPill" title="Sync-Status"><span class="dot"></span><span class="txt">Lokal gespeichert</span></div>
-  <div class="memberbar" id="memberBar" style="display:none"></div>
   </div>
 </header>
 
@@ -582,11 +544,6 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
     <div id="cartBody"></div>
   </section>
 
-  <!-- KÜHLSCHRANK / SPEIS -->
-  <section class="view" id="view-pantry">
-    <div class="viewhead"><h2>Kühlschrank / Speis</h2></div>
-    <div id="pantryBody"></div>
-  </section>
 
   <!-- EINSTELLUNGEN -->
   <section class="view" id="view-settings">
@@ -640,7 +597,6 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
   <button data-view="plan" class="active"><span class="ic">📅</span>Plan</button>
   <button data-view="recipes"><span class="ic">📖</span>Rezepte</button>
   <button data-view="cart"><span class="ic">🛒</span>Wagen<span class="cartbadge" id="navCartBadge">0</span></button>
-  <button data-view="pantry"><span class="ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><rect x="6" y="2.5" width="12" height="19" rx="2.4"/><line x1="6" y1="9.5" x2="18" y2="9.5"/><line x1="8.6" y1="5" x2="8.6" y2="7"/><line x1="8.6" y1="12" x2="8.6" y2="15"/></svg></span>Vorrat</button>
   <button data-view="settings"><span class="ic">⚙️</span>Mehr</button>
 </nav>
 
@@ -1763,14 +1719,14 @@ function zeroNut(){ return {kcal:0,protein:0,carbs:0,fat:0,fiber:0}; }
 function addNut(a,b){ NUTR_KEYS.forEach(k=>a[k]+=(b[k]||0)); return a; }
 function recipeNutrients(r){ if(r&&r.nutriM&&typeof r.nutriM.kcal==="number"){ const o=zeroNut(); NUTR_KEYS.forEach(k=>o[k]=+r.nutriM[k]||0); return o; }   // manuell angegebene Nährwerte haben Vorrang
   const t=zeroNut(); if(r&&Array.isArray(r.ing)) r.ing.forEach(ing=>{ const n=ingNutrients(ing); if(n) addNut(t,n); }); return t; }
-function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; if(abn&&s.id==="s2") return; if(!memberEatsSlot(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); addNut(t,extrasNut(dayId)); return t; }
+function dayNutrients(dayId,exceptSlot){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(exceptSlot&&s.id===exceptSlot) return; if(abn&&s.id==="s2") return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); addNut(t,extrasNut(dayId)); return t; }
 /* "gegessen/gekocht" tracking: sum only the marked meals so the day shows what's already eaten and what's still free */
 function doneKey(day,slot){ return day+"|"+slot; }
 function isDone(day,slot){ const d=DONE(); return !!(d && d[doneKey(day,slot)]); }
-function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); const nowDone=!d[k]; if(nowDone) d[k]=true; else delete d[k]; const ded=pantryAdjustForSlot(day,slot,nowDone?1:-1); checkStreak(); save(); if(ded) toast(nowDone?("🧊 "+ded+" Zutat(en) vom Vorrat abgezogen"):"🧊 Vorrat zurückgebucht"); }
+function toggleDone(day,slot){ const d=DONE(); const k=doneKey(day,slot); const nowDone=!d[k]; if(nowDone) d[k]=true; else delete d[k]; checkStreak(); save(); }
 function clearDone(day,slot){ const d=DONE(); if(d) delete d[doneKey(day,slot)]; }
 function dayEaten(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ if(isDone(dayId,e.id)){ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); } }); return t; }
-function dayConsumed(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; if(!memberEatsSlot(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ if(!memberEatsSlot(dayId,e.id)) return; const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }   // wie dayEaten, aber ALLE Extras zählen sofort; im Familienmodus nur die Slots des aktiven Mitglieds
+function dayConsumed(dayId){ const t=zeroNut(); const abn=weekProfile()==="abnehmen"; SLOTS.forEach(s=>{ if(abn&&s.id==="s2") return; if(!isDone(dayId,s.id)) return; const rid=PLAN()[dayId]&&PLAN()[dayId][s.id]; const r=rid?recipe(rid):null; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,s.id))); }); dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }   // ALLE Extras zählen sofort
 function anyDone(dayId){ return SLOTS.some(s=>isDone(dayId,s.id) && PLAN()[dayId] && PLAN()[dayId][s.id]) || dayExtras(dayId).some(e=>isDone(dayId,e.id)); }
 function targets(){ const t=state.targets||DEFAULT_TARGETS; return t; }
 /* per-week cheat day: state.weekCheat[weekKey]=dayId|null, with a per-key edit timestamp weekCheatAt[weekKey] so cloud merge converges (last-write-wins). No global fallback — a missing key simply means "no cheat". */
@@ -1784,7 +1740,7 @@ function dayExtras(dayId){ const w=state.weekExtra&&state.weekExtra[uiWeek]; con
 function newExtraId(){ return "x"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36); }
 function addExtraMeal(dayId,rid){ ensureWeek(uiWeek); if(!state.weekExtra) state.weekExtra={}; if(!state.weekExtra[uiWeek]) state.weekExtra[uiWeek]={}; if(!Array.isArray(state.weekExtra[uiWeek][dayId])) state.weekExtra[uiWeek][dayId]=[]; state.weekExtra[uiWeek][dayId].push({id:newExtraId(),rid}); }
 function removeExtra(dayId,exId){ const l=state.weekExtra&&state.weekExtra[uiWeek]&&state.weekExtra[uiWeek][dayId]; if(Array.isArray(l)){ const e=l.find(x=>x&&x.id===exId); if(e) e.del=true; }  clearDone(dayId,exId); }   // soft-delete so the removal syncs (union merge would otherwise re-add it)
-function extrasNut(dayId){ const t=zeroNut(); dayExtras(dayId).forEach(e=>{ if(!memberEatsSlot(dayId,e.id)) return; const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }
+function extrasNut(dayId){ const t=zeroNut(); dayExtras(dayId).forEach(e=>{ const r=state.recipes[e.rid]; if(r) addNut(t,mulNut(recipeNutrients(r),portionOf(dayId,e.id))); }); return t; }
 /* ---- manual locks per day/slot: state.weekLocks[weekKey][dayId][slot]=true (a slot the user set by hand; rebalance keeps it) ---- */
 function lockSet(dayId){ const s=new Set(); const w=state.weekLocks&&state.weekLocks[uiWeek], d=w&&w[dayId]; if(d) Object.keys(d).forEach(sl=>{ if(d[sl]) s.add(sl); }); return s; }
 function setLock(dayId,slot,on){ if(!state.weekLocks) state.weekLocks={}; if(!state.weekLocks[uiWeek]) state.weekLocks[uiWeek]={}; if(!state.weekLocks[uiWeek][dayId]) state.weekLocks[uiWeek][dayId]={}; if(on) state.weekLocks[uiWeek][dayId][slot]=true; else delete state.weekLocks[uiWeek][dayId][slot]; }
@@ -1797,7 +1753,7 @@ function rebalanceDay(dayId){
   const tg=targets(), profId=weekProfile(), order=weekOrder(), locks=lockSet(dayId);
   const fixed={}; order.forEach(([slot])=>{ if(locks.has(slot) && PLAN()[dayId][slot]) fixed[slot]=PLAN()[dayId][slot]; });
   const baseNut=extrasNut(dayId), used={};
-  const th=dayTheme(dayId), allowFn=(th==="veg"||th==="fish"||th==="fleisch")?(slot=>(r=>themeAllows(dayId,slot,r))):null;   // Motto-Tag auch beim Nachbalancieren einhalten
+  const allowFn=null;
   let best=null,bd=1e9;
   for(let k=0;k<80;k++){ const day=fillDay(order,tg,profId,used,recipesByType,{fixed,baseNut,allowFn,dayBonus:dayScoreBonus(dayId)}); const dist=dayDistance(day.nut,tg); if(dist<bd){bd=dist;best=day;} }
   if(best){ order.forEach(([slot])=>{ if(!locks.has(slot) && best.picks[slot]) PLAN()[dayId][slot]=best.picks[slot]; }); }   // only replace a non-locked slot that actually got a pick — never wipe an existing dish to null
@@ -1910,8 +1866,8 @@ function recipeEffort(r){ if(r&&(r.effort==="schnell"||r.effort==="mittel"||r.ef
   const st=((r&&r.steps)||"").trim(); const stepN = !st?0 : (st.indexOf("\n")>=0 ? st.split(/\n+/).filter(x=>x.trim()).length : st.split(/\.\s+/).filter(x=>x.trim()).length);
   const ings=(r&&r.ing?r.ing.length:0);
   if(stepN<=2 && ings<=5) return "schnell"; if(stepN>=5 || ings>=9) return "aufwendig"; return "mittel"; }
-function dayScoreBonus(dayId){ const tb=themeBonus(dayId), weekday=isWeekday(dayId);
-  return (r)=>{ let b=0; if(tb) b+=tb(r); const e=recipeEffort(r); if(weekday){ if(e==="schnell") b+=0.35; else if(e==="aufwendig") b-=0.2; } else if(e==="aufwendig") b+=0.15; return b; }; }
+function dayScoreBonus(dayId){ const weekday=isWeekday(dayId);
+  return (r)=>{ let b=0; const e=recipeEffort(r); if(weekday){ if(e==="schnell") b+=0.35; else if(e==="aufwendig") b-=0.2; } else if(e==="aufwendig") b+=0.15; return b; }; }
 function fillDay(order,tg,profId,used,byType,opts){
   opts=opts||{}; const allowFn=opts.allowFn, blockIds=opts.blockIds, fixed=opts.fixed, baseNut=opts.baseNut, dayBonus=opts.dayBonus;
   const picks={}, usedDay={}; const cur=zeroNut(); if(baseNut) addNut(cur,baseNut);   // baseNut = extra meals already on the day
@@ -1948,9 +1904,7 @@ function generateWeek(profileId){
     if(m && meatLimited){ if(slot!=="l" && slot!=="d") return false; if(!meatDays.has(dayId)) return false; }
     if(f && fishLimited){ if(slot!=="l" && slot!=="d") return false; if(!fishDays.has(dayId)) return false; }
     return true; };
-  const allowFor=(dayId)=>(slot)=>((r)=>{ const th=dayTheme(dayId);
-    if((th==="fish"||th==="fleisch") && slot==="l") return th==="fish"?hasFish(r):hasMeat(r);   // Motto-Mittagsgericht hat Vorrang vor den Wochen-Fleisch/Fisch-Limits
-    if(!themeAllows(dayId,slot,r)) return false; return dietAllowedOn(r,dayId,slot); });
+  const allowFor=(dayId)=>(slot)=>((r)=>dietAllowedOn(r,dayId,slot));
   const np={}; let placed=0;
   const proteinRepair=(dayId,bs)=>{ const tgP=tg.protein; if(!tgP) return;   // ensure the day covers the protein target: swap in higher-protein dishes where possible
     const dayProtein=()=>{ let p=extrasNut(dayId).protein; Object.values(np[dayId]).forEach(rid=>{ const r=rid&&state.recipes[rid]; if(r) p+=recipeNutrients(r).protein; }); return p; };
@@ -1959,7 +1913,7 @@ function generateWeek(profileId){
       let bestSwap=null;
       order.forEach(([slot,type])=>{ if(defs[slot]) return;   // don't override a standard meal
         const curR=np[dayId][slot]?state.recipes[np[dayId][slot]]:null, curPr=curR?recipeNutrients(curR).protein:0;
-        byType(type).forEach(r=>{ if(!themeAllows(dayId,slot,r)) return; if(!dietAllowedOn(r,dayId,slot)||bs.has(r.id)||Object.values(np[dayId]).indexOf(r.id)>=0) return; const gain=recipeNutrients(r).protein-curPr; if(gain>0 && (!bestSwap||gain>bestSwap.gain)) bestSwap={slot,rid:r.id,gain}; });
+        byType(type).forEach(r=>{ if(!dietAllowedOn(r,dayId,slot)||bs.has(r.id)||Object.values(np[dayId]).indexOf(r.id)>=0) return; const gain=recipeNutrients(r).protein-curPr; if(gain>0 && (!bestSwap||gain>bestSwap.gain)) bestSwap={slot,rid:r.id,gain}; });
       });
       if(!bestSwap) break; np[dayId][bestSwap.slot]=bestSwap.rid;
     }
@@ -2177,12 +2131,11 @@ function seedState(){
   normalizeRecipes(recipes);   // u. a. eingebaute Kaffees als Drinks taggen
   const plan={}; DAYS.forEach(d=>{plan[d.id]={};SLOTS.forEach(s=>plan[d.id][s.id]=SEED_PLAN[d.id]?SEED_PLAN[d.id][s.id]||null:null)});
   const ck=currentMondayStr();
-  return {persons:1, familyMode:false, members:[], attend:{}, defaultDiners:[], targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, deletedBuiltins:{}, pantry:[], meatPerWeek:-1, fishPerWeek:-1, meatDaysSel:"egal", fishDaysSel:"egal",
+  return {persons:1, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, deletedBuiltins:{}, meatPerWeek:-1, fishPerWeek:-1, meatDaysSel:"egal", fishDaysSel:"egal",
     currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
     height:null, age:null, sex:"n", activity:1.375,
-    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekPersons:{}, weekLocks:{}, weekCart:{}, weekPortions:{}, weekPinned:{}, wishes:{}, dayThemes:{}, defaults:{},
+    weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekPersons:{}, weekLocks:{}, weekCart:{}, weekPortions:{}, weekPinned:{}, wishes:{}, defaults:{},
     weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
-    users:{}, familyDishes:{}, cartSrc:{}, cartChecked:{}, cartManual:[],
     recipes, cart:[]};
 }
 
@@ -2195,131 +2148,19 @@ let state = load();
 let uiDay = todayDayId();                 // beim Öffnen: aktueller Wochentag
 let uiWeek = currentMondayStr();          // beim Öffnen: aktuelle Woche
 let didInitScroll=false;                  // einmaliges Scrollen zum heutigen Tag beim Start
-let uiMember = localStorage.getItem("foodies_member") || "all";   // aktives Familienmitglied dieses Geräts (nicht gesynct); "all" = Haushalt
-/* ===== Per-Nutzer-Daten (v2): jeder Login-Nutzer hat seinen eigenen Plan in state.users[uid] ===== */
-function nowISO(){ return new Date().toISOString(); }
-function viewUid(){ try{ const v=localStorage.getItem("foodies_viewuid"); return v||authUid()||"_local"; }catch(e){ return (typeof authUid==="function"&&authUid())||"_local"; } }   // welcher Nutzer-Plan gerade auf dem Schirm ist
-function ensureUser(uid){
-  uid = uid || authUid() || "_local";
-  if(!state.users || typeof state.users!=="object") state.users={};
-  let u=state.users[uid];
-  if(!u){ const ck=currentMondayStr();
-    u=state.users[uid]={ username:"", profileAt:"",
-      targets:{...DEFAULT_TARGETS}, currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
-      height:null, age:null, sex:"n", activity:1.375, cheatDay:null, meatPerWeek:-1, fishPerWeek:-1, personsDefault:1,
-      weeks:{[ck]:emptyPlan()}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}},
-      weekExtra:{}, weekTrain:{}, weekPersons:{}, weekPortions:{}, weekPinned:{}, wishes:{}, weekCheat:{}, weekCheatAt:{},
-      weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null }; }
-  return u;
-}
-function U(){ return ensureUser(viewUid()); }   // aktueller Ansichts-Nutzer (Standard: eigener authUid)
-/* ---- Familienmodus: leichte Mitglieder-Profile im geteilten Datensatz (keine echten Logins) ---- */
-function members(){ return Array.isArray(state.members)?state.members:[]; }
-function memberById(id){ return members().find(m=>m&&m.id===id)||null; }
-function activeMember(){ return (state.familyMode && uiMember && uiMember!=="all") ? memberById(uiMember) : null; }
-function newMemberId(){ return "mem"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36); }
-function memberFromGlobals(name,emoji,goal){ return { id:newMemberId(), name:name||"Ich", emoji:emoji||"🙂", color:"#e0623a",
-  weight:state.currentWeight||null, height:state.height||null, age:state.age||null, sex:state.sex||"n", activity:state.activity||1.375,
-  goal:goal||"ausgewogen", loseKgPerWeek:state.loseKgPerWeek||0.5, gainKgPerWeek:state.gainKgPerWeek||0.25, targetWeight:state.targetWeight||null,
-  diet:"omnivor", allergies:[], dislikes:[], portion:1, isChild:false, weightLog:Array.isArray(state.weightLog)?state.weightLog.slice():[], at:new Date().toISOString() }; }
-function setActiveMember(id){ uiMember=id||"all"; try{ localStorage.setItem("foodies_member",uiMember); }catch(e){}
-  if(!state.familyMode) return;
-  const list=members(); const m=(uiMember!=="all"?memberById(uiMember):null)||list[0];   // "Alle" → Haupt-Mitglied als Referenz für die Ziele
-  if(m){                                   // Mitglieds-Körperdaten in die Top-Level-Felder spiegeln → computeTargets bleibt unverändert
-    state.currentWeight=m.weight; state.height=m.height; state.age=m.age; state.sex=m.sex||"n"; state.activity=m.activity||1.375;
-    state.loseKgPerWeek=m.loseKgPerWeek||0.5; state.gainKgPerWeek=m.gainKgPerWeek||0.25; state.targetWeight=m.targetWeight;
-    if(m.goal) state.targets={...computeTargets(m.goal)};
-  }
-}
-function mergeMembers(rm){ if(!Array.isArray(rm)) return; const by={}; members().concat(rm).forEach(m=>{ if(m&&m.id){ const cur=by[m.id]; if(!cur || (m.at||"")>=(cur.at||"")) by[m.id]=m; } }); state.members=Object.values(by); }   // union per id, neuere at gewinnt
-/* ---- Phase 2: Anwesenheit – wer isst welche Mahlzeit ---- */
-function allMemberIds(){ return members().map(m=>m.id); }
-function attendeesFor(day,key){ const w=state.attend&&state.attend[uiWeek], d=w&&w[day], a=d&&d[key];
-  if(Array.isArray(a)) return a.filter(id=>memberById(id));
-  const def=(Array.isArray(state.defaultDiners)&&state.defaultDiners.length)?state.defaultDiners.filter(id=>memberById(id)):allMemberIds();
-  return def; }
-function setAttendee(day,key,mid,on){ ensureWeek(uiWeek); if(!state.attend) state.attend={}; if(!state.attend[uiWeek]) state.attend[uiWeek]={}; if(!state.attend[uiWeek][day]) state.attend[uiWeek][day]={};
-  let cur=Array.isArray(state.attend[uiWeek][day][key])?state.attend[uiWeek][day][key].slice():attendeesFor(day,key).slice();
-  const i=cur.indexOf(mid); if(on&&i<0) cur.push(mid); else if(!on&&i>=0) cur.splice(i,1);
-  state.attend[uiWeek][day][key]=cur; save(); }
-function nutriMemberId(){ return (state.familyMode && uiMember!=="all") ? uiMember : null; }   // Nährwertkarte: bei „Alle" ganzer Plan, sonst nur die Slots dieses Mitglieds
-function memberEatsSlot(day,key){ const mid=nutriMemberId(); if(!mid) return true; return attendeesFor(day,key).indexOf(mid)>=0; }
 function goalLabel(g){ const p=PROFILES.find(x=>x.id===g); return p?(p.emoji+" "+p.label):"⚖️ Ausgewogen"; }
-function renderMemberBar(){ const bar=$("#memberBar"); if(!bar) return;
-  if(!state.familyMode){ bar.style.display="none"; bar.innerHTML=""; return; }
-  bar.style.display="flex"; bar.innerHTML="";
-  const chip=(id,name,emoji,on)=>{ const b=el("button","memchip"+(on?" on":""),"<span class='memav'>"+esc(emoji)+"</span>"+esc(name)); b.onclick=()=>{ setActiveMember(id); renderAll(); }; return b; };
-  bar.appendChild(chip("all","Alle","👪",uiMember==="all"));
-  members().forEach(m=>bar.appendChild(chip(m.id,m.name,m.emoji||"🙂",uiMember===m.id)));
-  const add=el("button","memchip add","＋"); add.title="Familie verwalten"; add.setAttribute("aria-label","Familie verwalten"); add.onclick=openFamilySetup; bar.appendChild(add);
-}
-function openFamilySetup(){
-  openModal("<div class='mhead'><h3>👨‍👩‍👧 Familie</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
-    "<label class='fam-toggle'><input type='checkbox' id='famOn'"+(state.familyMode?" checked":"")+"> <span>Familienmodus aktivieren</span></label>"+
-    "<p class='hint' style='margin-top:2px'>Mehrere Personen mit eigenen Zielen, Ernährungsform &amp; Allergien – ihr kocht trotzdem ein Gericht. Ausgeschaltet = normale Einzel-Ansicht.</p>"+
-    "<div id='famList'></div>"+
-    "<button class='btn block' id='famAdd' style='margin-top:8px'>＋ Mitglied hinzufügen</button>"+
-    "<div class='divider'></div>"+
+function openAccount(){
+  openModal("<div class='mhead'><h3>👤 Konto</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
     "<div class='hh-box'><div class='hh-lbl'>👤 Konto</div>"+
-    (isLoggedIn()? "<div class='hh-code'>"+esc((_session&&_session.username)||"angemeldet")+"</div><p class='hint' style='margin-top:4px'>Eure Familie meldet sich auf jedem Gerät mit DIESEM Benutzernamen + Kennwort an – dann teilt ihr denselben Plan, Vorrat &amp; Einkauf. Andere Familien können eure Daten nicht sehen.</p>"+
+    (isLoggedIn()? "<div class='hh-code'>"+esc((_session&&_session.username)||"angemeldet")+"</div><p class='hint' style='margin-top:4px'>Du meldest dich auf jedem Gerät mit DIESEM Benutzernamen + Kennwort an – dein Plan ist gesichert und auf allen Geräten synchron.</p>"+
         (isAdmin()? "<div class='btnrow'><button class='btn sm primary' id='adminOpen'>🛠️ Benutzer verwalten</button></div>":"")+
         "<div class='btnrow'><button class='btn sm ghost' id='hhChgPw'>🔑 Kennwort ändern</button><button class='btn sm ghost' id='hhLogout'>🚪 Abmelden</button></div>"
       : "<p class='hint'>Nicht angemeldet – aktuell nur lokal auf diesem Gerät.</p>")+
-    "</div>"+
-    "</div>");
+    "</div></div>");
   $("#mX").onclick=closeModal;
   { const ao=$("#adminOpen"); if(ao) ao.onclick=openAdminPanel; }
   { const cp=$("#hhChgPw"); if(cp) cp.onclick=()=>{ closeModal(); openPwGate(true); }; }
-  { const lo=$("#hhLogout"); if(lo) lo.onclick=async()=>{ if(!confirm("Abmelden? Du musst dich danach neu anmelden. Eure Familiendaten bleiben in der Cloud gespeichert.")) return; await authLogout(); try{ localStorage.removeItem("foodies_lastUser"); }catch(e){} location.reload(); }; }
-  const renderList=()=>{ const l=$("#famList"); if(!l) return; l.innerHTML="";
-    if(!state.familyMode){ l.innerHTML="<p class='hint'>Aktiviere den Familienmodus, um Mitglieder anzulegen.</p>"; return; }
-    members().forEach(m=>{ const row=el("div","fam-row"); row.innerHTML="<span class='memav'>"+esc(m.emoji||"🙂")+"</span><b class='fam-nm'>"+esc(m.name)+"</b><small>"+esc(goalLabel(m.goal))+"</small>";
-      const ed=el("button","btn sm ghost","Bearbeiten"); ed.onclick=()=>openMemberEdit(m.id); row.appendChild(ed); l.appendChild(row); });
-  };
-  $("#famOn").onchange=(e)=>{ state.familyMode=e.target.checked;
-    if(state.familyMode && !members().length){ state.members=[memberFromGlobals("Ich","🙂",(state.weekProfile&&state.weekProfile[uiWeek])||"ausgewogen")]; uiMember=state.members[0].id; try{localStorage.setItem("foodies_member",uiMember);}catch(x){} }
-    save(); setActiveMember(uiMember); renderAll(); renderList();
-  };
-  $("#famAdd").onclick=()=>{ if(!state.familyMode){ toast("Erst Familienmodus aktivieren"); return; } openMemberEdit(null); };
-  renderList();
-}
-function openMemberEdit(id){
-  const isNew=!id; const m=isNew? {id:newMemberId(),name:"",emoji:"🙂",goal:"ausgewogen",diet:"omnivor",sex:"n",activity:1.375,weight:null,height:null,age:null,targetWeight:null,loseKgPerWeek:0.5,gainKgPerWeek:0.25,allergies:[],dislikes:[],portion:1,isChild:false,weightLog:[]} : {...memberById(id),allergies:(memberById(id).allergies||[]).slice()};
-  const EMO=["🙂","🧔","👩","👧","🧒","👦","👴","👵","🧑","👶","🦸","🐣"];
-  const DIETS=[{v:"omnivor",l:"🍽️ Alles"},{v:"vegetarisch",l:"🥗 Vegetarisch"},{v:"vegan",l:"🌱 Vegan"},{v:"pescetarisch",l:"🐟 Pescetarisch"}];
-  const ALG=["nuss","laktose","gluten","ei","soja","fisch","erdnuss"];
-  openModal("<div class='mhead'><h3>"+(isNew?"Neues Mitglied":esc(m.name||"Mitglied"))+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
-    "<div class='field'><label>Name</label><input class='input' id='meName' value='"+esc(m.name||"")+"' placeholder='z. B. Mia'></div>"+
-    "<div class='field'><label>Avatar</label><div class='chips' id='meEmo'>"+EMO.map(e=>"<button class='chip emochip"+(e===m.emoji?" active":"")+"' data-e='"+e+"'>"+e+"</button>").join("")+"</div></div>"+
-    "<div class='field'><label>Ziel</label><div class='chips' id='meGoal'>"+PROFILES.map(p=>"<button class='chip"+(p.id===m.goal?" active":"")+"' data-v='"+p.id+"'>"+esc(p.emoji+" "+p.label)+"</button>").join("")+"</div></div>"+
-    "<div class='field'><label>Ernährungsform</label><div class='chips' id='meDiet'>"+DIETS.map(d=>"<button class='chip"+(d.v===m.diet?" active":"")+"' data-v='"+d.v+"'>"+esc(d.l)+"</button>").join("")+"</div></div>"+
-    "<div class='field'><label>Körperdaten (für den Kalorienbedarf)</label><div class='chips' style='gap:6px'>"+
-      "<input class='input' id='meW' inputmode='decimal' placeholder='Gewicht kg' style='width:96px' value='"+(m.weight!=null?esc(fmtNum(m.weight)):"")+"'>"+
-      "<input class='input' id='meH' inputmode='numeric' placeholder='Größe cm' style='width:92px' value='"+(m.height!=null?esc(fmtNum(m.height)):"")+"'>"+
-      "<input class='input' id='meA' inputmode='numeric' placeholder='Alter' style='width:72px' value='"+(m.age!=null?esc(fmtNum(m.age)):"")+"'>"+
-      "<select class='input' id='meS' style='width:120px'><option value='n'"+(m.sex==="n"?" selected":"")+">Geschlecht</option><option value='m'"+(m.sex==="m"?" selected":"")+">männlich</option><option value='w'"+(m.sex==="w"?" selected":"")+">weiblich</option></select>"+
-    "</div></div>"+
-    "<div class='field'><label>Aktivität</label><select class='input' id='meAct'>"+ACT_LEVELS.map(a=>"<option value='"+a.v+"'"+(Math.abs((m.activity||1.375)-a.v)<0.01?" selected":"")+">"+esc(a.l)+"</option>").join("")+"</select></div>"+
-    "<div class='field'><label>Allergien / No-Gos</label><div class='chips' id='meAlg'>"+ALG.map(a=>"<button class='chip"+(m.allergies.indexOf(a)>=0?" active":"")+"' data-a='"+a+"'>"+esc(a.charAt(0).toUpperCase()+a.slice(1))+"</button>").join("")+"</div></div>"+
-    "<label class='pb-def'><input type='checkbox' id='meChild'"+(m.isChild?" checked":"")+"> <span>Kind (kleinere Portionen)</span></label>"+
-    "<div class='mfoot'>"+(isNew?"":"<button class='btn ghost' id='meDel'>Löschen</button>")+"<div style='flex:1'></div><button class='btn primary' id='meSave'>Speichern</button></div>"+
-    "</div>");
-  $("#mX").onclick=openFamilySetup;
-  let emo=m.emoji, goal=m.goal, diet=m.diet, alg=m.allergies.slice();
-  $$("#meEmo .emochip").forEach(b=>b.onclick=()=>{ emo=b.dataset.e; $$("#meEmo .emochip").forEach(x=>x.classList.toggle("active",x===b)); });
-  $$("#meGoal .chip").forEach(b=>b.onclick=()=>{ goal=b.dataset.v; $$("#meGoal .chip").forEach(x=>x.classList.toggle("active",x===b)); });
-  $$("#meDiet .chip").forEach(b=>b.onclick=()=>{ diet=b.dataset.v; $$("#meDiet .chip").forEach(x=>x.classList.toggle("active",x===b)); });
-  $$("#meAlg .chip").forEach(b=>b.onclick=()=>{ const a=b.dataset.a, i=alg.indexOf(a); if(i>=0) alg.splice(i,1); else alg.push(a); b.classList.toggle("active"); });
-  $("#meSave").onclick=()=>{ const nm=$("#meName").value.trim(); if(!nm){ toast("Name fehlt"); return; }
-    m.name=nm; m.emoji=emo; m.goal=goal; m.diet=diet; m.allergies=alg;
-    m.weight=parseNum($("#meW").value); m.height=parseNum($("#meH").value); m.age=parseNum($("#meA").value); m.sex=$("#meS").value; m.activity=parseFloat($("#meAct").value)||1.375;
-    m.isChild=$("#meChild").checked; m.at=new Date().toISOString();
-    const list=members(), idx=list.findIndex(x=>x.id===m.id); if(idx>=0) list[idx]=m; else list.push(m); state.members=list;
-    if(isNew && members().length===1) uiMember=m.id;
-    if(uiMember===m.id) setActiveMember(uiMember);
-    save(); openFamilySetup(); renderAll();
-  };
-  if(!isNew){ const del=$("#meDel"); if(del) del.onclick=()=>{ if(!confirm("Mitglied „"+m.name+"“ löschen?")) return; state.members=members().filter(x=>x.id!==m.id); if(uiMember===m.id){ uiMember="all"; setActiveMember("all"); } save(); openFamilySetup(); renderAll(); }; }
+  { const lo=$("#hhLogout"); if(lo) lo.onclick=async()=>{ if(!confirm("Abmelden? Du musst dich danach neu anmelden. Deine Daten bleiben in der Cloud gespeichert.")) return; await authLogout(); try{ localStorage.removeItem("foodies_lastUser"); }catch(e){} location.reload(); }; }
 }
 let nutriOpen = (localStorage.getItem("foodies_nutri_open")!=="0");
 let waterOpen = (localStorage.getItem("foodies_water_open")!=="0");
@@ -2381,7 +2222,7 @@ function dayDateStr(k,dayIdx){ const d=weekMonday(k); d.setDate(d.getDate()+dayI
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
 function todayDayId(){ return ["so","mo","di","mi","do","fr","sa"][new Date().getDay()]; }   // JS getDay: 0=So…6=Sa → unsere Tag-Ids
 function ymStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2); }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; if(!s.deletedBuiltins||typeof s.deletedBuiltins!=="object"||Array.isArray(s.deletedBuiltins)) s.deletedBuiltins={}; if(!Array.isArray(s.pantry)) s.pantry=[]; ensureNewRecipes(s.recipes); topUpBuiltins(s.recipes,s.deletedBuiltins); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; { const okSel=x=>x==="egal"||x==="nie"||Array.isArray(x); const der=c=>c===0?"nie":"egal"; if(!okSel(s.meatDaysSel)) s.meatDaysSel=der(s.meatPerWeek); if(!okSel(s.fishDaysSel)) s.fishDaysSel=der(s.fishPerWeek); } if(typeof s.familyMode!=="boolean") s.familyMode=false; if(!Array.isArray(s.members)) s.members=[]; if(!s.attend||typeof s.attend!=="object"||Array.isArray(s.attend)) s.attend={}; if(!Array.isArray(s.defaultDiners)) s.defaultDiners=[]; s.members=s.members.filter(m=>m&&m.id).map(m=>({diet:"omnivor",allergies:[],dislikes:[],portion:1,isChild:false,goal:"ausgewogen",sex:"n",activity:1.375,...m,allergies:Array.isArray(m.allergies)?m.allergies:[],dislikes:Array.isArray(m.dislikes)?m.dislikes:[]})); if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekPersons||typeof s.weekPersons!=="object"||Array.isArray(s.weekPersons)) s.weekPersons={}; if(!s.weekPortions||typeof s.weekPortions!=="object"||Array.isArray(s.weekPortions)) s.weekPortions={}; if(!s.weekPinned||typeof s.weekPinned!=="object"||Array.isArray(s.weekPinned)) s.weekPinned={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.wishes||typeof s.wishes!=="object"||Array.isArray(s.wishes)) s.wishes={}; if(!s.dayThemes||typeof s.dayThemes!=="object"||Array.isArray(s.dayThemes)) s.dayThemes={}; { const _wd=["mo","di","mi","do","fr","sa","so"]; if(Object.keys(s.dayThemes).some(k=>_wd.indexOf(k)>=0)) s.dayThemes={}; }   /* alte Wochentag-Mottos entfernen → Mottos jetzt pro Woche */ if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; if(!s.deletedBuiltins||typeof s.deletedBuiltins!=="object"||Array.isArray(s.deletedBuiltins)) s.deletedBuiltins={}; delete s.pantry; ensureNewRecipes(s.recipes); topUpBuiltins(s.recipes,s.deletedBuiltins); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; { const okSel=x=>x==="egal"||x==="nie"||Array.isArray(x); const der=c=>c===0?"nie":"egal"; if(!okSel(s.meatDaysSel)) s.meatDaysSel=der(s.meatPerWeek); if(!okSel(s.fishDaysSel)) s.fishDaysSel=der(s.fishPerWeek); } delete s.familyMode; delete s.members; delete s.attend; delete s.defaultDiners; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekPersons||typeof s.weekPersons!=="object"||Array.isArray(s.weekPersons)) s.weekPersons={}; if(!s.weekPortions||typeof s.weekPortions!=="object"||Array.isArray(s.weekPortions)) s.weekPortions={}; if(!s.weekPinned||typeof s.weekPinned!=="object"||Array.isArray(s.weekPinned)) s.weekPinned={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.wishes||typeof s.wishes!=="object"||Array.isArray(s.wishes)) s.wishes={}; delete s.dayThemes; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
 function pruneEmptyWeeks(){                                // drop only fully-empty scaffolding weeks; any used week is permanent (stats depend on it)
   const ck=currentMondayStr();
   Object.keys(state.weeks).forEach(k=>{
@@ -2456,7 +2297,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c||!isLoggedIn()) return; await ensureToken();
-  const body=[{id:rowId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,familyMode:state.familyMode,members:state.members,attend:state.attend,defaultDiners:state.defaultDiners,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,dayThemes:state.dayThemes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,pantry:state.pantry,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:rowId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:authHeader(),"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(r.status===401){ if(navigator.onLine && !(await authRefresh())) requireReauth(); throw new Error("HTTP 401"); }
@@ -2509,10 +2350,8 @@ async function cloudPullApply(force){
         if(d.weekPinned && typeof d.weekPinned==="object" && !Array.isArray(d.weekPinned)){ if(!state.weekPinned) state.weekPinned={}; Object.keys(d.weekPinned).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.weekPinned[k]||{}; state.weekPinned[k]={...rd, ...(state.weekPinned[k]||{})}; }); }   // festgestellte Mahlzeiten; lokal gewinnt
         // weekLocks are intentionally NOT synced — they are a per-device hint for rebalance/regenerate; syncing a monotonic union would resurrect cleared locks
         if(d.wishes && typeof d.wishes==="object" && !Array.isArray(d.wishes)){ if(!state.wishes) state.wishes={}; Object.keys(d.wishes).forEach(k=>{ if(!WK_RE.test(k)) return; const rd=d.wishes[k]||{}, lo=state.wishes[k]||{}, out={}; new Set(Object.keys(rd).concat(Object.keys(lo))).forEach(key=>{ out[key] = (lo[key]===false||rd[key]===false) ? false : ((lo[key]===true||rd[key]===true)?true:false); }); state.wishes[k]=out; }); }   // Wunschgerichte je Woche; entfernt (false) gewinnt → Löschungen konvergieren
-        if(d.dayThemes && typeof d.dayThemes==="object" && !Array.isArray(d.dayThemes)){ const rt={}; Object.keys(d.dayThemes).forEach(k=>{ if(WK_RE.test(k)) rt[k]=d.dayThemes[k]; }); state.dayThemes={...rt, ...state.dayThemes}; }   // Motto-Tage pro Woche: nur Wochen-Keys übernehmen, lokal gewinnt
         if(d.defaults && typeof d.defaults==="object" && !Array.isArray(d.defaults)) state.defaults={...d.defaults, ...state.defaults};   // per-slot merge keeps each device's independent standard-meal picks
         if(d.deletedBuiltins && typeof d.deletedBuiltins==="object" && !Array.isArray(d.deletedBuiltins)){ if(!state.deletedBuiltins) state.deletedBuiltins={}; Object.keys(d.deletedBuiltins).forEach(id=>{ if(d.deletedBuiltins[id]) state.deletedBuiltins[id]=true; }); }
-        if(Array.isArray(d.pantry)){ if(!Array.isArray(state.pantry)) state.pantry=[]; const by={}; state.pantry.concat(d.pantry).forEach(p=>{ if(p&&p.id){ const ex=by[p.id]; if(!ex || (p.at||"")>(ex.at||"")) by[p.id]=p; } }); state.pantry=Object.values(by); }   // pantry: last-write-wins per item id
         if(d.recipes && typeof d.recipes==="object"){ state.recipes=d.recipes; ensureNewRecipes(state.recipes); topUpBuiltins(state.recipes,state.deletedBuiltins); normalizeRecipes(state.recipes); }
         if(typeof d.persons==="number") state.persons=d.persons;
         if(d.targets) state.targets=sanitizeTargets(d.targets);
@@ -2520,10 +2359,6 @@ async function cloudPullApply(force){
         if(typeof d.meatPerWeek==="number") state.meatPerWeek=d.meatPerWeek;
         if(typeof d.fishPerWeek==="number") state.fishPerWeek=d.fishPerWeek;
         { const okSel=x=>x==="egal"||x==="nie"||Array.isArray(x); if(okSel(d.meatDaysSel)) state.meatDaysSel=d.meatDaysSel; if(okSel(d.fishDaysSel)) state.fishDaysSel=d.fishDaysSel; }
-        if(typeof d.familyMode==="boolean") state.familyMode=d.familyMode;
-        if(Array.isArray(d.members)) mergeMembers(d.members);
-        if(d.attend&&typeof d.attend==="object"&&!Array.isArray(d.attend)) state.attend={...d.attend,...state.attend};   // lokale Anwesenheit gewinnt je Woche
-        if(Array.isArray(d.defaultDiners)&&!(state.defaultDiners&&state.defaultDiners.length)) state.defaultDiners=d.defaultDiners;
         if(typeof d.currentWeight==="number"||d.currentWeight===null) state.currentWeight=d.currentWeight;
         if(typeof d.targetWeight==="number"||d.targetWeight===null) state.targetWeight=d.targetWeight;
         if(typeof d.loseKgPerWeek==="number"&&d.loseKgPerWeek>0) state.loseKgPerWeek=d.loseKgPerWeek;
@@ -2574,7 +2409,7 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 function toastAction(msg,label,fn){ const t=$("#toast"); t.innerHTML=esc(msg)+" <button class='undo'>"+esc(label)+"</button>"; t.classList.add("show"); t.querySelector(".undo").onclick=()=>{ fn(); t.classList.remove("show"); }; clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),4500); }
 
 /* ============================ RENDER ============================ */
-function renderAll(){ renderMemberBar(); const pv=$("#pVal"); if(pv) pv.textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets(); renderStats();
+function renderAll(){ const pv=$("#pVal"); if(pv) pv.textContent=state.persons; renderPlan(); renderRecipes(); renderCart(); renderTargets(); renderStats();
 }
 
 function dayNutriEl(dayId){
@@ -2642,7 +2477,7 @@ function fmtPortion(f){ return (Math.round(f*100)/100).toString().replace(".",",
 /* festgestellte (pinned) Mahlzeit: state.weekPinned[weekKey][day][slot]=true — bleibt beim Neuplanen erhalten UND zählt als „nur 1 Person" (individuell) */
 function isPinned(dayId,key){ const w=state.weekPinned&&state.weekPinned[uiWeek], d=w&&w[dayId]; return !!(d&&d[key]); }
 function setPinned(dayId,key,on){ ensureWeek(uiWeek); if(!state.weekPinned) state.weekPinned={}; if(!state.weekPinned[uiWeek]) state.weekPinned[uiWeek]={}; if(!state.weekPinned[uiWeek][dayId]) state.weekPinned[uiWeek][dayId]={}; if(on) state.weekPinned[uiWeek][dayId][key]=true; else delete state.weekPinned[uiWeek][dayId][key]; save(); }
-function mealPersons(dayId,key){ if(state.familyMode && members().length) return attendeesFor(dayId,key).length; return isPinned(dayId,key) ? 1 : personsFor(dayId); }   // Familienmodus: Anzahl Mitesser; sonst festgestellt=1 bzw. Tages-Personenzahl
+function mealPersons(dayId,key){ return isPinned(dayId,key) ? 1 : personsFor(dayId); }   // festgestellt=1 bzw. Tages-Personenzahl
 function setDayPersons(dayId,n){ ensureWeek(uiWeek); if(!state.weekPersons) state.weekPersons={}; if(!state.weekPersons[uiWeek]) state.weekPersons[uiWeek]={}; n=Math.max(1,Math.min(30,n)); if(n===(state.persons||1)) delete state.weekPersons[uiWeek][dayId]; else state.weekPersons[uiWeek][dayId]=n; save(); renderPlan(); }
 function personsEl(dayId){ const n=personsFor(dayId), custom=!!(state.weekPersons&&state.weekPersons[uiWeek]&&state.weekPersons[uiWeek][dayId]);
   const wrap=el("div","personsrow"+(custom?" custom":""));
@@ -2699,7 +2534,6 @@ function renderPlan(){
     bar.appendChild(b);
     const col=el("div","daycol"+(d.id===uiDay?" showday":""));
     col.appendChild(el("div","dayname",esc(d.name)+(cheat?" ⚡🍕":"")));
-    col.appendChild(dayThemeEl(d.id));
     col.appendChild(personsEl(d.id));
     col.appendChild(dayNutriEl(d.id));
     SLOTS.forEach(s=>{
@@ -2707,7 +2541,7 @@ function renderPlan(){
       const rid=PLAN()[d.id][s.id]; const r=rid?recipe(rid):null;
       const done=r && isDone(d.id,s.id);
       const card=el("div","slotcard"+(r?" filled":"")+(done?" done":""));
-      { const pf0=r?portionOf(d.id,s.id):1; const famB=(r&&state.familyMode&&members().length)?(" <span class='fambadge'>👨‍👩‍👧 "+attendeesFor(d.id,s.id).length+"</span>"):""; card.appendChild(el("div","slotlabel",esc(s.name)+(isWish(d.id,s.id)?" ⭐":"")+(pf0!==1?" <span class='pfbadge'>"+esc(fmtPortion(pf0))+"</span>":"")+famB)); }
+      { const pf0=r?portionOf(d.id,s.id):1; card.appendChild(el("div","slotlabel",esc(s.name)+(isWish(d.id,s.id)?" ⭐":"")+(pf0!==1?" <span class='pfbadge'>"+esc(fmtPortion(pf0))+"</span>":""))); }
       const btn=el("button","slotbtn"+(r?"":" empty"),r?esc(r.name):"+ Gericht");
       btn.onclick=()=> r? openSlotMenu(d.id,s.id) : openPicker(d.id,s.id);
       card.appendChild(btn);
@@ -2851,7 +2685,6 @@ function renderNutriPanel(container,day,slot,assign){
   });
 }
 
-function pantryCoverForCart(it){ if(it.amount==null) return null; const key=resolveFood(it.name); const pg=pantryList().filter(p=>p.key===key).reduce((s,p)=>s+(+p.grams||0),0); if(pg<=0) return null; const need=Math.round(ingGrams({n:it.name,a:it.amount,u:it.unit})); if(!(need>0)) return null; return {full:pg>=need, pg, need}; }
 function renderCart(){
   const body=$("#cartBody");
   const n=state.cart.length, open=state.cart.filter(c=>!c.checked).length;
@@ -2859,10 +2692,6 @@ function renderCart(){
   const badge=$("#navCartBadge"); badge.textContent=open; badge.classList.toggle("show",open>0);
   body.innerHTML="";
   if(!n){ body.appendChild(el("div","empty-state","<div class='big'>🛒</div>Dein Einkaufswagen ist leer.<br>Tippe im Wochenplan auf ein Gericht oder nutze »Woche → Wagen«.")); return; }
-  const covered=state.cart.filter(it=>{ const c=pantryCoverForCart(it); return c&&c.full&&!it.checked; });   // vollständig im Vorrat vorhanden
-  if(covered.length){ const bn=el("div","cart-pantrybar"); bn.innerHTML="<span>🧊 <b>"+covered.length+"</b> "+(covered.length===1?"Artikel hast":"Artikel hast")+" du schon im Vorrat</span>";
-    const rm=el("button","btn sm","🗑️ Aus Wagen nehmen"); rm.onclick=()=>{ const removed=covered.map(it=>({it,idx:state.cart.indexOf(it)})).filter(x=>x.idx>=0).sort((a,b)=>b.idx-a.idx); removed.forEach(x=>state.cart.splice(x.idx,1)); save(); renderCart(); toastAction(removed.length+" schon im Vorrat – entfernt","Rückgängig",()=>{ removed.slice().reverse().forEach(x=>state.cart.splice(Math.min(x.idx,state.cart.length),0,x.it)); save(); renderCart(); }); };
-    bn.appendChild(rm); body.appendChild(bn); }
   CATS.forEach(c=>{
     const items=state.cart.filter(x=>x.category===c.id);
     if(!items.length) return;
@@ -2870,14 +2699,11 @@ function renderCart(){
     g.appendChild(el("h3","","<span class='cdot' style='background:var("+c.v+")'></span>"+c.emoji+" "+c.id));
     items.forEach(it=>{
       const idx=state.cart.indexOf(it);
-      const cov=pantryCoverForCart(it);
-      const badge=cov?"<button type='button' class='instockbadge"+(cov.full?" rm":"")+"' title='"+(cov.full?"Schon im Vorrat – antippen zum Entfernen":"Teilweise im Vorrat")+"'>"+(cov.full?"🧊 schon da ✕":"🧊 "+esc(fmtStock(cov.pg))+" da")+"</button>":"";
-      const row=el("div","cartitem"+(it.checked?" checked":"")+(cov&&cov.full?" instock":""));
-      row.innerHTML="<div class='cname'>"+esc(it.name)+badge+"</div><div class='camt'>"+esc(amtLabel(it.amount,it.unit))+"</div><div class='check'>"+(it.checked?"✓":"")+"</div><button class='xbtn' aria-label='entfernen'>×</button>";
+      const row=el("div","cartitem"+(it.checked?" checked":""));
+      row.innerHTML="<div class='cname'>"+esc(it.name)+"</div><div class='camt'>"+esc(amtLabel(it.amount,it.unit))+"</div><div class='check'>"+(it.checked?"✓":"")+"</div><button class='xbtn' aria-label='entfernen'>×</button>";
       row.querySelector(".check").onclick=(e)=>{e.stopPropagation();it.checked=!it.checked;save();renderCart();};
       row.querySelector(".cname").onclick=()=>{it.checked=!it.checked;save();renderCart();};
       row.querySelector(".xbtn").onclick=(e)=>{e.stopPropagation();const removed=it;state.cart.splice(idx,1);save();renderCart();toastAction("Entfernt","Rückgängig",()=>{state.cart.splice(Math.min(idx,state.cart.length),0,removed);save();renderCart();});};
-      { const ib=row.querySelector(".instockbadge.rm"); if(ib) ib.onclick=(e)=>{e.stopPropagation(); const i=state.cart.indexOf(it); if(i<0) return; state.cart.splice(i,1); save(); renderCart(); toastAction("Aus Wagen genommen (im Vorrat)","Rückgängig",()=>{ state.cart.splice(Math.min(i,state.cart.length),0,it); save(); renderCart(); }); }; }
       g.appendChild(row);
     });
     body.appendChild(g);
@@ -3026,7 +2852,7 @@ function openSlotMenu(day,slot){
   const stepsBlock = r.steps? "<div class='stepsbox'><div class='stepshd'>👩‍🍳 Zubereitung</div><div class='stepstext'>"+esc(r.steps).replace(/\n/g,"<br>")+"</div></div>" : "";
   const notesBlock = r.notes? "<div class='notesbox'><div class='stepshd'>📝 Meine Notizen</div><div class='stepstext'>"+esc(r.notes).replace(/\n/g,"<br>")+"</div></div>" : "";
   const portionRow = "<div class='personsrow"+(pf!==1?" custom":"")+"'><span class='pr-lbl'>🍽️ Menge <small>"+(pf===1?"Normalportion":esc(fmtPortion(pf)+" Portion"))+"</small></span><span class='pr-step'><button class='pbtn' id='pfMinus' aria-label='weniger'>–</button><span class='pr-val'>"+esc(fmtPortion(pf))+"</span><button class='pbtn' id='pfPlus' aria-label='mehr'>+</button></span></div>";
-  const attendRow = (state.familyMode && members().length) ? "<div class='attendrow'><div class='ar-lbl'>👨‍👩‍👧 Wer isst mit?</div><div class='ar-chips' id='attChips'>"+members().map(mm=>{ const on=attendeesFor(day,slot).indexOf(mm.id)>=0; return "<button class='memchip sm"+(on?" on":"")+"' data-m='"+mm.id+"'><span class='memav'>"+esc(mm.emoji||"🙂")+"</span>"+esc(mm.name)+"</button>"; }).join("")+"</div></div>" : "";
+  const attendRow = "";
   openModal(
     "<div class='mhead'><h3>"+esc(r.name)+"</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'><div class='hint'>"+esc(dn)+" · "+esc(sn)+" · "+esc(mealLabel(r.mealType))+" — Mengen für "+pers+" Person(en)"+(pf!==1?(" · "+esc(fmtPortion(pf))+" Portion"):"")+". Zutaten abwählen, die du schon hast:</div>"+
@@ -3041,7 +2867,6 @@ function openSlotMenu(day,slot){
   );
   $("#mX").onclick=()=>{ closeModal(); renderPlan(); };
   { const chg=(d)=>{ setPortion(day,slot,pf+d); renderPlan(); openSlotMenu(day,slot); }; const pm=$("#pfMinus"),pp=$("#pfPlus"); if(pm) pm.onclick=()=>chg(-0.5); if(pp) pp.onclick=()=>chg(0.5); }
-  $$("#attChips .memchip").forEach(b=>b.onclick=()=>{ const mid=b.dataset.m; setAttendee(day,slot,mid,!b.classList.contains("on")); renderPlan(); openSlotMenu(day,slot); });
   $$(".ing-check").forEach(l=>l.onclick=()=>l.classList.toggle("on"));
   const tc=$("#toCart"); if(tc) tc.onclick=()=>{
     const picked=$$(".ing-check.on").map(l=>r.ing[+l.dataset.ix]);
@@ -3284,51 +3109,15 @@ function shareCart(){
 function switchView(name){
   $$("nav.tabs button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
   $$(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+name));
-  if(name==="pantry") renderPantry();
   window.scrollTo(0,0);
 }
 $$("nav.tabs button").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
 
 function setPersons(v){ state.persons=Math.max(1,Math.min(30,v)); const pv=$("#pVal"); if(pv) pv.textContent=state.persons; save(); }
-/* ============================ KÜHLSCHRANK / SPEIS (Vorräte) ============================ */
-function fmtDMY(iso){ if(!iso) return ""; const p=String(iso).split("-"); return p.length===3?(p[2]+"."+p[1]+"."+p[0]):iso; }
-function pantryList(){ return (state.pantry||[]).filter(p=>p&&!p.del); }
-function newPid(){ return "p"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36); }
-function fmtStock(g){ g=Math.round(g); return g>=1000 ? (Math.round(g/100)/10).toString().replace(".",",")+" kg" : g+" g"; }
-function addPantryItem(name,a,u,mhd){ if(!state.pantry) state.pantry=[]; name=(name||"").trim(); if(!name) return; const key=resolveFood(name); const grams=Math.max(0,Math.round(ingGrams({n:name,a:a,u:u||"g"}))); state.pantry.push({id:newPid(), key, name, grams, mhd:mhd||null, at:new Date().toISOString()}); }
-function removePantryItem(id){ const p=(state.pantry||[]).find(x=>x.id===id); if(p){ p.del=true; p.grams=0; p.at=new Date().toISOString(); } }
-function pantryHas(key){ return pantryList().some(p=>p.key===key && (+p.grams>0)); }
-function mhdStatus(mhd){ if(!mhd) return ""; const t=todayStr(); if(mhd<t) return "expired"; if(mhd<=shiftDays(t,3)) return "soon"; return "ok"; }
-function expiringPantry(){ return pantryList().filter(p=>p.mhd&&p.grams>0&&(mhdStatus(p.mhd)==="soon"||mhdStatus(p.mhd)==="expired")); }
-function remindExpiring(){ const items=expiringPantry(); if(!items.length) return; const today=todayStr(); try{ if(localStorage.getItem("foodies_pantryRemind")===today) return; localStorage.setItem("foodies_pantryRemind",today); }catch(e){}
-  const exp=items.some(p=>mhdStatus(p.mhd)==="expired"); const names=items.slice(0,3).map(p=>p.name).join(", ")+(items.length>3?" u. a.":"");
-  toastAction((exp?"⏰ ":"⏰ ")+items.length+" Lebensmittel läuft bald ab: "+names,"Ansehen",()=>switchView("pantry")); }
-function pantryUsesExpiring(key){ return pantryList().some(p=>p.key===key && p.grams>0 && (mhdStatus(p.mhd)==="expired"||mhdStatus(p.mhd)==="soon")); }
-/* deduct (sign>0) / restore (sign<0) a slot's recipe ingredients when it is cooked/uncooked; FEFO (earliest MHD first) */
 function recipeForSlot(day,slot){ if(SLOTS.some(s=>s.id===slot)){ const rid=PLAN()[day]&&PLAN()[day][slot]; return rid?state.recipes[rid]:null; } const e=dayExtras(day).find(x=>x.id===slot); return e?state.recipes[e.rid]:null; }
-function pantryAdjustForSlot(day,slot,sign){ if(!state.pantry||!state.pantry.length) return 0; const r=recipeForSlot(day,slot); if(!r||!Array.isArray(r.ing)) return 0; const persons=mealPersons(day,slot)*portionOf(day,slot); let changed=0; const now=new Date().toISOString();
-  r.ing.forEach(ing=>{ if(ing.a==null) return; const grams=ingGrams(ing)*persons; if(!(grams>0)) return; const key=resolveFood(ing.n);
-    if(sign>0){ let need=grams; pantryList().filter(p=>p.key===key && p.grams>0).sort((a,b)=>((a.mhd||"9999-99")<(b.mhd||"9999-99")?-1:1)).forEach(p=>{ if(need<=0) return; const take=Math.min(p.grams,need); if(take>0){ p.grams-=take; p.at=now; need-=take; changed++; if(p.grams<=0){ p.del=true; } } }); }
-    else { const cands=(state.pantry||[]).filter(x=>x&&x.key===key); const p=cands.find(x=>!x.del)||cands[0]; if(p){ p.grams=(+p.grams||0)+grams; p.del=false; p.at=now; changed++; } }   // auch vollständig aufgebrauchte (tombstoned) Einträge zurückbuchen
-  });
-  return changed;
-}
-/* ---- „Reste verwerten": recipes you can (mostly) cook from the pantry ---- */
-function recipeCoverage(r){ if(!r||!Array.isArray(r.ing)) return null;
-  const real=r.ing.filter(ing=>{ if(ing.a==null) return false; const k=resolveFood(ing.n); if(has(GENERIC,k)) return false; const cat=CATALOG[k]; return cat!=="Fette" && cat!=="Sonstiges"; });
-  if(!real.length) return null; let have=0, exp=false;
-  real.forEach(ing=>{ const k=resolveFood(ing.n); if(pantryHas(k)){ have++; if(pantryUsesExpiring(k)) exp=true; } });
-  return { have, total:real.length, ratio:have/real.length, usesExpiring:exp };
-}
-function pantrySuggestions(n){ const out=[];
-  Object.values(state.recipes).forEach(r=>{ if(r.kind||!r.ing||!r.ing.length||!recipeAvailable(r)) return; const c=recipeCoverage(r); if(!c||c.have===0) return; out.push({r,c}); });   // Lebensmittel/Drinks sind keine Gerichte zum Kochen
-  out.sort((a,b)=> (b.c.usesExpiring-a.c.usesExpiring) || (b.c.ratio-a.c.ratio) || (b.c.have-a.c.have));
-  return out.slice(0,n||12);
-}
 /* ---- Quick actions: random fill, wishes, day themes, profile switch, share ---- */
 function fillSlotRandom(day,slot){ const type=SLOT_TYPE[slot]||"snack"; let c=recipesByType(type);
   if(!c.length){ toast("Keine passenden Rezepte"); return; }
-  const themed=c.filter(r=>themeAllows(day,slot,r)); if(themed.length) c=themed;   // Motto-Tag einhalten
   const usedToday=SLOTS.map(s=>PLAN()[day][s.id]).filter(Boolean), curId=PLAN()[day][slot];
   const fresh=c.filter(r=>usedToday.indexOf(r.id)<0 && r.id!==curId); if(fresh.length) c=fresh;
   const pick=c[Math.floor(Math.random()*c.length)]; clearDone(day,slot); PLAN()[day][slot]=pick.id; setLock(day,slot,true); setWish(day,slot,false); save(); renderPlan(); toast("🎲 "+pick.name); }
@@ -3355,27 +3144,7 @@ function placeWish(rid){ ensureWeek(uiWeek); let target;
   const nm=DAYS.find(d=>d.id===day).name;
   if(prevRid){ toastAction("🌟 Wunschgericht am "+nm+" (ersetzt)","Rückgängig",()=>{ state.weeks[wk][day][slot]=prevRid; if(state.weekLocks&&state.weekLocks[wk]&&state.weekLocks[wk][day]){ if(wasLocked) state.weekLocks[wk][day][slot]=true; else delete state.weekLocks[wk][day][slot]; } if(!state.wishes) state.wishes={}; if(!state.wishes[wk]) state.wishes[wk]={}; state.wishes[wk][day+"|"+slot]=!!wasWish; save(); renderPlan(); }); }
   else toast("🌟 Wunschgericht am "+nm); }
-/* per-week themes: state.dayThemes[isoWeek][dayId] – Motto gilt nur für die jeweilige Woche */
-const THEMES=[{id:"",label:"Kein Motto",emoji:""},{id:"veg",label:"Veggie-Tag",emoji:"🌱"},{id:"fish",label:"Fisch-Tag",emoji:"🐟"},{id:"fleisch",label:"Fleisch-Tag",emoji:"🍗"},{id:"pizza",label:"Wunschessen",emoji:"🍕"},{id:"reste",label:"Reste-Tag",emoji:"♻️"}];
-function dayTheme(dayId){ const w=state.dayThemes&&state.dayThemes[uiWeek]; return (w&&w[dayId])||""; }
-/* hard Motto constraint: veg = every slot vegetarian; fish/fleisch = the MAIN slots (Mittag/Abend) must be fish/meat */
-function themeAllows(dayId,slot,r){ const th=dayTheme(dayId); if(th==="veg") return isVeg(r); if(th==="fish"&&slot==="l") return hasFish(r); if(th==="fleisch"&&slot==="l") return hasMeat(r); return true; }   // fisch/fleisch: das Mittagsgericht ist das Motto-Gericht (mind. eins am Tag)
-function themeMeta(id){ return THEMES.find(t=>t.id===id)||THEMES[0]; }
-function setDayTheme(dayId,t){ if(!state.dayThemes) state.dayThemes={}; if(!state.dayThemes[uiWeek]||typeof state.dayThemes[uiWeek]!=="object") state.dayThemes[uiWeek]={}; if(t) state.dayThemes[uiWeek][dayId]=t; else delete state.dayThemes[uiWeek][dayId]; save(); }
-/* Motto sofort auf den vorhandenen Tag anwenden: nur das Nötige tauschen (kein komplettes Neu-Planen) */
-function applyThemeToDay(dayId){ const th=dayTheme(dayId); if(!th||th==="pizza"||th==="reste") return 0; let changed=0;
-  const swap=(slot,pred)=>{ if(cheatDay()===dayId) return; const cur=PLAN()[dayId][slot], curR=cur?state.recipes[cur]:null; if(curR&&pred(curR)) return;
-    const type=SLOT_TYPE[slot]||"snack"; let c=recipesByType(type).filter(pred); if(!c.length) return;
-    const usedToday=SLOTS.map(s=>PLAN()[dayId][s.id]).filter(Boolean); const fresh=c.filter(r=>usedToday.indexOf(r.id)<0); if(fresh.length) c=fresh;
-    clearDone(dayId,slot); PLAN()[dayId][slot]=c[Math.floor(Math.random()*c.length)].id; setLock(dayId,slot,true); setWish(dayId,slot,false); changed++; };
-  if(th==="veg"){ SLOTS.forEach(s=>{ if(s.id==="s2"&&weekProfile()==="abnehmen")return; swap(s.id,isVeg); }); }
-  else if(th==="fish"){ swap("l",hasFish); }
-  else if(th==="fleisch"){ swap("l",hasMeat); }
-  return changed; }
-function dayThemeEl(dayId){ const t=dayTheme(dayId), m=themeMeta(t); const b=el("button","themechip"+(t?" set":""), t?(m.emoji+" "+esc(m.label)):"+ Motto-Tag"); b.title="Motto-Tag festlegen (gilt nur für diese Woche)"; b.onclick=()=>openThemeChooser(dayId); return b; }
-function openThemeChooser(dayId){ const dn=DAYS.find(d=>d.id===dayId).name; openModal("<div class='mhead'><h3>Motto für "+esc(dn)+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'><p class='hint'>Gilt nur für diese Woche – der Tag wird sofort passend angepasst (z. B. Fisch-Tag = ein Fischgericht mittags).</p>"+THEMES.map(t=>"<button class='btn block theme-pick' data-t='"+t.id+"' style='margin-bottom:8px'>"+(t.emoji?t.emoji+" ":"")+esc(t.label)+"</button>").join("")+"</div>");
-  $("#mX").onclick=closeModal; $$(".theme-pick").forEach(b=>b.onclick=()=>{ setDayTheme(dayId,b.dataset.t); closeModal(); if(b.dataset.t){ applyThemeToDay(dayId); rebalanceDay(dayId); } save(); renderPlan(); toast(b.dataset.t?("Motto: "+themeMeta(b.dataset.t).label+" – Tag neu geplant"):"Motto entfernt"); }); }
-function themeBonus(dayId){ const t=dayTheme(dayId); if(t!=="pizza") return null; return (r)=>/pizza|burger|auflauf|pfanne|nudeln|pasta|lasagne/i.test(r.name)?0.6:0; }   // fisch/fleisch sind harte Filter (themeAllows); pizza nur als Präferenz
+/* Motto-Tage entfernt (App ist Solo-Planer ohne Mottos) */
 /* week goal-profile quick switch */
 function openProfileSwitcher(){ openModal("<div class='mhead'><h3>Ziel dieser Woche</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+PROFILES.map(p=>"<button class='btn block prof-pick"+(state.weekProfile[uiWeek]===p.id?" primary":"")+"' data-p='"+p.id+"' style='margin-bottom:8px'>"+p.emoji+" "+esc(p.label)+"</button>").join("")+"<p class='hint'>Ändert die Nährwert-Ziele der Woche. Zum kompletten Neuplanen »🎯 Woche planen«.</p></div>");
   $("#mX").onclick=closeModal; $$(".prof-pick").forEach(b=>b.onclick=()=>{ ensureWeek(uiWeek); state.weekProfile[uiWeek]=b.dataset.p; state.targets={...computeTargets(b.dataset.p)};   // Nährwert-Ziele sofort auf das neue Profil umstellen
@@ -3389,42 +3158,6 @@ function shareWeekPlan(){ const wl=weekLabel(uiWeek); const lines=["📅 Essensp
   if(navigator.share){ navigator.share({title:"Essensplan KW "+wl.kw, text:txt}).catch(()=>{}); }
   else if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>toast("📋 Wochenplan kopiert")).catch(()=>toast("Kopieren nicht möglich")); }
   else toast("Teilen wird nicht unterstützt"); }
-function openPantry(){ switchView("pantry"); }
-const PANTRY_UNITS=["g","Stk","ml","l","Scheibe","Portion","Handvoll","Dose","Zehe","Kugel"];
-let pantryVorratOpen=(localStorage.getItem("foodies_vorrat_open")!=="0"), resteOpen=(localStorage.getItem("foodies_reste_open")!=="0"), resteExpiringOnly=false;
-const FRIDGE_SVG="<svg viewBox='0 0 24 24' width='17' height='17' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px'><rect x='6' y='2.5' width='12' height='19' rx='2.4'/><line x1='6' y1='9.5' x2='18' y2='9.5'/><line x1='8.6' y1='5' x2='8.6' y2='7'/><line x1='8.6' y1='12' x2='8.6' y2='15'/></svg>";
-function renderPantry(){
-  const body=$("#pantryBody"); if(!body) return;
-  const foodDatalist="<datalist id='pantryCatalog'>"+Object.keys(NUTRI).filter(foodEnabled).map(k=>"<option value='"+esc(foodLabel(k))+"'>").join("")+"</datalist>";
-  const items=pantryList().slice().sort((a,b)=>{ const rank=s=>s==="expired"?0:s==="soon"?1:2; return rank(mhdStatus(a.mhd))-rank(mhdStatus(b.mhd)) || ((a.mhd||"9999")<(b.mhd||"9999")?-1:1) || a.name.localeCompare(b.name,"de"); });
-  const rows=items.length? items.map(p=>{ const st=mhdStatus(p.mhd); const badge=p.mhd?("<span class='mhd "+(st==="ok"?"":st)+"'>"+(st==="expired"?"abgelaufen ":st==="soon"?"bald ":"MHD ")+esc(fmtDMY(p.mhd))+"</span>"):"";
-      return "<div class='pitem'><span class='pi-name'>"+esc(p.name)+"</span><span class='pi-amt'>"+esc(fmtStock(p.grams))+"</span>"+badge+"<button class='slotrm' data-id='"+esc(p.id)+"'>✕</button></div>"; }).join("")
-    : "<p class='hint'>Noch keine Vorräte erfasst. Trag oben ein, was du gekauft hast.</p>";
-  let sugg=pantrySuggestions(20); if(resteExpiringOnly) sugg=sugg.filter(s=>s.c.usesExpiring);
-  const reste=sugg.length? "<div class='reste-grid'>"+sugg.slice(0,10).map(s=>"<button class='reste-card"+(s.c.usesExpiring?" exp":"")+"' data-r='"+esc(s.r.id)+"'><b>"+esc(s.r.name)+"</b><small>"+s.c.have+"/"+s.c.total+" Zutaten da"+(s.c.usesExpiring?" · nutzt MHD-Ware ⏰":"")+"</small></button>").join("")+"</div>"
-    : "<p class='hint'>"+(resteExpiringOnly?"Gerade nutzt kein Gericht bald ablaufende Vorräte.":"Erfasse ein paar Vorräte – dann schlage ich hier Gerichte vor, die du daraus kochen kannst. 🍳")+"</p>";
-  const expN=expiringPantry().length;
-  body.innerHTML=
-    "<div class='pantry-add'>"+
-      "<input class='input' id='paName' list='pantryCatalog' placeholder='Lebensmittel (z. B. Skyr)' autocomplete='off'>"+foodDatalist+
-      "<button class='btn block' id='paScan' style='margin:2px 0 2px'>📷 Barcode scannen</button>"+
-      "<div class='pa-row'><input class='input' id='paAmt' inputmode='decimal' placeholder='Menge'><select class='input' id='paUnit'>"+PANTRY_UNITS.map(u=>"<option>"+u+"</option>").join("")+"</select></div>"+
-      "<div class='pa-row'><label class='pa-mhd'>MHD <input class='input' id='paMhd' type='date'></label><button class='btn sm primary' id='paAdd'>＋ Hinzufügen</button></div>"+
-    "</div>"+
-    "<button class='pan-head' id='vorratHead'><span>"+FRIDGE_SVG+" Kühlschrank <small>"+items.length+" "+(items.length===1?"Ding":"Dinge")+(expN?" · ⏰ "+expN+" bald ab":"")+"</small></span><span class='dn-chev'>"+(pantryVorratOpen?"▾":"▸")+"</span></button>"+
-    (pantryVorratOpen? "<div class='pan-body'>"+rows+"</div>" : "")+
-    "<button class='pan-head' id='resteHead' style='margin-top:12px'><span>🍳 Reste verwerten</span><span class='dn-chev'>"+(resteOpen?"▾":"▸")+"</span></button>"+
-    (resteOpen? "<div class='pan-body'><p class='hint' style='margin:0 2px 8px'>Beispiel-Gerichte, die du (fast) komplett aus deinem Kühlschrank kochen kannst.</p>"+
-      "<label class='togglerow' style='margin:0 2px 10px'><input type='checkbox' id='resteExp'"+(resteExpiringOnly?" checked":"")+"> ⏰ Zuerst bald ablaufende Lebensmittel verwenden</label>"+reste+"</div>" : "");
-  $("#paAdd").onclick=()=>{ const name=$("#paName").value.trim(); if(!name){ $("#paName").focus(); return; } addPantryItem(name, parseNum($("#paAmt").value), $("#paUnit").value, $("#paMhd").value||null); save(); renderPantry(); toast("🧊 „"+name+"“ zum Vorrat hinzugefügt"); };
-  $("#paScan").onclick=()=>{ openScanner(prod=>{ renderPantry(); const n=$("#paName"); if(n) n.value=prod.name; const a=$("#paAmt"); if(a){ a.focus(); } toast("🏷️ „"+prod.name+"“ erkannt – Menge & MHD ergänzen, dann »Hinzufügen«"); }, null, "✓ Ins Vorratsformular"); };
-  $("#paName").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#paAdd").click(); } });
-  const vh=$("#vorratHead"); if(vh) vh.onclick=()=>{ pantryVorratOpen=!pantryVorratOpen; localStorage.setItem("foodies_vorrat_open",pantryVorratOpen?"1":"0"); renderPantry(); };
-  const rh=$("#resteHead"); if(rh) rh.onclick=()=>{ resteOpen=!resteOpen; localStorage.setItem("foodies_reste_open",resteOpen?"1":"0"); renderPantry(); };
-  const re=$("#resteExp"); if(re) re.onchange=()=>{ resteExpiringOnly=re.checked; renderPantry(); };
-  $$(".pitem .slotrm").forEach(b=>b.onclick=(ev)=>{ ev.stopPropagation(); removePantryItem(b.dataset.id); save(); renderPantry(); });
-  $$(".reste-card").forEach(b=>b.onclick=()=>openRecipeEdit(b.dataset.r));
-}
 function openMenu(){
   openModal("<div class='mhead'><h3>☰ Menü</h3><button class='iconbtn' id='mX'>✕</button></div>"+
     "<div class='mbody'>"+
@@ -3433,7 +3166,7 @@ function openMenu(){
     "<div class='divider'></div>"+
     "<button class='btn block' id='mStats'>📊 Statistik</button>"+
     "<button class='btn block' id='mBande' style='margin-top:8px'>🍗 Nugget-Bande <span class='tag'>"+ownedCount()+"/"+ROSTER.length+(state.rewards.goldCount?" · 🥇"+state.rewards.goldCount:"")+"</span></button>"+
-    "<button class='btn block' id='mFamily' style='margin-top:8px'>👨‍👩‍👧 Familie"+(state.familyMode&&members().length?" <span class='tag'>"+members().length+"</span>":"")+"</button>"+
+    "<button class='btn block' id='mFamily' style='margin-top:8px'>👤 Konto</button>"+
     "</div>");
   $("#mX").onclick=closeModal;
   $("#pMinus").onclick=()=>setPersons(state.persons-1);
@@ -3441,7 +3174,7 @@ function openMenu(){
   $("#mGen").onclick=()=>{ closeModal(); openWeekChooser(); };
   $("#mStats").onclick=()=>{ closeModal(); switchView("stats"); };
   $("#mBande").onclick=()=>{ closeModal(); openBande(); };
-  $("#mFamily").onclick=()=>{ closeModal(); openFamilySetup(); };
+  $("#mFamily").onclick=()=>{ closeModal(); openAccount(); };
 }
 $("#menuBtn").onclick=openMenu;
 $("#foodSelectBtn").onclick=openFoodSelect;
@@ -3827,16 +3560,14 @@ function openBande(){
 function startAppSession(){
   if(_appStarted) return; _appStarted=true;
   setActiveWeek(uiWeek);
-  if(state.familyMode && members().length && uiMember!=="all" && !memberById(uiMember)) uiMember="all";
-  setActiveMember(uiMember);
   rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; persistLocal();
   renderAll();
   const synced=cloudConfig() && isLoggedIn();
   setSync(synced?"busy":"local");
   if(synced){
-    cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; setActiveMember(uiMember); save(); renderAll(); maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); }).catch(()=>{});
+    cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); maybeDayFazit(); }).catch(()=>{});
     startPolling();
-  } else { maybeWeighIn(); flushCelebs(); remindExpiring(); maybeDayFazit(); }
+  } else { maybeWeighIn(); flushCelebs(); maybeDayFazit(); }
   setInterval(maybeDayFazit, 300000);
 }
 function hardReplaceFromRemote(row){ try{ localStorage.setItem(LS_KEY,JSON.stringify(row.data)); }catch(e){} location.reload(); }
