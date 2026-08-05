@@ -3752,6 +3752,8 @@ async function gateLogout(){ try{ await authLogout(); }catch(e){} try{ localStor
   if(isLoggedIn()){ await afterLogin(); }             // Familie? → Zwangs-Kennwort? → App (gleiche Reihenfolge wie nach Formular-Login)
   else { openGate(); if(!navigator.onLine) showAuthError("Kein Internet. Zum ersten Anmelden ist einmalig eine Verbindung nötig."); }
 })();
+/* Service Worker: online immer frisch (kein Strg+F5 nötig), offline nutzbar */
+if("serviceWorker" in navigator){ window.addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }
 </script>
 </body>
 </html>
