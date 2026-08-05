@@ -2069,8 +2069,19 @@ function openFoodSelect(){
 /* built-in coffees added earlier as kind:"food" → re-tag to Drinks/Kaffee on existing installs (defined before normalizeRecipes which runs at boot) */
 const DRINK_BUILTINS={"Espresso":"kaffee","Schwarzer Kaffee":"kaffee","Cappuccino":"kaffee","Latte Macchiato":"kaffee","Milchkaffee":"kaffee","Flat White":"kaffee","Caffè Latte":"kaffee",
   "Kuhmilch Vollmilch (3,5 %)":"unalk","Kuhmilch fettarm (1,5 %)":"unalk","Magermilch (0,3 %)":"unalk","Hafermilch":"unalk","Mandelmilch (ungesüßt)":"unalk","Sojamilch (ungesüßt)":"unalk","Reismilch":"unalk","Kokosmilch (Drink)":"unalk"};
+/* Repariert doppelt/dreifach kodierte Umlaute in Alt-Daten aus der Cloud */
+function fixMojibake(s){
+  if(typeof s!=="string" || (s.indexOf("\u00C3")<0 && s.indexOf("\u00C2")<0)) return s;
+  var M={"\u00C3\u00A4":"\u00E4","\u00C3\u00B6":"\u00F6","\u00C3\u00BC":"\u00FC","\u00C3\u0178":"\u00DF","\u00C3\u009F":"\u00DF","\u00C3\u201E":"\u00C4","\u00C3\u0084":"\u00C4","\u00C3\u2013":"\u00D6","\u00C3\u0096":"\u00D6","\u00C3\u0153":"\u00DC","\u00C3\u009C":"\u00DC","\u00C3\u0192":"\u00C3","\u00C2\u00A4":"\u00A4","\u00C2\u00B6":"\u00B6","\u00C2\u00BC":"\u00BC"};
+  var prev, guard=0;
+  do{ prev=s; for(var k in M){ if(s.indexOf(k)>=0) s=s.split(k).join(M[k]); } }while(s!==prev && ++guard<6);
+  return s;
+}
 function normalizeRecipes(recipes){
   Object.values(recipes||{}).forEach(r=>{
+    if(typeof r.name==="string") r.name=fixMojibake(r.name);
+    if(typeof r.steps==="string") r.steps=fixMojibake(r.steps);
+    if(Array.isArray(r.ing)) r.ing.forEach(ing=>{ if(ing&&typeof ing.n==="string"){ ing.n=fixMojibake(ing.n); ing.n=ing.n.replace(/Ei \(ganzes Hühnerei\)/g,"Ei"); } });   // Umlaute reparieren + zu umständlichen Ei-Namen kürzen (sonst nicht erkannt)
     if(!r.mealType) r.mealType=MEAL_TYPE[r.id]||"snack";
     if(typeof r.steps!=="string") r.steps=STEPS[r.id]||"";
     if(!Array.isArray(r.goals)) r.goals=RECIPE_GOALS[r.id]||["ausgewogen"];
