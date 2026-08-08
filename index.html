@@ -1626,13 +1626,14 @@ function profile(id){ return PROFILES.find(p=>p.id===id)||PROFILES[0]; }
 /* real energy needs from body metrics.
    Grundumsatz (BMR) via Mifflin-St Jeor when weight+height+age are known, ×Aktivitätsfaktor → Gesamtumsatz (TDEE).
    Falls back to ~32 kcal/kg when only weight is known, and to the profile's fixed targets when nothing is entered. */
+/* Aktivität = NUR Alltag & Beruf (NEAT), OHNE Sport. Sport läuft ausschließlich über eingetragenes Training (weekTrain → budget=t.kcal+burn), damit es nicht doppelt zählt. */
 const ACT_LEVELS=[
-  {v:1.2,   l:"Sitzend",      d:"kaum Bewegung, Bürojob"},
-  {v:1.375, l:"Leicht aktiv", d:"1–3× Sport / Woche"},
-  {v:1.55,  l:"Mäßig aktiv",  d:"3–5× Sport / Woche"},
-  {v:1.725, l:"Sehr aktiv",   d:"6–7× Sport / Woche"},
-  {v:1.9,   l:"Extrem aktiv", d:"körperliche Arbeit / 2× Training"}
+  {v:1.2,   l:"Sitzend",          d:"Bürojob, wenig Bewegung"},
+  {v:1.375, l:"Etwas aktiv",      d:"leichte Alltagsbewegung"},
+  {v:1.5,   l:"Viel auf den Beinen", d:"stehender/gehender Beruf"},
+  {v:1.6,   l:"Körperlich aktiv", d:"schwere körperliche Arbeit"}
 ];
+function normActivity(v){ if(typeof v!=="number") return v; if(v===1.55) return 1.5; if(v===1.725||v===1.9) return 1.6; return v; }   // alte sport-inklusive Aktivitätswerte auf die neue NEAT-only-Skala mappen (an EINER Stelle, damit migrate() & Cloud-Pull nicht auseinanderlaufen)
 function bmrValue(){                                  // Mifflin-St Jeor; null if height/age missing
   const w=state.currentWeight, h=state.height, a=state.age;
   if(!(typeof w==="number"&&w>0)) return null;
@@ -1642,7 +1643,7 @@ function bmrValue(){                                  // Mifflin-St Jeor; null i
   }
   return null;
 }
-function maintenanceKcal(){                           // TDEE (kcal/Tag to hold weight)
+function maintenanceKcal(){                           // TDEE (kcal/Tag to hold weight). state.activity = NEAT/Beruf only – Sport NIE hier addieren (läuft über weekTrain, budget=t.kcal+burn).
   const b=bmrValue();
   if(b!=null){ const act=(typeof state.activity==="number"&&state.activity>=1.2&&state.activity<=1.9)?state.activity:1.375; return b*act; }
   const w=state.currentWeight;
@@ -1889,8 +1890,11 @@ function recipeEffort(r){ if(r&&(r.effort==="schnell"||r.effort==="mittel"||r.ef
   const st=((r&&r.steps)||"").trim(); const stepN = !st?0 : (st.indexOf("\n")>=0 ? st.split(/\n+/).filter(x=>x.trim()).length : st.split(/\.\s+/).filter(x=>x.trim()).length);
   const ings=(r&&r.ing?r.ing.length:0);
   if(stepN<=2 && ings<=5) return "schnell"; if(stepN>=5 || ings>=9) return "aufwendig"; return "mittel"; }
-function dayScoreBonus(dayId){ const weekday=isWeekday(dayId);
-  return (r)=>{ let b=0; const e=recipeEffort(r); if(weekday){ if(e==="schnell") b+=0.35; else if(e==="aufwendig") b-=0.2; } else if(e==="aufwendig") b+=0.15; return b; }; }
+function dayScoreBonus(dayId){ const weekday=isWeekday(dayId), pref=state.cookTimePref||"egal";
+  return (r)=>{ let b=0; const e=recipeEffort(r); if(weekday){ if(e==="schnell") b+=0.35; else if(e==="aufwendig") b-=0.2; } else if(e==="aufwendig") b+=0.15;
+    if(pref==="schnell"){ if(e==="schnell") b+=0.3; else if(e==="aufwendig") b-=0.2; }          // Koch-Zeit-Präferenz: weicher Bonus, nie harter Filter (Pool könnte sonst leerlaufen)
+    else if(pref==="aufwendig"){ if(e==="aufwendig") b+=0.25; else if(e==="schnell") b-=0.15; }
+    return b; }; }
 function fillDay(order,tg,profId,used,byType,opts){
   opts=opts||{}; const allowFn=opts.allowFn, blockIds=opts.blockIds, fixed=opts.fixed, baseNut=opts.baseNut, dayBonus=opts.dayBonus;
   const picks={}, usedDay={}; const cur=zeroNut(); if(baseNut) addNut(cur,baseNut);   // baseNut = extra meals already on the day
@@ -1999,7 +2003,11 @@ function openWeekChooser(){
         "<label class='wfield'><span>Geschlecht</span><select class='input' id='sexSel'>"+SEX.map(s=>"<option value='"+s.v+"'"+(state.sex===s.v?" selected":"")+">"+esc(s.l)+"</option>").join("")+"</select></label>"+
         "<label class='wfield'><span>Aktivität</span><select class='input' id='actSel'>"+ACT_LEVELS.map(a=>"<option value='"+a.v+"'"+(state.activity===a.v?" selected":"")+">"+esc(a.l)+"</option>").join("")+"</select></label>"+
       "</div>"+
+      "<div class='setup-sub' style='margin:2px 2px 0'>Nur Alltag &amp; Beruf – ohne Sport. Sport trägst du pro Tag beim Training ein (zählt dann extra).</div>"+
       "<div class='bmiline' id='bmiLine'></div>"+
+      "<div class='dayrow-lbl' style='margin-top:12px'>🏃 Trainings-Ziel pro Woche</div>"+
+      "<div class='setup-sub' style='margin:0 0 6px'>Nur als Ziel für deine Statistik – deine Kalorien ändert das nicht.</div>"+
+      "<div class='chips daysel' id='trainGoalChips'></div>"+
     "</div>"+
     "<div class='setupcard'>"+
       "<div class='setup-h'><span class='setup-num'>3</span>🍗 Fleisch &amp; Fisch</div>"+
@@ -2008,7 +2016,12 @@ function openWeekChooser(){
       "<div class='dayrow-lbl'>🐟 Fisch</div><div class='chips daysel' id='fishChips'></div>"+
     "</div>"+
     "<div class='setupcard'>"+
-      "<div class='setup-h'><span class='setup-num'>4</span>🚫 Lebensmittel</div>"+
+      "<div class='setup-h'><span class='setup-num'>4</span>⏱️ Zeit zum Kochen</div>"+
+      "<div class='setup-sub'>Wie aufwendig dürfen die Gerichte meistens sein? Werktags darf's automatisch schneller gehen.</div>"+
+      "<div class='chips' id='cookTimeChips'></div>"+
+    "</div>"+
+    "<div class='setupcard'>"+
+      "<div class='setup-h'><span class='setup-num'>5</span>🚫 Lebensmittel</div>"+
       "<div class='setup-sub'>Wähle ab, was du nicht magst – optional mit Ersatz.</div>"+
       "<button class='btn block ghost' id='foodPrefBtn'>Lebensmittel abwählen / Ersatz wählen</button>"+
     "</div>"+
@@ -2028,6 +2041,10 @@ function openWeekChooser(){
     DAYSOPT.forEach(o=>{ const c=el("button","chip"+(cur===o.v?" active":""),o.l); c.onclick=()=>{ state[cntKey]=o.v; save(); renderDays(elId,cntKey); }; mc.appendChild(c); });
   };
   renderDays("#meatChips","meatPerWeek"); renderDays("#fishChips","fishPerWeek");
+  { const cc=$("#cookTimeChips"); if(cc){ const opts=[{v:"schnell",l:"🚀 Schnell"},{v:"egal",l:"🍳 Gemischt"},{v:"aufwendig",l:"👨‍🍳 Gern aufwendig"}];
+      const drawCt=()=>{ cc.innerHTML=""; opts.forEach(o=>{ const c=el("button","chip"+((state.cookTimePref||"egal")===o.v?" active":""),o.l); c.onclick=()=>{ state.cookTimePref=o.v; save(); drawCt(); }; cc.appendChild(c); }); }; drawCt(); } }
+  { const tc=$("#trainGoalChips"); if(tc){ const opts=[{v:null,l:"Kein Ziel"},{v:1,l:"1×"},{v:2,l:"2×"},{v:3,l:"3×"},{v:4,l:"4×"},{v:5,l:"5×"}];
+      const drawTg=()=>{ tc.innerHTML=""; opts.forEach(o=>{ const active=(state.trainGoalPerWeek==null&&o.v==null)||state.trainGoalPerWeek===o.v; const c=el("button","chip"+(active?" active":""),o.l); c.onclick=()=>{ state.trainGoalPerWeek=o.v; save(); drawTg(); }; tc.appendChild(c); }); }; drawTg(); } }
   const numField=(id,key,max)=>{ const el2=$(id); if(el2) el2.oninput=(e)=>{ const v=parseNum(e.target.value); state[key]=(v&&v>0&&(!max||v<=max))?v:null; save(); updateComputed(); }; };
   numField("#wCur","currentWeight",500); numField("#wHt","height",260); numField("#wAge","age",120); numField("#wTgt","targetWeight",500);
   $("#sexSel").onchange=(e)=>{ state.sex=["m","w","n"].includes(e.target.value)?e.target.value:"n"; save(); updateComputed(); };
@@ -2167,9 +2184,9 @@ function seedState(){
   const ck=currentMondayStr();
   return {persons:1, targets:{...DEFAULT_TARGETS}, cheatDay:null, disabledFoods:{}, substitutions:{}, deletedBuiltins:{}, deletedRecipes:{}, meatPerWeek:-1, fishPerWeek:-1, meatDaysSel:"egal", fishDaysSel:"egal",
     currentWeight:null, targetWeight:null, loseKgPerWeek:0.5, gainKgPerWeek:0.25,
-    height:null, age:null, sex:"n", activity:1.375,
+    height:null, age:null, sex:"n", activity:1.375, cookTimePref:"egal", trainGoalPerWeek:null,
     weeks:{[ck]:plan}, weekDone:{[ck]:{}}, weekProfile:{[ck]:null}, weekWater:{[ck]:{}}, weekCheat:{}, weekCheatAt:{}, weekExtra:{}, weekTrain:{}, weekPersons:{}, weekLocks:{}, weekCart:{}, weekPortions:{}, weekPinned:{}, wishes:{}, defaults:{},
-    weightLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
+    weightLog:[], measureLog:[], rewards:defaultRewards(), monthLog:{}, monthGoal:null, checkinSnooze:null,
     favorites:{}, recipes, cart:[]};
 }
 
@@ -2256,7 +2273,9 @@ function dayDateStr(k,dayIdx){ const d=weekMonday(k); d.setDate(d.getDate()+dayI
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
 function todayDayId(){ return ["so","mo","di","mi","do","fr","sa"][new Date().getDay()]; }   // JS getDay: 0=So…6=Sa → unsere Tag-Ids
 function ymStr(){ const d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2); }
-function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; if(!s.deletedBuiltins||typeof s.deletedBuiltins!=="object"||Array.isArray(s.deletedBuiltins)) s.deletedBuiltins={}; if(!s.deletedRecipes||typeof s.deletedRecipes!=="object"||Array.isArray(s.deletedRecipes)) s.deletedRecipes={}; delete s.pantry; ensureNewRecipes(s.recipes); topUpBuiltins(s.recipes,s.deletedBuiltins); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; { const okSel=x=>x==="egal"||x==="nie"||Array.isArray(x); const der=c=>c===0?"nie":"egal"; if(!okSel(s.meatDaysSel)) s.meatDaysSel=der(s.meatPerWeek); if(!okSel(s.fishDaysSel)) s.fishDaysSel=der(s.fishPerWeek); } delete s.familyMode; delete s.members; delete s.attend; delete s.defaultDiners; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekPersons||typeof s.weekPersons!=="object"||Array.isArray(s.weekPersons)) s.weekPersons={}; if(!s.weekPortions||typeof s.weekPortions!=="object"||Array.isArray(s.weekPortions)) s.weekPortions={}; if(!s.weekPinned||typeof s.weekPinned!=="object"||Array.isArray(s.weekPinned)) s.weekPinned={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.wishes||typeof s.wishes!=="object"||Array.isArray(s.wishes)) s.wishes={}; if(!s.favorites||typeof s.favorites!=="object"||Array.isArray(s.favorites)) s.favorites={}; delete s.dayThemes; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
+function migrate(s){ if(!Array.isArray(s.cart)) s.cart=[]; if(!s.persons) s.persons=4; if(!s.recipes||typeof s.recipes!=="object") s.recipes={}; if(!s.deletedBuiltins||typeof s.deletedBuiltins!=="object"||Array.isArray(s.deletedBuiltins)) s.deletedBuiltins={}; if(!s.deletedRecipes||typeof s.deletedRecipes!=="object"||Array.isArray(s.deletedRecipes)) s.deletedRecipes={}; delete s.pantry; ensureNewRecipes(s.recipes); topUpBuiltins(s.recipes,s.deletedBuiltins); normalizeRecipes(s.recipes); s.targets=sanitizeTargets(s.targets); if(!s.disabledFoods||typeof s.disabledFoods!=="object"||Array.isArray(s.disabledFoods)) s.disabledFoods={}; if(!(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay))) s.cheatDay=null; if(!s.substitutions||typeof s.substitutions!=="object"||Array.isArray(s.substitutions)) s.substitutions={}; if(typeof s.meatPerWeek!=="number") s.meatPerWeek=-1; if(typeof s.fishPerWeek!=="number") s.fishPerWeek=-1; { const okSel=x=>x==="egal"||x==="nie"||Array.isArray(x); const der=c=>c===0?"nie":"egal"; if(!okSel(s.meatDaysSel)) s.meatDaysSel=der(s.meatPerWeek); if(!okSel(s.fishDaysSel)) s.fishDaysSel=der(s.fishPerWeek); } delete s.familyMode; delete s.members; delete s.attend; delete s.defaultDiners; if(!s.weekWater||typeof s.weekWater!=="object"||Array.isArray(s.weekWater)) s.weekWater={}; if(!s.weekCheat||typeof s.weekCheat!=="object"||Array.isArray(s.weekCheat)) s.weekCheat={}; if(!s.weekCheatAt||typeof s.weekCheatAt!=="object"||Array.isArray(s.weekCheatAt)) s.weekCheatAt={}; if(typeof s.cheatDay==="string"&&DAYS.some(d=>d.id===s.cheatDay)&&!Object.prototype.hasOwnProperty.call(s.weekCheat,currentMondayStr())) s.weekCheat[currentMondayStr()]=s.cheatDay; if(!s.weekExtra||typeof s.weekExtra!=="object"||Array.isArray(s.weekExtra)) s.weekExtra={}; if(!s.weekTrain||typeof s.weekTrain!=="object"||Array.isArray(s.weekTrain)) s.weekTrain={}; if(!s.weekPersons||typeof s.weekPersons!=="object"||Array.isArray(s.weekPersons)) s.weekPersons={}; if(!s.weekPortions||typeof s.weekPortions!=="object"||Array.isArray(s.weekPortions)) s.weekPortions={}; if(!s.weekPinned||typeof s.weekPinned!=="object"||Array.isArray(s.weekPinned)) s.weekPinned={}; if(!s.weekLocks||typeof s.weekLocks!=="object"||Array.isArray(s.weekLocks)) s.weekLocks={}; if(!s.wishes||typeof s.wishes!=="object"||Array.isArray(s.wishes)) s.wishes={}; if(!s.favorites||typeof s.favorites!=="object"||Array.isArray(s.favorites)) s.favorites={}; delete s.dayThemes; if(!s.defaults||typeof s.defaults!=="object"||Array.isArray(s.defaults)) s.defaults={}; if(!(typeof s.currentWeight==="number"&&s.currentWeight>0)) s.currentWeight=null; if(!(typeof s.targetWeight==="number"&&s.targetWeight>0)) s.targetWeight=null; if(!(typeof s.loseKgPerWeek==="number"&&s.loseKgPerWeek>0)) s.loseKgPerWeek=0.5; if(!(typeof s.gainKgPerWeek==="number"&&s.gainKgPerWeek>0)) s.gainKgPerWeek=0.25; if(!(typeof s.height==="number"&&s.height>0)) s.height=null; if(!(typeof s.age==="number"&&s.age>0)) s.age=null; if(!(typeof s.sex==="string"&&["m","w","n"].includes(s.sex))) s.sex="n"; s.activity=normActivity(s.activity);   // Aktivität ist jetzt NEAT-only (ohne Sport) → alte sport-inklusive Werte auf die neuen Stufen mappen, sonst zeigt actSel nichts Ausgewähltes
+      if(!(typeof s.activity==="number"&&s.activity>=1.2&&s.activity<=1.9)) s.activity=1.375; if(!Array.isArray(s.weightLog)) s.weightLog=[]; if(!Array.isArray(s.measureLog)) s.measureLog=[]; if(!(typeof s.cookTimePref==="string"&&["schnell","egal","aufwendig"].includes(s.cookTimePref))) s.cookTimePref="egal"; if(!(typeof s.trainGoalPerWeek==="number"&&s.trainGoalPerWeek>0&&s.trainGoalPerWeek<=7)) s.trainGoalPerWeek=null; if(!s.rewards||typeof s.rewards!=="object"||Array.isArray(s.rewards)){ s.rewards=defaultRewards(); } else { const r=defaultRewards(); s.rewards={...r,...s.rewards}; if(!Array.isArray(s.rewards.nuggets)) s.rewards.nuggets=[]; if(!Array.isArray(s.rewards.awardedStreaks)) s.rewards.awardedStreaks=[]; if(!s.rewards.dropDays||typeof s.rewards.dropDays!=="object"||Array.isArray(s.rewards.dropDays)) s.rewards.dropDays={}; if(typeof s.rewards.aquaCount!=="number") s.rewards.aquaCount=0; } if(!s.monthLog||typeof s.monthLog!=="object"||Array.isArray(s.monthLog)) s.monthLog={}; if(!(typeof s.monthGoal==="number"&&s.monthGoal>0)) s.monthGoal=null; if(!(typeof s.checkinSnooze==="string")) s.checkinSnooze=null; { const refd=new Set(); Object.keys(s.weekExtra||{}).forEach(wk=>{ const wd=s.weekExtra[wk]||{}; Object.keys(wd).forEach(dy=>{ const l=wd[dy]; if(Array.isArray(l)) l.forEach(e=>{ if(e&&!e.del&&e.rid) refd.add(e.rid); }); }); }); Object.keys(s.recipes||{}).forEach(id=>{ const r=s.recipes[id]; if(r&&r.eatOut&&!refd.has(id)){ delete s.recipes[id]; if(!s.deletedRecipes) s.deletedRecipes={}; s.deletedRecipes[id]=true; } }); }   // GC: verwaiste „Auswärts"-Rezepte (kein lebendiger Extra-Verweis mehr) löschen + tombstonen → wachsen nicht ewig mit / syncen nicht wieder auf
+ const t=normWeeks(s); s.weeks=t.weeks; s.weekDone=t.weekDone; s.weekProfile=t.weekProfile; delete s.weekAnchor; delete s.plan; delete s.done; return s; }
 function pruneEmptyWeeks(){                                // drop only fully-empty scaffolding weeks; any used week is permanent (stats depend on it)
   const ck=currentMondayStr();
   Object.keys(state.weeks).forEach(k=>{
@@ -2332,7 +2351,7 @@ async function cloudGet(){
 }
 async function cloudPush(){
   const c=cloudConfig(); if(!c||!isLoggedIn()) return; await ensureToken();
-  const body=[{id:rowId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,favorites:state.favorites,defaults:state.defaults,weightLog:state.weightLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,deletedRecipes:state.deletedRecipes,recipes:state.recipes,cart:state.cart}}];
+  const body=[{id:rowId(),updated_at:new Date().toISOString(),data:{persons:state.persons,targets:state.targets,cheatDay:state.cheatDay,disabledFoods:state.disabledFoods,substitutions:state.substitutions,meatPerWeek:state.meatPerWeek,fishPerWeek:state.fishPerWeek,meatDaysSel:state.meatDaysSel,fishDaysSel:state.fishDaysSel,currentWeight:state.currentWeight,targetWeight:state.targetWeight,loseKgPerWeek:state.loseKgPerWeek,gainKgPerWeek:state.gainKgPerWeek,height:state.height,age:state.age,sex:state.sex,activity:state.activity,cookTimePref:state.cookTimePref,trainGoalPerWeek:state.trainGoalPerWeek,weeks:state.weeks,weekDone:state.weekDone,weekProfile:state.weekProfile,weekWater:state.weekWater,weekCheat:state.weekCheat,weekCheatAt:state.weekCheatAt,weekExtra:state.weekExtra,weekTrain:state.weekTrain,weekPersons:state.weekPersons,weekPortions:state.weekPortions,weekPinned:state.weekPinned,wishes:state.wishes,favorites:state.favorites,defaults:state.defaults,weightLog:state.weightLog,measureLog:state.measureLog,rewards:state.rewards,monthLog:state.monthLog,monthGoal:state.monthGoal,checkinSnooze:state.checkinSnooze,deletedBuiltins:state.deletedBuiltins,deletedRecipes:state.deletedRecipes,recipes:state.recipes,cart:state.cart}}];
   const r=await fetch(c.url+"/rest/v1/app_state?on_conflict=id",
     {method:"POST",headers:{apikey:c.key,Authorization:authHeader(),"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"},body:JSON.stringify(body)});
   if(r.status===401){ if(navigator.onLine && !(await authRefresh())) requireReauth(); throw new Error("HTTP 401"); }
@@ -2405,8 +2424,10 @@ async function cloudPullApply(force){
         if(typeof d.height==="number"||d.height===null) state.height=d.height;
         if(typeof d.age==="number"||d.age===null) state.age=d.age;
         if(typeof d.sex==="string"&&["m","w","n"].includes(d.sex)) state.sex=d.sex;
-        if(typeof d.activity==="number"&&d.activity>=1.2&&d.activity<=1.9) state.activity=d.activity;
-        mergeWeightLog(d.weightLog); mergeRewards(d.rewards);
+        if(typeof d.activity==="number"){ const a=normActivity(d.activity); if(a>=1.2&&a<=1.9) state.activity=a; }   // remote-Wert ebenfalls auf NEAT-only mappen, sonst wird der migrate()-Fix beim Start wieder überschrieben (Sport zählte sonst doppelt)
+        if(typeof d.cookTimePref==="string"&&["schnell","egal","aufwendig"].includes(d.cookTimePref)) state.cookTimePref=d.cookTimePref;
+        if((typeof d.trainGoalPerWeek==="number"&&d.trainGoalPerWeek>0&&d.trainGoalPerWeek<=7)||d.trainGoalPerWeek===null) state.trainGoalPerWeek=d.trainGoalPerWeek;
+        mergeWeightLog(d.weightLog); mergeMeasureLog(d.measureLog); mergeRewards(d.rewards);
         if(d.monthLog&&typeof d.monthLog==="object"&&!Array.isArray(d.monthLog)) state.monthLog={...d.monthLog,...state.monthLog};
         if(typeof d.monthGoal==="number"&&d.monthGoal>0&&state.monthGoal==null) state.monthGoal=d.monthGoal;
         if(typeof d.checkinSnooze==="string"&&d.checkinSnooze>(state.checkinSnooze||"")) state.checkinSnooze=d.checkinSnooze;
@@ -3239,7 +3260,8 @@ function copyWeekInto(fromKey,toKey){
   if(!state.weekExtra) state.weekExtra={}; const se=state.weekExtra[fromKey]||{}, de={};
   Object.keys(se).forEach(dy=>{ if(Array.isArray(se[dy])){ const l=se[dy].filter(e=>e&&!e.del).map(e=>({id:newExtraId(),rid:e.rid})); if(l.length) de[dy]=l; } });
   state.weekExtra[toKey]=de;
-  // NICHT kopiert: weekDone / weekWater / weekTrain / weekCheat (das sind Ist-Werte je Woche)
+  if(!state.weekDone) state.weekDone={}; state.weekDone[toKey]={};   // „gegessen/gekocht" hängt an den Plan-Slots → beim Ersetzen der Planung zurücksetzen, sonst zählen alte Haken für die neuen Gerichte
+  // NICHT angefasst (bewusst behalten): weekWater / weekTrain / weekCheat (planunabhängige Ist-Werte)
 }
 function openDuplicateWeek(){
   const from=uiWeek, wl=weekLabel(from), ck=currentMondayStr();
@@ -3285,7 +3307,7 @@ function eatOutSlot(day,slot){
   $("#eoOk").onclick=()=>{
     const kcal=Math.max(0,Math.round(+(($("#eoKcal").value)||0)));
     const nm=(($("#eoName").value)||"").trim();
-    const id=newId();
+    const id="eo"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);   // global eindeutige ID (nicht newId() „r"+n), sonst vergeben zwei Offline-Geräte dieselbe ID für verschiedene Auswärts-Mahlzeiten → Überschreiben beim Sync
     state.recipes[id]={id,name:(nm?"🍽️ "+nm:"🍽️ Auswärts gegessen"),kind:"food",eatOut:true,mealType:(SLOT_TYPE[slot]||"snack"),steps:"",goals:[],ing:[],nutriM:{kcal:kcal,protein:0,carbs:0,fat:0,fiber:0}};
     if(isSlot && PLAN()[day][slot]){ clearDone(day,slot); PLAN()[day][slot]=null; setLock(day,slot,false); setWish(day,slot,false); }   // geplantes Gericht raus – es wurde ja nicht gegessen
     addExtraMeal(day,id);
@@ -3673,6 +3695,43 @@ function weightSparkline(w,h,pad){ w=w||280; h=h||64; pad=pad||10;
   if(typeof tw==="number"&&tw>=lo&&tw<=hi){ const ty=y(tw).toFixed(1); tgt="<line x1='"+pad+"' y1='"+ty+"' x2='"+(w-pad)+"' y2='"+ty+"' stroke='var(--muted)' stroke-dasharray='3 3'/>"; }
   return "<svg class='spark' viewBox='0 0 "+w+" "+h+"' width='100%' height='"+h+"' preserveAspectRatio='none'>"+tgt+"<path d='"+line+"' fill='none' stroke='var(--brand)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/><circle cx='"+xs[xs.length-1].toFixed(1)+"' cy='"+y(kgs[kgs.length-1]).toFixed(1)+"' r='3.5' fill='var(--brand)'/></svg>";
 }
+/* ---- Körperumfang (Taille/Hüfte) — eigener measureLog, unabhängig vom weightLog (Gewichts-/Sync-Pfad bleibt unangetastet) ---- */
+function recordMeasure(o){ const d=todayStr(); const w=(typeof o.waist==="number"&&o.waist>0)?o.waist:undefined, h=(typeof o.hip==="number"&&o.hip>0)?o.hip:undefined; if(w===undefined&&h===undefined) return;
+  const prev=state.measureLog.find(e=>e.d===d)||{}; const e={...prev,d}; if(w!==undefined)e.waist=w; if(h!==undefined)e.hip=h;
+  state.measureLog=state.measureLog.filter(x=>x.d!==d).concat([e]).sort((a,b)=>a.d<b.d?-1:1); }
+function mergeMeasureLog(rl){ if(!Array.isArray(rl)) return; const by={}; state.measureLog.forEach(e=>{ if(e&&typeof e.d==="string") by[e.d]=e; });
+  rl.forEach(e=>{ if(e&&typeof e.d==="string"&&(typeof e.waist==="number"||typeof e.hip==="number")) by[e.d]=Object.assign({},by[e.d],e); });   // Feld-Merge pro Datum → gleiche-Tag-Einträge zweier Geräte gehen additiv zusammen
+  state.measureLog=Object.values(by).sort((a,b)=>a.d<b.d?-1:1); }
+function measureTrendText(){ const p=state.measureLog.filter(e=>typeof e.waist==="number"&&e.waist>0).slice(-6); if(p.length<2) return "";
+  const diff=Math.round((p[p.length-1].waist-p[0].waist)*10)/10;
+  if(diff<=-1) return "Taille "+fmtNum(diff)+" cm – stark dran! 🌱";
+  if(diff>=1) return "Taille +"+fmtNum(diff)+" cm – dranbleiben, jeder Weg hat Wellen. 💛";
+  return "Taille schön stabil gehalten. 👍"; }
+function measureSparkline(w,h,pad){ w=w||280; h=h||64; pad=pad||10;
+  const pts=state.measureLog.filter(e=>typeof e.waist==="number"&&e.waist>0).slice(-12); if(pts.length<2) return "";
+  const xs=pts.map((_,i)=>pad+i*(w-2*pad)/(pts.length-1)), vs=pts.map(p=>p.waist);
+  let lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
+  const whtr=(typeof state.height==="number"&&state.height>0)?0.5*state.height:null;   // gesunde Grenze: Taille < 0,5 × Größe
+  if(whtr!=null){ lo=Math.min(lo,whtr); hi=Math.max(hi,whtr); }
+  const sp=(hi-lo)||1, y=v=>pad+(hi-v)/sp*(h-2*pad);
+  const line=xs.map((x,i)=>(i?"L":"M")+x.toFixed(1)+" "+y(vs[i]).toFixed(1)).join(" ");
+  let ref=""; if(whtr!=null){ const ry=y(whtr).toFixed(1); ref="<line x1='"+pad+"' y1='"+ry+"' x2='"+(w-pad)+"' y2='"+ry+"' stroke='var(--muted)' stroke-dasharray='3 3'/>"; }
+  return "<svg class='spark' viewBox='0 0 "+w+" "+h+"' width='100%' height='"+h+"' preserveAspectRatio='none'>"+ref+"<path d='"+line+"' fill='none' stroke='var(--brand)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/><circle cx='"+xs[xs.length-1].toFixed(1)+"' cy='"+y(vs[vs.length-1]).toFixed(1)+"' r='3.5' fill='var(--brand)'/></svg>"; }
+function whtrText(){ const m=state.measureLog.filter(e=>typeof e.waist==="number"&&e.waist>0); if(!m.length||!(typeof state.height==="number"&&state.height>0)) return "";
+  const waist=m[m.length-1].waist, r=waist/state.height; const good=r<0.5;
+  return "Taille/Größe: "+fmtNum(Math.round(r*100)/100)+" · "+(good?"gesunder Bereich (Ziel < 0,5) ✅":"etwas über dem Ziel (< 0,5)"); }
+function openMeasureIn(){ const last=state.measureLog.length?state.measureLog[state.measureLog.length-1]:null;
+  openModal("<div class='mhead'><h3>📏 Maße eintragen</h3><button class='iconbtn' id='mX'>✕</button></div>"+
+    "<div class='mbody'>"+
+    "<p class='hint'>Nur für deinen eigenen Verlauf – ganz freiwillig. Miss morgens, immer an derselben Stelle.</p>"+
+    "<div class='wrow'><label class='wfield' style='flex:1'><span>Taille</span><span class='winput'><input class='input' id='meaWaist' inputmode='decimal' placeholder='z. B. 84' value='"+esc(last&&typeof last.waist==="number"?fmtNum(last.waist):"")+"'><small>cm</small></span></label></div>"+
+    "<div class='wrow'><label class='wfield' style='flex:1'><span>Hüfte (optional)</span><span class='winput'><input class='input' id='meaHip' inputmode='decimal' placeholder='z. B. 98' value='"+esc(last&&typeof last.hip==="number"?fmtNum(last.hip):"")+"'><small>cm</small></span></label></div>"+
+    "<p class='hint'>Taille am Bauchnabel messen, locker atmen.</p>"+
+    "<button class='btn block primary' id='meaSave' style='margin-top:8px'>Eintragen</button>"+
+    "</div>");
+  $("#mX").onclick=closeModal;
+  $("#meaSave").onclick=()=>{ const w=parseNum($("#meaWaist").value), h=parseNum($("#meaHip").value); if(!((w&&w>0)||(h&&h>0))){ toast("Bitte Taille (oder Hüfte) eintragen"); return; } recordMeasure({waist:w,hip:h}); save(); closeModal(); renderAll(); toast("📏 Maße gespeichert"); };
+}
 function renderWeekBars(host){ if(!host) return;
   const wks=lastNWeekKeys(8), vals=wks.map(cookedInWeek), max=Math.max(1,Math.max.apply(null,vals)), ck=currentMondayStr();
   host.innerHTML="<div class='barchart'>"+wks.map((wk,i)=>{ const hh=Math.round(vals[i]/max*100);
@@ -3692,12 +3751,20 @@ function renderStats(){
   html+="<div class='stat-card'><div class='sc-head'>Monatsziel</div><div class='meter'><div class='meter-fill' style='width:"+pct+"%'></div></div><div class='sc-sub'>"+thisM+" / "+goal+" Gerichte"+(rem>0?" · Noch "+rem+" bis zum nächsten Freund! 🥚":" · geschafft! 🎉")+"</div></div>";
   html+="<div class='stat-card'><div class='sc-head'>Gekocht pro Woche</div><div id='weekBars'></div></div>";
   if(state.weightLog.length>=2){ html+="<div class='stat-card'><div class='sc-head'>Gewichtsverlauf</div>"+weightSparkline()+"<div class='sc-sub'>"+esc(weightTrendText())+"</div></div>"; }
+  { const hasM=state.measureLog.filter(e=>typeof e.waist==="number"&&e.waist>0).length; const wh=whtrText();
+    html+="<div class='stat-card'><div class='sc-head'>📏 Körpermaße</div>"+(hasM>=2?measureSparkline():"")+
+      "<div class='sc-sub'>"+esc(hasM>=1?(measureTrendText()+(wh?" · "+wh:"")):"Trag deine Taille ein – oft zeigt das Maßband Fortschritt, wenn die Waage mal stockt.")+"</div>"+
+      "<button class='btn block' id='measBtn' style='margin-top:8px'>📏 Maß eintragen</button></div>"; }
+  if(state.trainGoalPerWeek!=null){ const ckw=currentMondayStr(), wt=(state.weekTrain&&state.weekTrain[ckw])||{};
+    const doneT=DAYS.filter(day=>Array.isArray(wt[day.id])&&wt[day.id].some(e=>e&&!e.del)).length, goalT=state.trainGoalPerWeek, pctT=Math.min(100,Math.round(doneT/goalT*100));
+    html+="<div class='stat-card'><div class='sc-head'>🏃 Training diese Woche</div><div class='meter'><div class='meter-fill' style='width:"+pctT+"%'></div></div><div class='sc-sub'>"+doneT+" / "+goalT+" Trainings"+(doneT>=goalT?" · geschafft! 💪":" · noch "+(goalT-doneT)+" diese Woche")+"</div></div>"; }
   const drops=dropsCount(), wstreak=waterStreak(), aqua=state.rewards.aquaCount||0;
   html+="<div class='stat-card'><div class='sc-head'>💧 Wasser</div><div class='sc-sub'><b>"+drops+"</b> Tropfen gesammelt · Serie: <b>"+wstreak+"</b> "+(wstreak===1?"Tag":"Tage")+" 🔥"+(aqua?" · ✨💧 ×"+aqua:"")+"</div><div class='sc-sub'>"+(wstreak>=1?"Weiter so – bei 7 Tagen am Stück gibt's einen glänzenden Tropfen von Aqua!":"Erreiche dein Tagesziel bei den Wassergläsern, um Tropfen zu sammeln.")+"</div></div>";
   html+="<button class='btn block' id='bandeBtn' style='margin-top:6px'>🍗 Deine Nugget-Bande ("+owned+"/"+ROSTER.length+(gold?" · 🥇"+gold:"")+(aqua?" · ✨💧"+aqua:"")+")</button>";
   host.innerHTML=html;
   renderWeekBars($("#weekBars"));
   const bb=$("#bandeBtn"); if(bb) bb.onclick=openBande;
+  const mb2=$("#measBtn"); if(mb2) mb2.onclick=openMeasureIn;
 }
 
 /* ---- collection modal ---- */
