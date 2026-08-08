@@ -158,6 +158,13 @@ main{padding-top:8px}
 .fazit-score{font-size:34px;font-weight:800;text-align:center;color:var(--brand);margin:2px 0 10px}
 .fazit-score small{font-size:16px;color:var(--muted);font-weight:600}
 .fazit-roast{background:linear-gradient(90deg,rgba(232,98,58,.12),rgba(201,150,43,.12));border:1px solid var(--line);border-radius:11px;padding:10px 13px;margin:0 0 11px;font-size:13.5px;font-style:italic;font-weight:600;color:var(--ink);text-align:center}
+.prep-banner{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(90deg,rgba(232,98,58,.12),rgba(201,150,43,.12));border:1px solid var(--line);border-radius:14px;padding:11px 12px;margin:0 0 12px;box-shadow:var(--shadow)}
+.prep-banner .pb-face{font-size:22px;line-height:1.1;flex:0 0 auto}
+.prep-banner .pb-txt{flex:1;font-size:13.5px;color:var(--ink);line-height:1.35}
+.prep-banner .pb-txt b{font-weight:700}
+.prep-banner .pb-act{margin-top:6px}
+.prep-banner .pb-act button{font-size:12.5px;padding:5px 10px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.prep-banner .pb-x{flex:0 0 auto;background:transparent;border:0;color:var(--ink);opacity:.55;font-size:18px;line-height:1;cursor:pointer;padding:2px 4px}
 .fazit-list{list-style:none;padding:0;margin:0 0 10px;display:flex;flex-direction:column;gap:6px}
 .fazit-list li{font-size:13.5px;background:var(--chip);border-radius:9px;padding:8px 11px}
 .fazit-tips{background:rgba(63,143,107,.10);border:1px solid var(--line);border-radius:11px;padding:9px 12px;margin-bottom:8px}
@@ -522,6 +529,7 @@ textarea.input{resize:vertical;font-family:inherit;line-height:1.4}
         <button class="wc-ib" id="dupWeekBtn" aria-label="Woche kopieren"><span class="ic">📋</span><span>Kopieren</span></button>
       </div>
     </div>
+    <div class="prep-banner" id="prepBanner" style="display:none"></div>
     <div class="daybar" id="dayBar"></div>
     <div class="weekgrid" id="weekGrid"></div>
   </section>
@@ -2645,6 +2653,7 @@ function renderPlan(){
     try{ const at=$("#dayBar")&&$("#dayBar").querySelector("button.active"); if(at&&at.scrollIntoView) at.scrollIntoView({inline:"center",block:"nearest"});
       const cols=grid.querySelectorAll(".daycol"), gi=DAYS.findIndex(d=>d.id===uiDay); if(cols[gi]&&cols[gi].scrollIntoView) cols[gi].scrollIntoView({inline:"center",block:"nearest"}); }catch(e){}
   },30); }
+  renderPrepReminder();   // Abend-Erinnerung (uiWeek-unabhängig, idempotent, blendet sich selbst aus wenn nicht relevant)
 }
 
 let recipeFilter="all", recipeDiet="all", recipeKind="dish", recipeEffortF="all", drinkFilter="all";
@@ -3551,68 +3560,90 @@ function endingMonthDue(){ const now=new Date(), dim=new Date(now.getFullYear(),
 }
 function shiftDays(dstr,n){ const dt=new Date(dstr+"T00:00:00"); dt.setDate(dt.getDate()+n); return dt.getFullYear()+"-"+("0"+(dt.getMonth()+1)).slice(-2)+"-"+("0"+dt.getDate()).slice(-2); }
 /* ---- Tages-Fazit: poppt ab ~21 Uhr einmal am Tag auf, bewertet Nährstoffe/Wasser/Training + Tipps ---- */
-function fazitRoast(o){   // liebevoll-frecher Spruch als Motivation, je nach Schwachstelle
-  const pick=a=>a[Math.floor(Math.random()*a.length)];
-  if(o.pct>=85) return pick([
-    "Ok Angeber 😎 – heute war fast zu perfekt. Nicht übermütig werden, morgen nochmal!",
-    "Wer bist du und was hast du mit dem Schummler von gestern gemacht? Stark! 👏",
-    "So sauber, da wird sogar dein Waagen-Zeiger neidisch. 🌟",
-    "Heute Standing Ovations 👏 – die Waage wird dich morgen küssen.",
-    "So diszipliniert, dass dein innerer Schweinehund heute Urlaub genommen hat. 🐷🏖️",
-    "Musterschüler-Alarm! ⭐ Bloß nicht übermütig werden, morgen nochmal so.",
-    "Chapeau! Heute hättest du sogar den Ernährungsberater beeindruckt. 🎩",
-    "Perfekt-Tag freigeschaltet 🏅 – wer hat dich ausgetauscht und wo bestell ich das?"
-  ]);
-  if(o.overK) return pick([
-    "Der Kühlschrank hatte heute Angst vor dir. 😅 Morgen zeigst du ihm, wer der Boss ist!",
-    "Dein Kaloriendefizit ist heute in den Urlaub gefahren – hol es zurück! ✈️",
-    "So viele Kalorien … heimlich das Buffet leergeräumt? Morgen wird gezähmt! 💪",
-    "Buffet 1 : 0 du. 🍽️ Das Rückspiel ist morgen!",
-    "Deine Gabel hatte heute Akkordarbeit. Morgen gönnst du ihr eine Pause! 😅",
-    "Heute eher Genuss- als Abnehmtag. Passiert – morgen drehst du's um! 💪",
-    "Die Kalorien haben eine Party gefeiert und dich nicht als Türsteher eingeladen. Morgen schon! 🚪",
-    "So viel gefuttert – hast du den Kühlschrank adoptiert? Morgen wieder Distanz halten! 🧊"
-  ]);
-  if(o.noSport) return pick([
-    "Die Couch hat heute deine Abdrücke gespeichert. 🛋️ Morgen bewegst du den Hintern!",
-    "Der einzige Sport heute waren Gabel-zum-Mund-Curls? Morgen läuft was! 🏋️",
-    "Dein Sofa sagt danke, dein Körper eher nicht. 😜 Auf geht's morgen!",
-    "Schrittzähler heute: Couch → Kühlschrank → Couch. 🚶 Morgen echte Meter!",
-    "Deine Laufschuhe verstauben und weinen leise. 👟😢 Gib ihnen morgen einen Grund!",
-    "Der aktivste Muskel heute war der Daumen beim Scrollen. 📱 Morgen kommt der Rest dran!",
-    "Heute Team Faultier 🦥 – morgen bitte Team Gepard. Auf geht's!",
-    "Dein Fitnessstudio hat schon einen Suchtrupp losgeschickt. 🔍 Morgen tauchst du auf!"
-  ]);
-  if(o.waterLow) return pick([
-    "Ein Kaktus trinkt mehr als du heute. 🌵 Morgen: Flasche marsch!",
-    "Deine Nieren funken Durst-SOS. Trink was, du Dörrpflaume! 💧",
-    "So trocken hier – bestehst du zu 90 % aus Chips? Wasser marsch! 😄",
-    "Deine Wasserflasche fragt: ‚Kennen wir uns?' 💧 Morgen stellst du sie vor!",
-    "So wenig getrunken – bist du heimlich ein Kamel? 🐫 Morgen Nachschub!",
-    "Deine Zellen dürsten wie die Sahara. 🏜️ Morgen wird geflutet!",
-    "Willst du als Rosine enden? 🍇 Trink was, morgen mehr!",
-    "Heute mehr Kaffee als Wasser? Deine Nieren gründen bald eine Gewerkschaft. ☕→💧"
-  ]);
-  if(o.protLow) return pick([
-    "Eiweiß? Kennste? Deine Muskeln hätten heute gern mal Hallo gesagt. 🥚",
-    "So wenig Protein – deine Muskeln machen gerade Homeoffice. Hol sie zurück! 💪",
-    "Deine Gabel hat heute jedes Stück Eiweiß umkurvt. Morgen zielsicherer!",
-    "Eiweiß-Konto überzogen ins Minus. 🥚 Morgen wieder einzahlen!",
-    "Dein Bizeps hat heute Hungerstreik gemeldet. Morgen versöhnst du dich mit ihm! 💪",
-    "Baust du Muskeln oder Luftschlösser? So wenig Protein … morgen Skyr nicht vergessen!",
-    "Eiweiß war heute unsichtbar auf dem Teller. Morgen machst du es sichtbar! 🍗",
-    "Deine Muskeln haben vergeblich aufs Futter gewartet. 💪😴 Morgen Buffet für sie!"
-  ]);
-  return pick([
-    "War okay – aber ‚okay' baut keine Traumfigur. 😏 Einen Tick mehr morgen!",
-    "Nicht schlecht, Herr/Frau Specht – aber da geht noch was! 🐦",
-    "Heute Durchschnitt, morgen Diva. Leg nach! ✨",
-    "Solide – aber Weltmeister werden anders. 🏆 Morgen mehr Biss!",
-    "Lauwarm wie vergessener Kaffee. ☕ Morgen wieder heiß laufen!",
-    "Nicht Fisch, nicht Fleisch heute. 😏 Morgen entscheidest du dich für ‚richtig gut'!",
-    "Mittelmaß angedockt – morgen legst du wieder ab Richtung Bestform! ⛵",
-    "Geht besser, geht schlechter. Morgen geht's besser, versprochen? 😉"
-  ]);
+/* Tagesspruch: liebevoll-frech & motivierend. WICHTIG: necken den TAG/das Verhalten, NIE Körper/Gewicht/Aussehen/Selbstwert, kein Essens-Schuldgefühl. Immer motivierend enden. */
+const PRAISE_LINES=[
+  "Ok Angeber 😎 – heute war fast zu perfekt. Morgen ganz locker nochmal!",
+  "Wer bist du und was hast du mit dem Schummler von gestern gemacht? Stark! 💪",
+  "Musterschüler-Alarm! ⭐ Heute lief alles wie am Schnürchen.",
+  "Chapeau! 🎩 Heute hättest du sogar den Ernährungsberater beeindruckt.",
+  "Perfekt-Tag freigeschaltet! 🏅 Die ganze Nugget-Bande jubelt.",
+  "So diszipliniert, dein innerer Schweinehund hat heute freigenommen. 🐷🏖️",
+  "Heute Standing Ovations 👏 – so macht der Plan richtig Spaß!",
+  "Volle Punktzahl fürs Durchziehen. 🎯 Knusper ist mächtig stolz auf dich!",
+  "Heute alles im grünen Bereich – Gold wert! 💛",
+  "Du und der Plan heute: ein echtes Dreamteam. 🤝 Weiter so!",
+  "Sauber durchgezogen! 🌟 Genau so fühlt sich ein guter Tag an.",
+  "Knusper macht die Welle für dich 🌊🐥 – top gemacht heute!",
+  "Heute nichts anbrennen lassen – Chefkoch-Niveau! 👨‍🍳✨",
+  "Voller Erfolg auf ganzer Linie. 🏆 Gönn dir das gute Gefühl!",
+  "Heute richtig geliefert! 📦 Die Nugget-Bande feiert dich.",
+  "Tag gerockt! 🎸 So darf's gern weitergehen."
+];
+const BLANK_LINES=[
+  "Heute ist der Plan ganz leer geblieben. 📋 Morgen hakst du wieder was ab!",
+  "Nichts eingetragen heute? Der Plan vermisst dich schon. 🐥 Morgen zusammen weiter!",
+  "Heute Funkstille im Plan. 📻 Morgen meldest du dich zurück!",
+  "Der Haken-Button hatte heute frei. ✅ Morgen darf er wieder ran!",
+  "Heute nichts abgehakt – kein Drama. 🌱 Morgen ein frischer Start!"
+];
+const OVERK_LINES=[
+  "Der Kühlschrank hatte heute Angst vor dir. 😅 Morgen zeigst du ihm, wer der Boss ist!",
+  "Dein Kaloriendefizit ist heute in den Urlaub gefahren – hol es zurück! ✈️",
+  "Der Kühlschrank hatte heute Heimvorteil. 🧊 Morgen spielst du auf eigenem Platz!",
+  "Buffet 1 : 0 du. 🍽️ Das Rückspiel ist morgen – du bist Favorit!",
+  "Deine Gabel hatte heute Akkordarbeit. 🍴 Morgen gönnst du ihr eine Pause!",
+  "Heute eher Genuss- als Plan-Tag. Passiert! 💪 Morgen drehst du's locker um.",
+  "Die Kalorien haben gefeiert und dich nicht als Türsteher eingeladen. 🚪 Morgen schon!",
+  "Der Kühlschrank und du hattet heute etwas zu viel Nähe. 🧊 Morgen wieder Abstand!"
+];
+const WATER_LINES=[
+  "Ein Kaktus trinkt mehr als du heute. 🌵 Morgen: Flasche marsch!",
+  "Deine Wasserflasche fragt: ‚Kennen wir uns?' 💧 Morgen stellst du sie richtig vor!",
+  "So wenig getrunken – bist du heimlich ein Kamel? 🐫 Morgen Nachschub!",
+  "Deine Zellen hätten heute gern mal einen Schluck gehabt. 💧 Morgen wird geflutet!",
+  "Heute mehr Kaffee als Wasser? ☕→💧 Morgen wieder ausgleichen!",
+  "Die Wasserflasche stand heute etwas einsam rum. 🚰 Morgen habt ihr wieder ein Date!"
+];
+const SPORT_LINES=[
+  "Die Couch hat heute deine Abdrücke gespeichert. 🛋️ Morgen bringst du wieder Schwung rein!",
+  "Der einzige Sport heute waren Gabel-zum-Mund-Curls? 🏋️ Morgen läuft was!",
+  "Schrittzähler heute: Couch → Kühlschrank → Couch. 🚶 Morgen echte Meter!",
+  "Deine Laufschuhe warten treu an der Tür. 👟 Gib ihnen morgen einen Grund!",
+  "Der aktivste Muskel heute war der Daumen beim Scrollen. 📱 Morgen kommt der Rest dran!",
+  "Heute Team Faultier 🦥 – morgen bitte Team Gepard. Auf geht's!",
+  "Dein Fitnessstudio hat schon einen Suchtrupp losgeschickt. 🔍 Morgen tauchst du auf!"
+];
+const PROT_LINES=[
+  "Deine Muskeln haben heute vergeblich aufs Futter gewartet. 💪 Morgen gibt's Nachschlag!",
+  "So wenig Protein – deine Muskeln machen gerade Homeoffice. 🏠 Hol sie zurück!",
+  "Eiweiß-Konto heute knapp. 🥚 Morgen wieder einzahlen!",
+  "Dein Bizeps hat heute leise gestreikt. 💪 Morgen versöhnt ihr euch – mit Skyr!",
+  "Eiweiß war heute fast unsichtbar auf dem Teller. 🍗 Morgen machst du's sichtbar!",
+  "Baust du Muskeln oder Luftschlösser? 🏰 Morgen den Skyr nicht vergessen!"
+];
+const GENERIC_LINES=[
+  "Heute war der Kühlschrank schneller als du. 😏 Morgen zeigst du's ihm!",
+  "Der Plan und du hattet heute eine kleine Fernbeziehung. 📞 Morgen wieder Händchen halten!",
+  "Heute lief's eher auf Sparflamme. 🔥 Morgen drehst du die Hitze wieder hoch!",
+  "Der Schweinehund hat heute 1:0 geführt. 🐷 Rückspiel ist morgen – du bist Favorit!",
+  "Ein Stolperer ist noch kein Sturz. 🤸 Morgen tanzt du einfach weiter!",
+  "Heute war eher Generalprobe. 🎭 Die große Vorstellung steigt morgen!",
+  "Klein gepatzt, groß egal. 🤷 Morgen wartet ein frischer Teller auf dich!",
+  "Nicht dein Tag, sondern der Tag der Ausreden. 😅 Morgen führst wieder du Regie!",
+  "Heute Durchschnitt, morgen wieder Bestform. ✨ Leg nach!",
+  "Mittelmaß angedockt – morgen legst du wieder ab Richtung Bestform! ⛵"
+];
+function daySeed(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0); }
+function fazitRoast(o){   // liebevoll-frecher Spruch, deterministisch je Tag+Kategorie (kein Math.random → gleicher Tag = gleicher Spruch)
+  let arr, cat;
+  if(o.pct>=80){ arr=PRAISE_LINES; cat="praise"; }
+  else if(o.blank){ arr=BLANK_LINES; cat="blank"; }
+  else if(o.overK){ arr=OVERK_LINES; cat="overK"; }
+  else if(o.waterLow){ arr=WATER_LINES; cat="water"; }
+  else if(o.noSport){ arr=SPORT_LINES; cat="sport"; }
+  else if(o.protLow){ arr=PROT_LINES; cat="prot"; }
+  else { arr=GENERIC_LINES; cat="generic"; }
+  return arr[ daySeed((o.dstr||todayStr())+"|"+cat) % arr.length ];
 }
 function openDayFazit(dayId){
   const n=dayNutrients(dayId), t=targets(), burn=dayBurn(dayId);
@@ -3637,7 +3668,8 @@ function openDayFazit(dayId){
   if(wgoal&&water<wgoal) tips.push((wgoal-water)+" Glas Wasser fehlen noch – morgens direkt eine Flasche bereitstellen.");
   if(burn<=0) tips.push("Schon 20–30 Min zügiges Gehen verbrennen ~150–250 kcal.");
   if(dKcal<=0 && protPct>=90 && (!wgoal||water>=wgoal)) tips.push("Perfekt eingehalten – ein paar solcher Tage und dein Ziel rückt näher! 🎯");
-  const roast=fazitRoast({ pct:pct, overK:(prof==="abnehmen"?dKcal>150:Math.abs(dKcal)>budget*0.2), noSport:burn<=0, waterLow:(wgoal&&water<wgoal), protLow:protPct<90 });
+  const dstr=shiftDays(uiWeek, DAYS.findIndex(d=>d.id===dayId));
+  const roast=fazitRoast({ pct:pct, dstr:dstr, blank:(n.kcal===0&&water===0&&burn===0), overK:(prof==="abnehmen"?dKcal>150:dKcal>budget*0.2), noSport:burn<=0, waterLow:(wgoal&&water<wgoal), protLow:protPct<70 });
   openModal("<div class='mhead'><h3>"+head+"</h3><button class='iconbtn' id='mX'>✕</button></div><div class='mbody'>"+
     "<p class='hint' style='margin-top:0'>Dein Tages-Fazit für "+esc((DAYS.find(d=>d.id===dayId)||{}).name||"heute")+":</p>"+
     "<div class='fazit-score'>"+pct+" <small>%</small></div>"+
@@ -3647,6 +3679,45 @@ function openDayFazit(dayId){
     "<p class='hint'>🐥 Dranbleiben lohnt sich: gekochte Tage füllen deine Nugget-Bande.</p>"+
     "<button class='btn block primary' id='fazitOk'>Alles klar</button></div>");
   $("#mX").onclick=closeModal; const ok=$("#fazitOk"); if(ok) ok.onclick=closeModal;
+}
+/* ---- Abend-Erinnerung: heute Abend für morgen vorbereiten (über Nacht einweichen, marinieren, auftauen …) ---- */
+const PREP_PATTERNS=[/über nacht/,/overnight/,/einweich/,/marinier/,/marinade/,/auftau(?!ch)/,/vorabend/,/vortag/,/\beinlegen/];   // auftau(?!ch) trennt „auftauen" von „auftauchen"; \beinlegen trennt von „hineinlegen"
+function prepHintFor(hay){   // hay bereits lowercased
+  if(/marinier|marinade|\beinlegen/.test(hay)) return "vorher marinieren/einlegen";
+  if(/auftau(?!ch)/.test(hay)) return "rechtzeitig auftauen";
+  if(/vorabend|vortag/.test(hay)) return "am Vorabend vorbereiten";
+  return "über Nacht einweichen/quellen lassen";
+}
+function tomorrowRef(){ const t=new Date(); t.setDate(t.getDate()+1); return { dayId:["so","mo","di","mi","do","fr","sa"][t.getDay()], weekKey:mondayStr(t) }; }   // reales Welt-Morgen, unabhängig von uiWeek/uiDay
+function planNeedsPrep(weekKey,dayId){ const wk=state.weeks&&state.weeks[weekKey]; if(!wk||!wk[dayId]) return null;   // liest state.weeks DIREKT, ruft NIE ensureWeek (kein passives Mutieren)
+  const items=[];
+  SLOTS.forEach(s=>{ const rid=wk[dayId][s.id], r=rid?recipe(rid):null; if(!r) return;
+    const hay=((r.name||"")+" "+(r.steps||"")).toLowerCase();
+    if(PREP_PATTERNS.some(re=>re.test(hay))) items.push({slot:s.id,name:r.name,hint:prepHintFor(hay)}); });
+  if(!items.length) return null;
+  return { items, hasBreakfast:items.some(x=>x.slot==="b") };
+}
+function renderPrepReminder(){ const box=$("#prepBanner"); if(!box) return;
+  const hide=()=>{ box.style.display="none"; box.innerHTML=""; };
+  if(new Date().getHours()<17){ hide(); return; }                       // nur abends (ab 17 Uhr)
+  let seen=""; try{ seen=localStorage.getItem("foodies_prepSeen")||""; }catch(e){}
+  if(seen===todayStr()){ hide(); return; }                             // heute schon weggetippt
+  const ref=tomorrowRef();
+  if(cheatDayOf(ref.weekKey)===ref.dayId){ hide(); return; }           // morgen Cheat-Day → nichts vorbereiten
+  const need=planNeedsPrep(ref.weekKey,ref.dayId); if(!need){ hide(); return; }   // deckt leeren/ungeplanten Tag ab
+  const dayName=(DAYS.find(d=>d.id===ref.dayId)||{}).name||"morgen";
+  const bf=need.items.find(x=>x.slot==="b"), main=need.items[0];
+  const lead = need.hasBreakfast
+    ? ("Morgen früh gibt's <b>"+esc(bf.name)+"</b> – "+esc(bf.hint)+".")
+    : ("Für morgen ("+esc(dayName)+") steht <b>"+esc(main.name)+"</b> auf dem Plan – "+esc(main.hint)+".");
+  box.innerHTML="<div class='pb-face'>🌙🐥</div>"+
+    "<div class='pb-txt'>"+lead+" Am besten <b>heute Abend</b> schon vorbereiten, dann klappt's morgen ganz entspannt."+
+      "<div class='pb-act'><button id='pbGo'>Zum "+esc(dayName)+"</button></div></div>"+
+    "<button class='pb-x' id='pbX' aria-label='Ausblenden'>✕</button>";
+  box.style.display="flex";
+  const dismiss=()=>{ try{ localStorage.setItem("foodies_prepSeen",todayStr()); }catch(e){} hide(); };
+  $("#pbX").onclick=dismiss;
+  $("#pbGo").onclick=()=>{ dismiss(); weekPickerOpen=false; uiDay=ref.dayId; setActiveWeek(ref.weekKey); renderAll(); };
 }
 function maybeDayFazit(){
   if(modalOpen()) return;
@@ -3810,7 +3881,7 @@ function startAppSession(){
     cloudPullApply(true).then(()=>{ rewardSilent=true; checkStreak(); grantPendingAwards(); checkAqua(); rewardSilent=false; save(); renderAll(); maybeWeighIn(); flushCelebs(); maybeDayFazit(); }).catch(()=>{});
     startPolling();
   } else { maybeWeighIn(); flushCelebs(); maybeDayFazit(); }
-  setInterval(maybeDayFazit, 300000);
+  setInterval(()=>{ maybeDayFazit(); renderPrepReminder(); }, 300000);   // Fazit + Abend-Erinnerung auch prüfen, wenn die App über 17/21 Uhr offen bleibt
 }
 function hardReplaceFromRemote(row){ try{ localStorage.setItem(LS_KEY,JSON.stringify(row.data)); }catch(e){} location.reload(); }
 async function afterAuth(){
